@@ -1,0 +1,48 @@
+---
+/**
+ * Grasrotandelen call-to-action.
+ *
+ * The org number comes from the `klubb` single type so the board can change it
+ * without a deploy. If it isn't set, the section renders nothing rather than
+ * shipping a broken Norsk Tipping link.
+ */
+interface Props {
+  orgNumber?: string | null;
+  heading?: string;
+  body?: string;
+}
+
+const {
+  orgNumber,
+  heading = 'Støtt TOIK med Grasrotandelen',
+  body = 'Spiller du hos Norsk Tipping? Da kan du gi 7 % av innsatsen din til TOIK — uten at det koster deg noe ekstra.',
+} = Astro.props;
+
+const clean = orgNumber?.replace(/\s/g, '');
+const href = clean ? `https://www.norsk-tipping.no/grasrotandelen/din-mottaker/${clean}` : null;
+---
+
+{
+  href && (
+    <section class="bg-brand-900 py-14 text-ink-invert" aria-labelledby="grasrot">
+      <div class="container-content grid gap-8 md:grid-cols-[1fr_auto] md:items-center">
+        <div>
+          <h2 id="grasrot" class="text-display text-white">{heading}</h2>
+          <p class="mt-3 max-w-prose text-ice-300">{body}</p>
+          <p class="mt-4 text-sm text-ice-400">
+            Organisasjonsnummer <strong class="font-mono text-ice-100">{orgNumber}</strong>
+          </p>
+        </div>
+
+        <a
+          href={href}
+          target="_blank"
+          rel="noopener"
+          class="inline-flex items-center justify-center rounded-pill bg-accent-500 px-6 py-3 font-semibold text-white transition hover:bg-accent-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+        >
+          Velg TOIK som grasrotmottaker
+        </a>
+      </div>
+    </section>
+  )
+}

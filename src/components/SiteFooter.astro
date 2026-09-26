@@ -1,0 +1,79 @@
+---
+interface Props {
+  orgNumber?: string | null;
+  email?: string | null;
+  address?: string | null;
+}
+
+const { orgNumber, email, address } = Astro.props;
+const year = new Date().getFullYear();
+
+const columns = [
+  {
+    title: 'Klubben',
+    links: [
+      { href: '/klubben/styret', label: 'Styret' },
+      { href: '/klubben/retningslinjer', label: 'Retningslinjer' },
+      { href: '/klubben/historie', label: 'Historie' },
+      { href: '/klubben/politiattest', label: 'Politiattest' },
+    ],
+  },
+  {
+    title: 'Spille hockey',
+    links: [
+      { href: '/klubben/ny-i-klubben', label: 'Ny i klubben' },
+      { href: '/lag/skoyteskole', label: 'Skøyteskole' },
+      { href: '/lag', label: 'Lag og treningsgrupper' },
+    ],
+  },
+  {
+    title: 'Annet',
+    links: [
+      { href: '/sponsorer', label: 'Samarbeidspartnere' },
+      { href: '/kontakt', label: 'Kontakt' },
+      { href: '/varsle', label: 'Varsle om kritikkverdige forhold' },
+    ],
+  },
+];
+---
+
+<footer class="mt-20 border-t border-line bg-surface-sunken py-12">
+  <div class="container-content">
+    <div class="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
+      <div>
+        <p class="font-display text-lg">Tønsberg og Omegn Ishockeyklubb</p>
+        <p class="mt-2 text-sm text-ink-muted">Én klubb, mange lag.</p>
+        {address && <p class="mt-4 whitespace-pre-line text-sm text-ink-muted">{address}</p>}
+        {
+          email && (
+            <p class="mt-2 text-sm">
+              <a href={`mailto:${email}`} class="underline underline-offset-2">{email}</a>
+            </p>
+          )
+        }
+      </div>
+
+      {
+        columns.map((column) => (
+          <nav aria-labelledby={`f-${column.title}`}>
+            <h2 id={`f-${column.title}`} class="text-sm tracking-wide text-ink-muted">
+              {column.title}
+            </h2>
+            <ul class="mt-3 space-y-2 text-sm">
+              {column.links.map((link) => (
+                <li>
+                  <a href={link.href} class="hover:underline underline-offset-2">{link.label}</a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        ))
+      }
+    </div>
+
+    <div class="mt-10 flex flex-col gap-2 border-t border-line pt-6 text-xs text-ink-muted sm:flex-row sm:justify-between">
+      <p>&copy; {year} Tønsberg og Omegn Ishockeyklubb</p>
+      {orgNumber && <p>Org.nr. {orgNumber}</p>}
+    </div>
+  </div>
+</footer>

@@ -1,17 +1,200 @@
 ---
+/**
+ * Front page.
+ *
+ * Every section fetches independently through Promise.allSettled, so one
+ * failing source — Strapi restarting, the federation API timing out — leaves a
+ * gap instead of a 500. A club site that half-renders beats one that doesn't.
+ *
+ * ADJUST: the `forside` and `klubb` single types are read defensively because
+ * their field names are yours. Wire the real ones where marked.
+ */
+import Base from "../layouts/Base.astro";
+import SiteHeader from "../components/SiteHeader.astro";
+import SiteFooter from "../components/SiteFooter.astro";
+import ArticleCard from "../components/ArticleCard.astro";
+import FixtureList from "../components/FixtureList.astro";
+import SponsorGrid from "../components/SponsorGrid.astro";
+import Grasrot from "../components/Grasrot.astro";
+import LiveMatch from "../components/LiveMatch.vue";
+import {
+    getArticles,
+    getFixtures,
+    getSingle,
+    getSponsors,
+    mediaAlt,
+    mediaUrl,
+    publicStrapiUrl,
+} from "../lib/strapi";
+import type { Article, Sponsor, StrapiMedia } from "../types/strapi";
 
+/** The team whose fixtures lead the front page. */
+const FEATURED_TEAM = import.meta.env.PUBLIC_FEATURED_TEAM_SLUG || "a-lag";
+
+const [articlesRes, upcomingRes, recentRes, sponsorsRes, forsideRes, klubbRes] =
+    await Promise.allSettled([
+        getArticles({ pageSize: 7 }),
+        getFixtures(FEATURED_TEAM, "upcoming", 4),
+        getFixtures(FEATURED_TEAM, "completed", 3),
+        getSponsors(),
+        getSingle<Record<string, any>>("forside"),
+        getSingle<Record<string, any>>("klubb"),
+    ]);
+
+const ok = <T,>(result: PromiseSettledResult<T>, fallback: T): T =>
+    result.status === "fulfilled" ? result.value : fallback;
+
+const articles: Article[] =
+    ok(articlesRes, { data: [], meta: {} } as any).data ?? [];
+const upcoming = ok(upcomingRes, { data: [], meta: {} } as any).data ?? [];
+const recent = ok(recentRes, { data: [], meta: {} } as any).data ?? [];
+const sponsors: Sponsor[] =
+    ok(sponsorsRes, { data: [], meta: {} } as any).data ?? [];
+const forside = ok(forsideRes, null) ?? {};
+const klubb = ok(klubbRes, null) ?? {};
+
+// Log what failed — a silently empty front page is hard to debug later
+for (const [name, result] of Object.entries({
+    articles: articlesRes,
+    upcoming: upcomingRes,
+    recent: recentRes,
+    sponsors: sponsorsRes,
+    forside: forsideRes,
+    klubb: klubbRes,
+})) {
+    if (result.status === "rejected")
+        console.error(`[forside] ${name}:`, result.reason);
+}
+
+// ADJUST: swap these keys for your actual single-type field names
+const heroTitle: string =
+    forside.hero?.title ?? forside.title ?? "Én klubb, mange lag";
+const heroText: string =
+    forside.hero?.text ??
+    forside.intro ??
+    "Ishockey i Tønsberg for alle — fra skøyteskole til A-lag.";
+const heroImage: StrapiMedia | null =
+    forside.hero?.image ?? forside.image ?? null;
+const orgNumber: string | null = klubb.orgNumber ?? klubb.orgnr ?? null;
+
+const [lead, ...rest] = articles;
+const heroSrc = mediaUrl(heroImage, "large");
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Base
+    title="Tønsberg og Omegn Ishockeyklubb"
+    description={heroText}
+    image={heroSrc}
+    maxAge={300}
+>
+    <SiteHeader slot="header" />
+
+    <!-- Hero -->
+    <section class="relative isolate overflow-hidden bg-brand-900 text-ink-invert">
+        {heroSrc && (
+            <img
+                src={heroSrc}
+                alt={mediaAlt(heroImage)}
+                class="absolute inset-0 -z-10 size-full object-cover opacity-35"
+                fetchpriority="high"
+                decoding="async"
+            />
+        )}
+        <div class="container-content py-20 sm:py-28">
+            <h1 class="max-w-3xl text-hero text-white">{heroTitle}</h1>
+            <p class="mt-5 max-w-xl text-lg text-ice-200">{heroText}</p>
+            <div class="mt-8 flex flex-wrap gap-3">
+                <a
+                    href="/klubben/ny-i-klubben"
+                    class="rounded-pill bg-accent-500 px-6 py-3 font-semibold text-white transition hover:bg-accent-400"
+                >
+                    Bli med i klubben
+                </a>
+                <a
+                    href="/kamper"
+                    class="rounded-pill border border-ice-400/40 px-6 py-3 font-semibold text-white transition hover:bg-white/10"
+                >
+                    Se kampoppsettet
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!--
+    Live match. Hydrated on load because it must poll; everything else on this
+    page ships zero JavaScript. It renders its own "ingen kamp nå" state, so
+    there is nothing to conditionally hide here.
+  -->
+    <section class="container-content -mt-10 mb-14">
+        <LiveMatch client:load strapiUrl={publicStrapiUrl()} />
+    </section>
+
+    <!-- Matches -->
+    <section
+        class="container-content mb-16 grid gap-8 lg:grid-cols-2"
+        aria-labelledby="kamper"
+    >
+        <h2 id="kamper" class="sr-only">
+            Kamper
+        </h2>
+        <div>
+            <div class="mb-3 flex items-baseline justify-between">
+                <h3 class="text-xl">Neste kamper</h3>
+                <a
+                    href="/kamper"
+                    class="text-sm text-ink-muted hover:underline"
+                >
+                    Hele terminlisten
+                </a>
+            </div>
+            <FixtureList fixtures={upcoming} type="upcoming" />
+        </div>
+        <div>
+            <div class="mb-3 flex items-baseline justify-between">
+                <h3 class="text-xl">Siste resultater</h3>
+                <a
+                    href="/kamper?type=spilte"
+                    class="text-sm text-ink-muted hover:underline"
+                >
+                    Alle resultater
+                </a>
+            </div>
+            <FixtureList fixtures={recent} type="completed" />
+        </div>
+    </section>
+
+    <!-- News -->
+    {articles.length > 0 && (
+        <section class="container-content mb-16" aria-labelledby="nyheter">
+            <div class="mb-6 flex items-baseline justify-between">
+                <h2 id="nyheter" class="text-display">
+                    Siste nytt
+                </h2>
+                <a
+                    href="/nyheter"
+                    class="text-sm text-ink-muted hover:underline"
+                >
+                    Alle nyheter
+                </a>
+            </div>
+
+            <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                {lead && <ArticleCard article={lead} featured />}
+                {rest.map((article) => (
+                    <ArticleCard article={article} />
+                ))}
+            </div>
+        </section>
+    )}
+
+    <Grasrot orgNumber={orgNumber} />
+
+    <SponsorGrid sponsors={sponsors} />
+
+    <SiteFooter
+        slot="footer"
+        orgNumber={orgNumber}
+        email={klubb.email ?? null}
+        address={klubb.address ?? null}
+    />
+</Base>

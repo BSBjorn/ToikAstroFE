@@ -1,0 +1,196 @@
+@import 'tailwindcss';
+
+/*
+  TOIK design tokens — a proposal, built to be replaced.
+
+  Everything visual derives from the `--color-brand-*` and `--color-accent-*`
+  scales below. When the club's real colours arrive, change those two ramps
+  and the rest of the site follows: the semantic tokens underneath reference
+  them rather than restating hex values.
+
+  The direction: deep navy as the base (ice-rink dark, serious, prints well on
+  kit), a cold ice-blue for surfaces, and one hot red accent for scores, live
+  state and calls to action. Inclusive and energetic without being loud —
+  the accent earns attention because almost nothing else uses it.
+*/
+
+@theme {
+  /* --- Brand ramp: navy ------------------------------------------------ */
+  --color-brand-50: #eef3f9;
+  --color-brand-100: #d6e2f0;
+  --color-brand-200: #adc4e0;
+  --color-brand-300: #7c9fcb;
+  --color-brand-400: #4a74a8;
+  --color-brand-500: #2b5286;
+  --color-brand-600: #1d3c66;
+  --color-brand-700: #142c4c;
+  --color-brand-800: #0f2138;
+  --color-brand-900: #0a1a2f;
+  --color-brand-950: #061120;
+
+  /* --- Accent ramp: rink red ------------------------------------------- */
+  --color-accent-50: #fdeaee;
+  --color-accent-100: #fbd0d8;
+  --color-accent-200: #f5a3b2;
+  --color-accent-300: #ee6c83;
+  --color-accent-400: #e03a58;
+  --color-accent-500: #c8102e;
+  --color-accent-600: #a60c26;
+  --color-accent-700: #82091e;
+  --color-accent-800: #5e0616;
+  --color-accent-900: #3d040e;
+
+  /* --- Ice: cool neutrals ---------------------------------------------- */
+  --color-ice-50: #f8fafc;
+  --color-ice-100: #eef2f6;
+  --color-ice-200: #dde4ec;
+  --color-ice-300: #c3cedb;
+  --color-ice-400: #94a4b8;
+  --color-ice-500: #64748b;
+  --color-ice-600: #47566b;
+  --color-ice-700: #334154;
+  --color-ice-800: #1f2937;
+  --color-ice-900: #111827;
+
+  /* --- Type ------------------------------------------------------------ */
+  /* Display face carries the club's voice; swap when the profile lands.
+     Both are system-stack fallbacks so nothing blocks first paint. */
+  --font-display: 'Barlow Condensed', 'Arial Narrow', system-ui, sans-serif;
+  --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: ui-monospace, 'SF Mono', Menlo, monospace;
+
+  --text-hero: clamp(2.5rem, 6vw, 4.5rem);
+  --text-hero--line-height: 1.02;
+  --text-hero--letter-spacing: -0.02em;
+  --text-display: clamp(1.75rem, 3.5vw, 2.75rem);
+  --text-display--line-height: 1.1;
+  --text-display--letter-spacing: -0.015em;
+
+  /* --- Shape ------------------------------------------------------------ */
+  --radius-card: 0.75rem;
+  --radius-pill: 999px;
+
+  --shadow-card: 0 1px 2px rgb(10 26 47 / 0.06), 0 8px 24px -12px rgb(10 26 47 / 0.18);
+  --shadow-lift: 0 2px 4px rgb(10 26 47 / 0.08), 0 16px 40px -16px rgb(10 26 47 / 0.28);
+
+  --spacing-gutter: 1rem;
+  --container-content: 72rem;
+}
+
+/*
+  Semantic layer. Components reference these, never the ramps directly, so a
+  dark mode or a rebrand is a change in one place.
+*/
+@theme {
+  --color-surface: var(--color-ice-50);
+  --color-surface-raised: #ffffff;
+  --color-surface-sunken: var(--color-ice-100);
+  --color-surface-invert: var(--color-brand-900);
+
+  --color-ink: var(--color-brand-900);
+  --color-ink-muted: var(--color-ice-600);
+  --color-ink-invert: var(--color-ice-50);
+
+  --color-line: var(--color-ice-200);
+  --color-line-strong: var(--color-ice-300);
+
+  --color-focus: var(--color-brand-400);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --color-surface: var(--color-brand-950);
+    --color-surface-raised: var(--color-brand-900);
+    --color-surface-sunken: var(--color-brand-800);
+    --color-surface-invert: var(--color-ice-50);
+
+    --color-ink: var(--color-ice-50);
+    --color-ink-muted: var(--color-ice-400);
+    --color-ink-invert: var(--color-brand-900);
+
+    --color-line: var(--color-brand-700);
+    --color-line-strong: var(--color-brand-600);
+  }
+}
+
+:root[data-theme='dark'] {
+  --color-surface: var(--color-brand-950);
+  --color-surface-raised: var(--color-brand-900);
+  --color-surface-sunken: var(--color-brand-800);
+  --color-surface-invert: var(--color-ice-50);
+
+  --color-ink: var(--color-ice-50);
+  --color-ink-muted: var(--color-ice-400);
+  --color-ink-invert: var(--color-brand-900);
+
+  --color-line: var(--color-brand-700);
+  --color-line-strong: var(--color-brand-600);
+}
+
+/* --- Base ------------------------------------------------------------- */
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  body {
+    background-color: var(--color-surface);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    letter-spacing: 0.005em;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+  }
+
+  /* Editor-authored rich text from Strapi blocks */
+  .prose-toik :where(p, ul, ol) {
+    margin-block: 1em;
+    line-height: 1.7;
+  }
+  .prose-toik :where(h2, h3) {
+    margin-block: 1.6em 0.5em;
+  }
+  .prose-toik :where(a) {
+    color: var(--color-brand-500);
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+  }
+  .prose-toik :where(img) {
+    border-radius: var(--radius-card);
+  }
+}
+
+@layer components {
+  .container-content {
+    width: 100%;
+    max-width: var(--container-content);
+    margin-inline: auto;
+    padding-inline: var(--spacing-gutter);
+  }
+}

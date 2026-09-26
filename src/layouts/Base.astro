@@ -1,0 +1,87 @@
+---
+/**
+ * Base layout. Sets the document shell, cache headers and metadata.
+ *
+ * Cache-Control is where Astro replaces Nuxt's routeRules: Cloudflare caches
+ * the HTML for `maxAge` and serves stale while revalidating, on top of the
+ * in-process TTL cache around the Strapi calls.
+ */
+import "../styles/main.css";
+
+interface Props {
+    title: string;
+    description?: string;
+    image?: string | null;
+    /** Seconds Cloudflare may cache this page. 0 disables edge caching. */
+    maxAge?: number;
+    noindex?: boolean;
+}
+
+const {
+    title,
+    description,
+    image,
+    maxAge = 300,
+    noindex = false,
+} = Astro.props;
+
+const siteName = "Tønsberg og Omegn Ishockeyklubb";
+const fullTitle = title === siteName ? title : `${title} · TOIK`;
+const canonical = new URL(
+    Astro.url.pathname,
+    Astro.site ?? Astro.url.origin,
+).toString();
+
+if (maxAge > 0) {
+    Astro.response.headers.set(
+        "Cache-Control",
+        `public, max-age=0, s-maxage=${maxAge}, stale-while-revalidate=${maxAge * 4}`,
+    );
+} else {
+    Astro.response.headers.set("Cache-Control", "no-store");
+}
+---
+
+<!doctype html>
+<html lang="no">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>{fullTitle}</title>
+        {description && <meta name="description" content={description} />}
+        <link rel="canonical" href={canonical} />
+        {noindex && <meta name="robots" content="noindex" />}
+
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content={siteName} />
+        <meta property="og:title" content={fullTitle} />
+        {description && (
+            <meta property="og:description" content={description} />
+        )}
+        {image && <meta property="og:image" content={image} />}
+        <meta
+            name="twitter:card"
+            content={image ? "summary_large_image" : "summary"}
+        />
+
+        <meta name="theme-color" content="#0a1a2f" />
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    </head>
+
+    <body class="min-h-dvh bg-surface text-ink antialiased">
+        <a
+            href="#innhold"
+            class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-surface-raised focus:px-4 focus:py-2"
+        >
+            Hopp til innhold
+        </a>
+
+        <slot name="header" />
+
+        <main id="innhold">
+            <slot />
+        </main>
+
+        <slot name="footer" />
+    </body>
+</html>

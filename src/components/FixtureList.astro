@@ -1,0 +1,76 @@
+---
+import type { Fixture } from '../types/strapi';
+import { formatDateShort } from '../lib/strapi';
+
+interface Props {
+  fixtures: Fixture[];
+  type: 'upcoming' | 'completed';
+  /** Shown when there is nothing to list — an empty season is normal in summer. */
+  emptyText?: string;
+}
+
+const { fixtures, type, emptyText } = Astro.props;
+
+const OUTCOME: Record<string, { label: string; class: string }> = {
+  win: { label: 'S', class: 'bg-emerald-600 text-white' },
+  loss: { label: 'T', class: 'bg-accent-600 text-white' },
+  draw: { label: 'U', class: 'bg-ice-400 text-white' },
+};
+---
+
+{
+  fixtures.length === 0 ? (
+    <p class="rounded-card border border-dashed border-line px-4 py-6 text-center text-sm text-ink-muted">
+      {emptyText ?? (type === 'upcoming' ? 'Ingen kamper satt opp ennå.' : 'Ingen spilte kamper ennå.')}
+    </p>
+  ) : (
+    <ul class="divide-y divide-line overflow-hidden rounded-card border border-line bg-surface-raised">
+      {fixtures.map((fixture) => (
+        <li
+          class:list={[
+            'flex items-center gap-4 px-4 py-3',
+            fixture.isHome && 'border-l-2 border-l-brand-500',
+          ]}
+        >
+          <div class="w-20 shrink-0">
+            <p class="text-sm font-semibold tabular-nums">{formatDateShort(fixture.date)}</p>
+            {fixture.time && <p class="text-xs text-ink-muted tabular-nums">{fixture.time}</p>}
+          </div>
+
+          <div class="min-w-0 flex-1">
+            <p class="truncate text-sm">
+              <span class:list={[fixture.isHome && 'font-semibold']}>{fixture.homeTeam}</span>
+              <span class="mx-1.5 text-ink-muted">–</span>
+              <span class:list={[!fixture.isHome && 'font-semibold']}>{fixture.awayTeam}</span>
+            </p>
+            {fixture.venue && (
+              <p class="truncate text-xs text-ink-muted">
+                {fixture.venue}
+                {fixture.isHome && <span class="ml-1 text-brand-500">· Hjemmekamp</span>}
+              </p>
+            )}
+          </div>
+
+          {type === 'completed' && fixture.result && (
+            <div class="flex shrink-0 items-center gap-2">
+              <span class="font-display text-lg tabular-nums">{fixture.result}</span>
+              {fixture.outcome && (
+                <span
+                  class:list={[
+                    'grid size-6 place-items-center rounded-pill text-xs font-bold',
+                    OUTCOME[fixture.outcome]?.class,
+                  ]}
+                  aria-label={
+                    fixture.outcome === 'win' ? 'Seier' : fixture.outcome === 'loss' ? 'Tap' : 'Uavgjort'
+                  }
+                >
+                  {OUTCOME[fixture.outcome]?.label}
+                </span>
+              )}
+            </div>
+          )}
+        </li>
+      ))}
+    </ul>
+  )
+}
