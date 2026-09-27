@@ -22,6 +22,10 @@ const TAGS_BY_MODEL: Record<string, string[]> = {
   player: ['player', 'team'],
   sponsor: ['sponsor'],
   page: ['page'],
+  frontpage: ['frontpage'],
+  club: ['club'],
+  contact: ['contact'],
+  whistleblow: ['whistleblow'],
 };
 
 export const POST: APIRoute = async ({ request }) => {
@@ -44,7 +48,7 @@ export const POST: APIRoute = async ({ request }) => {
   const model = body.model ?? '';
   const tags = TAGS_BY_MODEL[model];
 
-  // Unknown model, or a single type (forside, klubb, kontakt): clear the lot.
+  // Unknown model, or a single type (frontpage, club, contact): clear the lot.
   // The cache is small and refills on the next request, so this is cheap.
   const purged = tags ? purgeTags(tags) : purgeAll();
 

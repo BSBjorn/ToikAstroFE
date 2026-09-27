@@ -4,83 +4,114 @@
  * changes roughly never, and a wrong nav is worse than a slightly stale one.
  * Move it to the `klubb` single type later if the board wants control.
  */
+import type { StrapiMedia } from "../types/strapi";
+import { mediaUrl } from "../lib/strapi";
+
+interface Props {
+    logo: StrapiMedia | null;
+}
+
+const { logo } = Astro.props;
+
 const nav = [
-  { href: '/nyheter', label: 'Nyheter' },
-  { href: '/lag', label: 'Lag' },
-  { href: '/kamper', label: 'Kamper' },
-  { href: '/klubben', label: 'Klubben' },
-  { href: '/kontakt', label: 'Kontakt' },
+    { href: "/nyheter", label: "Nyheter" },
+    { href: "/lag", label: "Lag" },
+    { href: "/kamper", label: "Kamper" },
+    { href: "/klubben", label: "Klubben" },
+    { href: "/kontakt", label: "Kontakt" },
 ];
 
 const path = Astro.url.pathname;
 const isActive = (href: string) => path === href || path.startsWith(`${href}/`);
+
+const logoSrc = logo ? mediaUrl(logo, "thumbnail") : null;
 ---
 
 <header class="sticky top-0 z-40 border-b border-line bg-surface/90 backdrop-blur">
-  <div class="container-content flex h-16 items-center justify-between gap-6">
-    <a href="/" class="flex items-center gap-3 font-display text-lg leading-none">
-      <!-- Placeholder mark until the club logo lands -->
-      <span class="grid size-9 shrink-0 place-items-center rounded-pill bg-brand-900 text-sm font-bold text-white">
-        TOIK
-      </span>
-      <span class="hidden sm:block">
-        Tønsberg og Omegn<br /><span class="text-ink-muted">Ishockeyklubb</span>
-      </span>
-    </a>
+    <div class="container-content flex h-16 items-center justify-between gap-6">
+        <a
+            href="/"
+            class="flex items-center gap-3 font-display text-lg leading-none"
+        >
+            {logoSrc ? (
+                <img src={logoSrc} alt="TOIK logo" class="" />
+            ) : (
+                <span class="grid size-9 shrink-0 place-items-center rounded-pill bg-brand-900 text-sm font-bold text-white">
+                    TOIK
+                </span>
+            )}
+        </a>
 
-    <nav aria-label="Hovedmeny" class="hidden md:block">
-      <ul class="flex items-center gap-1">
-        {
-          nav.map((item) => (
-            <li>
-              <a
-                href={item.href}
-                aria-current={isActive(item.href) ? 'page' : undefined}
-                class:list={[
-                  'rounded-pill px-3 py-2 text-sm font-semibold uppercase tracking-wide transition',
-                  isActive(item.href)
-                    ? 'bg-surface-sunken text-ink'
-                    : 'text-ink-muted hover:bg-surface-sunken hover:text-ink',
-                ]}
-              >
-                {item.label}
-              </a>
-            </li>
-          ))
-        }
-      </ul>
-    </nav>
+        <nav aria-label="Hovedmeny" class="hidden md:block">
+            <ul class="flex items-center gap-1">
+                {nav.map((item) => (
+                    <li>
+                        <a
+                            href={item.href}
+                            aria-current={
+                                isActive(item.href) ? "page" : undefined
+                            }
+                            class:list={[
+                                "rounded-pill px-3 py-2 text-sm font-semibold uppercase tracking-wide transition",
+                                isActive(item.href)
+                                    ? "bg-surface-sunken text-ink"
+                                    : "text-ink-muted hover:bg-surface-sunken hover:text-ink",
+                            ]}
+                        >
+                            {item.label}
+                        </a>
+                    </li>
+                ))}
+            </ul>
+        </nav>
 
-    <!-- No-JS mobile menu: a details element, open state handled by the browser -->
-    <details class="md:hidden [&[open]_svg.close]:block [&[open]_svg.open]:hidden">
-      <summary
-        class="grid size-10 cursor-pointer list-none place-items-center rounded-card border border-line [&::-webkit-details-marker]:hidden"
-        aria-label="Meny"
-      >
-        <svg class="open size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-          <path d="M4 6h16M4 12h16M4 18h16" stroke-linecap="round" />
-        </svg>
-        <svg class="close hidden size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-          <path d="M6 6l12 12M18 6L6 18" stroke-linecap="round" />
-        </svg>
-      </summary>
-      <nav aria-label="Mobilmeny" class="absolute inset-x-0 top-16 border-b border-line bg-surface-raised shadow-card">
-        <ul class="container-content flex flex-col py-2">
-          {
-            nav.map((item) => (
-              <li>
-                <a
-                  href={item.href}
-                  aria-current={isActive(item.href) ? 'page' : undefined}
-                  class="block border-b border-line py-3 font-semibold uppercase tracking-wide last:border-0"
+        <!-- No-JS mobile menu: a details element, open state handled by the browser -->
+        <details class="md:hidden [&[open]_svg.close]:block [&[open]_svg.open]:hidden">
+            <summary
+                class="grid size-10 cursor-pointer list-none place-items-center rounded-card border border-line [&::-webkit-details-marker]:hidden"
+                aria-label="Meny"
+            >
+                <svg
+                    class="open size-5"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    aria-hidden="true"
                 >
-                  {item.label}
-                </a>
-              </li>
-            ))
-          }
-        </ul>
-      </nav>
-    </details>
-  </div>
+                    <path d="M4 6h16M4 12h16M4 18h16" stroke-linecap="round" />
+                </svg>
+                <svg
+                    class="close hidden size-5"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    aria-hidden="true"
+                >
+                    <path d="M6 6l12 12M18 6L6 18" stroke-linecap="round" />
+                </svg>
+            </summary>
+            <nav
+                aria-label="Mobilmeny"
+                class="absolute inset-x-0 top-16 border-b border-line bg-surface-raised shadow-card"
+            >
+                <ul class="container-content flex flex-col py-2">
+                    {nav.map((item) => (
+                        <li>
+                            <a
+                                href={item.href}
+                                aria-current={
+                                    isActive(item.href) ? "page" : undefined
+                                }
+                                class="block border-b border-line py-3 font-semibold uppercase tracking-wide last:border-0"
+                            >
+                                {item.label}
+                            </a>
+                        </li>
+                    ))}
+                </ul>
+            </nav>
+        </details>
+    </div>
 </header>

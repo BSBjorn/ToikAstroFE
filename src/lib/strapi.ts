@@ -32,16 +32,22 @@ const TTL = {
   team: 30 * 60_000,
   sponsor: 60 * 60_000,
   page: 60 * 60_000,
+  frontpage: 5 * 60_000,
+  club: 60 * 60_000,
   fixtures: 2 * 60_000,
 } as const;
 
-type QueryValue = string | number | boolean | undefined | null;
+type QueryValue = string | number | boolean | undefined | null | string[];
 
 function buildQuery(query: Record<string, QueryValue>): string {
   const params = new URLSearchParams();
   for (const [key, value] of Object.entries(query)) {
     if (value === undefined || value === null || value === '') continue;
-    params.set(key, String(value));
+    if (Array.isArray(value)) {
+      for (const v of value) params.append(key, v);
+    } else {
+      params.append(key, String(value));
+    }
   }
   const qs = params.toString();
   return qs ? `?${qs}` : '';
@@ -208,6 +214,33 @@ export async function getPage(slug: string): Promise<Page | null> {
 export async function getSingle<T>(name: string, populate = '*'): Promise<T | null> {
   const res = await get<StrapiResponse<T>>(name, TTL.page, `/api/${name}`, { populate });
   return res.data ?? null;
+}
+
+/** Fetch frontpage with explicit component/media population. */
+export async function getFrontpage(): Promise<StrapiResponse<Frontpage> | null> {
+  return get<StrapiResponse<Frontpage>>(
+    'frontpage',
+    TTL.frontpage,
+    '/api/frontpage',
+    {
+      'populate[hero][populate]': 'image',
+      'populate[pinnedArticle][populate]': ['cover', 'team'],
+      'populate[sections][populate]': '*',
+    }
+  );
+}
+
+/** Fetch club with explicit component/media population. */
+export async function getClub(): Promise<StrapiResponse<Club> | null> {
+  return get<StrapiResponse<Club>>(
+    'club',
+    TTL.club,
+    '/api/club',
+    {
+      'populate[0]': 'logo',
+      'populate[1]': 'socialLinks',
+    }
+  );
 }
 
 // --- Matches -----------------------------------------------------------

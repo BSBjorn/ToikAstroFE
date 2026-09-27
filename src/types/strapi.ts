@@ -145,6 +145,38 @@ export interface Page extends StrapiEntity {
   showInMenu?: boolean;
 }
 
+// --- Single types ------------------------------------------------------
+
+export interface SectionToggle {
+  sectionId: string;
+  title: string;
+  enabled: boolean | null;
+  image: StrapiMedia | null;
+  content: unknown[];
+}
+
+export interface HeroBanner {
+  title: string;
+  subtitle: string | null;
+  image: StrapiMedia | null;
+  ctaText: string | null;
+  ctaLink: string | null;
+}
+
+export interface Frontpage extends StrapiEntity {
+  title: string;
+  hero: HeroBanner | null;
+  pinnedArticle: Article | null;
+  featuredSponsorTier: SponsorTier | null;
+  sections: SectionToggle[];
+}
+
+export interface Club extends StrapiEntity {
+  logo: StrapiMedia | null;
+  socialLinks: components["schemas"]["SharedSocialLinkEntry"][];
+  grasrotandelenOrgNumber: string | null;
+}
+
 // --- Custom match endpoints --------------------------------------------
 
 export type MatchSide = 'home' | 'away';

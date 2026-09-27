@@ -9,7 +9,9 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "types:gen": "openapi-typescript ${STRAPI_URL:-http://localhost:1337}/api/openapi.json -o src/types/generated.ts",
+    "check:contract": "node scripts/check-contract.mjs"
   },
   "dependencies": {
     "@astrojs/node": "^11.1.6",
@@ -23,6 +25,7 @@
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.3.3",
+    "openapi-typescript": "^7.13.0",
     "tailwindcss": "^4.3.3"
   }
 }

@@ -6,7 +6,7 @@
  * failing source — Strapi restarting, the federation API timing out — leaves a
  * gap instead of a 500. A club site that half-renders beats one that doesn't.
  *
- * ADJUST: the `forside` and `klubb` single types are read defensively because
+ * ADJUST: the `frontpage` and `club` single types are read defensively because
  * their field names are yours. Wire the real ones where marked.
  */
 import Base from "../layouts/Base.astro";
@@ -16,30 +16,44 @@ import ArticleCard from "../components/ArticleCard.astro";
 import FixtureList from "../components/FixtureList.astro";
 import SponsorGrid from "../components/SponsorGrid.astro";
 import Grasrot from "../components/Grasrot.astro";
+import RichText from "../components/RichText.astro";
 import LiveMatch from "../components/LiveMatch.vue";
 import {
     getArticles,
+    getClub,
     getFixtures,
-    getSingle,
+    getFrontpage,
     getSponsors,
     mediaAlt,
     mediaUrl,
     publicStrapiUrl,
 } from "../lib/strapi";
-import type { Article, Sponsor, StrapiMedia } from "../types/strapi";
+import type {
+    Article,
+    Frontpage,
+    Sponsor,
+    StrapiMedia,
+    Club,
+} from "../types/strapi";
 
 /** The team whose fixtures lead the front page. */
 const FEATURED_TEAM = import.meta.env.PUBLIC_FEATURED_TEAM_SLUG || "a-lag";
 
-const [articlesRes, upcomingRes, recentRes, sponsorsRes, forsideRes, klubbRes] =
-    await Promise.allSettled([
-        getArticles({ pageSize: 7 }),
-        getFixtures(FEATURED_TEAM, "upcoming", 4),
-        getFixtures(FEATURED_TEAM, "completed", 3),
-        getSponsors(),
-        getSingle<Record<string, any>>("forside"),
-        getSingle<Record<string, any>>("klubb"),
-    ]);
+const [
+    articlesRes,
+    upcomingRes,
+    recentRes,
+    sponsorsRes,
+    frontpageRes,
+    clubRes,
+] = await Promise.allSettled([
+    getArticles({ pageSize: 5 }),
+    getFixtures(FEATURED_TEAM, "upcoming", 4),
+    getFixtures(FEATURED_TEAM, "completed", 3),
+    getSponsors(),
+    getFrontpage(),
+    getClub(),
+]);
 
 const ok = <T,>(result: PromiseSettledResult<T>, fallback: T): T =>
     result.status === "fulfilled" ? result.value : fallback;
@@ -50,52 +64,65 @@ const upcoming = ok(upcomingRes, { data: [], meta: {} } as any).data ?? [];
 const recent = ok(recentRes, { data: [], meta: {} } as any).data ?? [];
 const sponsors: Sponsor[] =
     ok(sponsorsRes, { data: [], meta: {} } as any).data ?? [];
-const forside = ok(forsideRes, null) ?? {};
-const klubb = ok(klubbRes, null) ?? {};
-
+const frontpageRaw = ok(frontpageRes, { data: null } as any);
+const clubRaw = ok(clubRes, { data: null } as any);
+const frontpage: Frontpage = frontpageRaw?.data ?? {};
+const club: Club = clubRaw?.data ?? {};
 // Log what failed — a silently empty front page is hard to debug later
 for (const [name, result] of Object.entries({
     articles: articlesRes,
     upcoming: upcomingRes,
     recent: recentRes,
     sponsors: sponsorsRes,
-    forside: forsideRes,
-    klubb: klubbRes,
+    frontpage: frontpageRes,
+    club: clubRes,
 })) {
     if (result.status === "rejected")
-        console.error(`[forside] ${name}:`, result.reason);
+        console.error(`[frontpage] ${name}:`, result.reason);
 }
 
-// ADJUST: swap these keys for your actual single-type field names
-const heroTitle: string =
-    forside.hero?.title ?? forside.title ?? "Én klubb, mange lag";
-const heroText: string =
-    forside.hero?.text ??
-    forside.intro ??
-    "Ishockey i Tønsberg for alle — fra skøyteskole til A-lag.";
-const heroImage: StrapiMedia | null =
-    forside.hero?.image ?? forside.image ?? null;
-const orgNumber: string | null = klubb.orgNumber ?? klubb.orgnr ?? null;
-
+const heroTitle: string = frontpage.hero?.title ?? frontpage.title ?? "TITLE";
+const heroText: string = frontpage.hero?.subtitle ?? "SUBTITLE";
+const heroImage: StrapiMedia | null = frontpage.hero?.image ?? null;
+const orgNumber: string | null = club.grasrotandelenOrgNumber ?? null;
+const pinnedArticle: Article | null = frontpage.pinnedArticle ?? null;
+console.log(frontpage.hero);
 const [lead, ...rest] = articles;
 const heroSrc = mediaUrl(heroImage, "large");
+
+// Build section map from frontpage sections config
+const sectionMap: Record<string, boolean> = {};
+const sectionData: Record<
+    string,
+    { title: string; content: unknown[]; image: StrapiMedia | null }
+> = {};
+for (const s of frontpage.sections ?? []) {
+    sectionMap[s.sectionId] = s.enabled ?? true;
+    sectionData[s.sectionId] = {
+        title: s.title,
+        content: s.content ?? [],
+        image: (s as any).image ?? null,
+    };
+}
+// Default: show news/sponsors if no sections defined
+sectionMap.news = sectionMap.news ?? true;
+sectionMap.sponsors = sectionMap.sponsors ?? true;
 ---
 
 <Base
-    title="Tønsberg og Omegn Ishockeyklubb"
+    title="Tønsberg og Omegn Ishockeyclub"
     description={heroText}
     image={heroSrc}
     maxAge={300}
 >
-    <SiteHeader slot="header" />
-
+    <SiteHeader slot="header" logo={club.logo} />
     <!-- Hero -->
     <section class="relative isolate overflow-hidden bg-brand-900 text-ink-invert">
         {heroSrc && (
             <img
                 src={heroSrc}
                 alt={mediaAlt(heroImage)}
-                class="absolute inset-0 -z-10 size-full object-cover opacity-35"
+                class="absolute inset-0 -z-10 size-full object-cover opacity-85"
                 fetchpriority="high"
                 decoding="async"
             />
@@ -104,12 +131,21 @@ const heroSrc = mediaUrl(heroImage, "large");
             <h1 class="max-w-3xl text-hero text-white">{heroTitle}</h1>
             <p class="mt-5 max-w-xl text-lg text-ice-200">{heroText}</p>
             <div class="mt-8 flex flex-wrap gap-3">
-                <a
-                    href="/klubben/ny-i-klubben"
-                    class="rounded-pill bg-accent-500 px-6 py-3 font-semibold text-white transition hover:bg-accent-400"
-                >
-                    Bli med i klubben
-                </a>
+                {frontpage.hero?.ctaText && frontpage.hero?.ctaLink ? (
+                    <a
+                        href={frontpage.hero.ctaLink}
+                        class="rounded-pill bg-accent-500 px-6 py-3 font-semibold text-white transition hover:bg-accent-400"
+                    >
+                        {frontpage.hero.ctaText}
+                    </a>
+                ) : (
+                    <a
+                        href="/klubben/ny-i-klubben"
+                        class="rounded-pill bg-accent-500 px-6 py-3 font-semibold text-white transition hover:bg-accent-400"
+                    >
+                        Bli med i klubben
+                    </a>
+                )}
                 <a
                     href="/kamper"
                     class="rounded-pill border border-ice-400/40 px-6 py-3 font-semibold text-white transition hover:bg-white/10"
@@ -124,8 +160,8 @@ const heroSrc = mediaUrl(heroImage, "large");
     Live match. Hydrated on load because it must poll; everything else on this
     page ships zero JavaScript. It renders its own "ingen kamp nå" state, so
     there is nothing to conditionally hide here.
-  -->
-    <section class="container-content -mt-10 mb-14">
+    -->
+    <section class="container-content mt-10 mb-14">
         <LiveMatch client:load strapiUrl={publicStrapiUrl()} />
     </section>
 
@@ -164,7 +200,7 @@ const heroSrc = mediaUrl(heroImage, "large");
     </section>
 
     <!-- News -->
-    {articles.length > 0 && (
+    {sectionMap.news && articles.length > 0 && (
         <section class="container-content mb-16" aria-labelledby="nyheter">
             <div class="mb-6 flex items-baseline justify-between">
                 <h2 id="nyheter" class="text-display">
@@ -179,7 +215,12 @@ const heroSrc = mediaUrl(heroImage, "large");
             </div>
 
             <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {lead && <ArticleCard article={lead} featured />}
+                {pinnedArticle && (
+                    <ArticleCard article={pinnedArticle} featured />
+                )}
+                {lead && !pinnedArticle && (
+                    <ArticleCard article={lead} featured />
+                )}
                 {rest.map((article) => (
                     <ArticleCard article={article} />
                 ))}
@@ -187,14 +228,65 @@ const heroSrc = mediaUrl(heroImage, "large");
         </section>
     )}
 
-    <Grasrot orgNumber={orgNumber} />
+    <!-- Dynamic sections from frontpage config -->
+    {Object.entries(sectionData).map(([id, section], idx) => {
+        if (!sectionMap[id]) return null;
+        const sectionImg = section.image
+            ? mediaUrl(section.image as any, "medium")
+            : null;
+        const imageFirst = idx % 2 === 0;
+        return (
+            <section
+                class="container-content mb-16"
+                aria-labelledby={`section-${id}`}
+            >
+                {sectionImg && (
+                    <div class="flex gap-8">
+                        <div
+                            class:list={[
+                                "overflow-hidden rounded-card w-full lg:w-1/3",
+                                imageFirst ? "lg:order-1" : "lg:order-2",
+                            ]}
+                        >
+                            <img
+                                src={sectionImg}
+                                alt={section.title}
+                                class="size-full object-cover"
+                                loading="lazy"
+                            />
+                        </div>
+                        <div class="lg:w-2/3 order-1">
+                            <h2 id={`section-${id}`} class="text-display">
+                                {section.title}
+                            </h2>
+                            <div class="prose prose-lg mt-6 text-ink">
+                                <RichText nodes={section.content as any} />
+                            </div>
+                        </div>
+                    </div>
+                )}
+                {!sectionImg && (
+                    <div>
+                        <h2 id={`section-${id}`} class="text-display">
+                            {section.title}
+                        </h2>
+                        <div class="prose prose-lg mt-6 text-ink">
+                            <RichText nodes={section.content as any} />
+                        </div>
+                    </div>
+                )}
+            </section>
+        );
+    })}
 
-    <SponsorGrid sponsors={sponsors} />
+    {sectionMap.sponsors && <Grasrot orgNumber={orgNumber} />}
+
+    {sectionMap.sponsors && <SponsorGrid sponsors={sponsors} />}
 
     <SiteFooter
         slot="footer"
         orgNumber={orgNumber}
-        email={klubb.email ?? null}
-        address={klubb.address ?? null}
+        email={null}
+        address={null}
     />
 </Base>
