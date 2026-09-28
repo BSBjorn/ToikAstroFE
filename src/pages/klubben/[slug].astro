@@ -1,0 +1,39 @@
+---
+import Base from '../../layouts/Base.astro';
+import RichText from '../../components/RichText.astro';
+import { getPages } from '../../lib/strapi';
+
+const { slug } = Astro.params;
+const page = await getPages({ slug });
+
+if (!page) {
+  throw Astro.redirect('/');
+}
+
+const children = await getPages({ parent: slug });
+---
+
+<Base title={page.title}>
+  <div class="container-content py-12">
+    <h1 class="text-display">{page.title}</h1>
+
+    {children.length > 0 && (
+      <nav class="mt-6 border-b border-line" aria-label="Undersider">
+        <ul class="flex gap-4 text-sm">
+          {children.map((child) => (
+            <li>
+              <a
+                href={`/klubben/${child.slug}`}
+                class="pb-2 hover:underline underline-offset-4"
+              >
+                {child.title}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    )}
+
+    {page.content && <RichText nodes={page.content} class="mt-8" />}
+  </div>
+</Base>

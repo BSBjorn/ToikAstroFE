@@ -1,0 +1,27 @@
+---
+import Base from '../layouts/Base.astro';
+import FixtureList from '../components/FixtureList.astro';
+import { getFixtures } from '../lib/strapi';
+
+const team = import.meta.env.PUBLIC_FEATURED_TEAM_SLUG || 'a-lag';
+const upcoming = await getFixtures(team, 'upcoming', 10);
+const completed = await getFixtures(team, 'completed', 10);
+---
+
+<Base title="Kamper">
+  <div class="container-content py-12">
+    <h1 class="text-display">Kamper</h1>
+
+    <div class="mt-8 grid gap-12 md:grid-cols-2">
+      <div>
+        <h2 class="text-xl">Kommande kamper</h2>
+        <FixtureList fixtures={upcoming.data} type="upcoming" />
+      </div>
+
+      <div>
+        <h2 class="text-xl">Siste kamper</h2>
+        <FixtureList fixtures={completed.data} type="completed" />
+      </div>
+    </div>
+  </div>
+</Base>

@@ -14,13 +14,15 @@
 import { cached } from './cache';
 import type {
   Article,
+  Contact,
   FixtureResponse,
   Page,
-  Player,
+  Person,
   Sponsor,
   StrapiMedia,
   StrapiResponse,
   Team,
+  Whistleblow,
 } from '../types/strapi';
 
 const PUBLIC_URL = import.meta.env.PUBLIC_STRAPI_URL ?? 'http://localhost:1337';
@@ -35,6 +37,9 @@ const TTL = {
   frontpage: 5 * 60_000,
   club: 60 * 60_000,
   fixtures: 2 * 60_000,
+  contact: 60 * 60_000,
+  whistleblow: 60 * 60_000,
+  person: 60 * 60_000,
 } as const;
 
 type QueryValue = string | number | boolean | undefined | null | string[];
@@ -119,7 +124,6 @@ export async function getArticle(slug: string): Promise<Article | null> {
   const res = await get<StrapiResponse<Article[]>>('article', TTL.article, '/api/articles', {
     'filters[slug][$eq]': slug,
     'populate[cover]': 'true',
-    'populate[body][populate]': '*',
     'populate[team][fields][0]': 'name',
     'populate[team][fields][1]': 'slug',
     'pagination[pageSize]': 1,
@@ -155,7 +159,6 @@ export async function getTeam(slug: string): Promise<Team | null> {
   const res = await get<StrapiResponse<Team[]>>('team', TTL.team, '/api/teams', {
     'filters[slug][$eq]': slug,
     'populate[photo]': 'true',
-    'populate[description][populate]': '*',
     'populate[players][populate][photo]': 'true',
     'populate[players][sort][0]': 'number:asc',
     'pagination[pageSize]': 1,
@@ -199,11 +202,12 @@ export async function getSponsors(tier?: string) {
 export async function getPage(slug: string): Promise<Page | null> {
   const res = await get<StrapiResponse<Page[]>>('page', TTL.page, '/api/pages', {
     'filters[slug][$eq]': slug,
-    'populate[body][populate]': '*',
+    'populate[content][populate]': '*',
     'populate[parent][fields][0]': 'title',
     'populate[parent][fields][1]': 'slug',
     'populate[children][fields][0]': 'title',
     'populate[children][fields][1]': 'slug',
+    'pagination[page]': 1,
     'pagination[pageSize]': 1,
   });
   return res.data[0] ?? null;
@@ -241,6 +245,46 @@ export async function getClub(): Promise<StrapiResponse<Club> | null> {
       'populate[1]': 'socialLinks',
     }
   );
+}
+
+export async function getContact(): Promise<Contact | null> {
+  const res = await get<StrapiResponse<Contact>>('contact', TTL.contact, '/api/contact');
+  return res.data ?? null;
+}
+
+export async function getWhistleblow(): Promise<Whistleblow | null> {
+  const res = await get<StrapiResponse<Whistleblow>>('whistleblow', TTL.whistleblow, '/api/whistleblow');
+  return res.data ?? null;
+}
+
+export async function getPages(options: { slug?: string; parent?: string; menuOnly?: boolean } = {}) {
+  const { slug, parent, menuOnly = false } = options;
+  const query: Record<string, QueryValue> = {
+    'populate[parent][fields][0]': 'title',
+    'populate[parent][fields][1]': 'slug',
+    'populate[children][fields][0]': 'title',
+    'populate[children][fields][1]': 'slug',
+    'sort[0]': 'sortOrder:asc',
+    'pagination[page]': 1,
+    'pagination[pageSize]': 100,
+  };
+  if (slug) query['filters[slug][$eq]'] = slug;
+  if (parent) query['filters[parent][$eq]'] = parent;
+  if (menuOnly) query['filters[showInMenu][$eq]'] = true;
+
+  const res = await get<StrapiResponse<Page[]>>('page', TTL.page, '/api/pages', query);
+  if (slug) return res.data[0] ?? null;
+  return res.data;
+}
+
+export async function getPersons(): Promise<Person[]> {
+  const res = await get<StrapiResponse<Person[]>>('person', TTL.person, '/api/persons', {
+    'populate[photo]': 'true',
+    'sort[0]': 'name:asc',
+    'pagination[page]': 1,
+    'pagination[pageSize]': 100,
+  });
+  return res.data;
 }
 
 // --- Matches -----------------------------------------------------------

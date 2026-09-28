@@ -1,0 +1,18 @@
+---
+import Base from '../layouts/Base.astro';
+import { getWhistleblow } from '../lib/strapi';
+import RichText from '../components/RichText.astro';
+
+const whistleblow = await getWhistleblow();
+
+if (!whistleblow) {
+  throw Astro.redirect('/');
+}
+---
+
+<Base title={whistleblow.title}>
+  <div class="container-content py-12">
+    <h1 class="text-display">{whistleblow.title}</h1>
+    <RichText nodes={whistleblow.content} class="mt-8" />
+  </div>
+</Base>

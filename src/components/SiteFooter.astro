@@ -7,34 +7,6 @@ interface Props {
 
 const { orgNumber, email, address } = Astro.props;
 const year = new Date().getFullYear();
-
-const columns = [
-  {
-    title: 'Klubben',
-    links: [
-      { href: '/klubben/styret', label: 'Styret' },
-      { href: '/klubben/retningslinjer', label: 'Retningslinjer' },
-      { href: '/klubben/historie', label: 'Historie' },
-      { href: '/klubben/politiattest', label: 'Politiattest' },
-    ],
-  },
-  {
-    title: 'Spille hockey',
-    links: [
-      { href: '/klubben/ny-i-klubben', label: 'Ny i klubben' },
-      { href: '/lag/skoyteskole', label: 'Skøyteskole' },
-      { href: '/lag', label: 'Lag og treningsgrupper' },
-    ],
-  },
-  {
-    title: 'Annet',
-    links: [
-      { href: '/sponsorer', label: 'Samarbeidspartnere' },
-      { href: '/kontakt', label: 'Kontakt' },
-      { href: '/varsle', label: 'Varsle om kritikkverdige forhold' },
-    ],
-  },
-];
 ---
 
 <footer class="mt-20 border-t border-line bg-surface-sunken py-12">
@@ -53,22 +25,18 @@ const columns = [
         }
       </div>
 
-      {
-        columns.map((column) => (
-          <nav aria-labelledby={`f-${column.title}`}>
-            <h2 id={`f-${column.title}`} class="text-sm tracking-wide text-ink-muted">
-              {column.title}
-            </h2>
-            <ul class="mt-3 space-y-2 text-sm">
-              {column.links.map((link) => (
-                <li>
-                  <a href={link.href} class="hover:underline underline-offset-2">{link.label}</a>
-                </li>
-              ))}
-            </ul>
-          </nav>
-        ))
-      }
+      <nav aria-label="Hovedlenker" class="grid flex-grow gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        <ul class="space-y-2 text-sm">
+          <li><a href="/lag" class="hover:underline underline-offset-2">Lag og treningsgrupper</a></li>
+          <li><a href="/kamper" class="hover:underline underline-offset-2">Kamper</a></li>
+          <li><a href="/nyheter" class="hover:underline underline-offset-2">Nyheter</a></li>
+        </ul>
+        <ul class="space-y-2 text-sm">
+          <li><a href="/sponsorer" class="hover:underline underline-offset-2">Samarbeidspartnere</a></li>
+          <li><a href="/kontakt" class="hover:underline underline-offset-2">Kontakt</a></li>
+          <li><a href="/varsle" class="hover:underline underline-offset-2">Varsle om kritikkverdige forhold</a></li>
+        </ul>
+      </nav>
     </div>
 
     <div class="mt-10 flex flex-col gap-2 border-t border-line pt-6 text-xs text-ink-muted sm:flex-row sm:justify-between">

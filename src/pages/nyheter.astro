@@ -1,0 +1,19 @@
+---
+import Base from '../layouts/Base.astro';
+import ArticleCard from '../components/ArticleCard.astro';
+import { getArticles } from '../lib/strapi';
+
+const response = await getArticles({ page: 1, pageSize: 24 });
+const articles = response?.data ?? [];
+---
+
+<Base title="Nyheter">
+  <div class="container-content py-12">
+    <h1 class="text-display">Nyheter</h1>
+    <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {articles.map((article) => (
+        <ArticleCard article={article} />
+      ))}
+    </div>
+  </div>
+</Base>

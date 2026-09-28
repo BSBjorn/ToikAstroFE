@@ -132,17 +132,17 @@ export interface Person extends StrapiEntity {
   email: string | null;
   phone: string | null;
   photo: StrapiMedia | null;
-  group: 'styre' | 'sportslig' | 'administrasjon';
+  bio: string | null;
 }
 
 export interface Page extends StrapiEntity {
   title: string;
   slug: string;
-  body: BlockNode[];
-  parent?: Pick<Page, 'id' | 'documentId' | 'title' | 'slug'> | null;
-  children?: Array<Pick<Page, 'id' | 'documentId' | 'title' | 'slug'>>;
-  sortOrder?: number;
-  showInMenu?: boolean;
+  content: BlockNode[] | null;
+  parent?: Pick<Page, 'id' | 'slug' | 'title'> | null;
+  children?: Array<Pick<Page, 'id' | 'slug' | 'title'>>;
+  sortOrder: number;
+  showInMenu: boolean;
 }
 
 // --- Single types ------------------------------------------------------
@@ -175,6 +175,23 @@ export interface Club extends StrapiEntity {
   logo: StrapiMedia | null;
   socialLinks: components["schemas"]["SharedSocialLinkEntry"][];
   grasrotandelenOrgNumber: string | null;
+}
+
+export interface Contact extends StrapiEntity {
+  title: string;
+  address: string;
+  orgNumber: string | null;
+  email: string;
+  phone: string | null;
+  mapCoordinates: components["schemas"]["SharedMapCoordinatesEntry"] | null;
+  contactPersons: Person[];
+}
+
+export interface Whistleblow extends StrapiEntity {
+  title: string;
+  content: BlockNode[];
+  recipients: 'alle' | 'spillere' | 'foreldre' | 'trenere' | 'styre';
+  isActive: boolean | null;
 }
 
 // --- Custom match endpoints --------------------------------------------

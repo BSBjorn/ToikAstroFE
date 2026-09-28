@@ -1,0 +1,61 @@
+---
+import Base from '../../layouts/Base.astro';
+import RichText from '../../components/RichText.astro';
+import { getTeam, mediaUrl, mediaAlt } from '../../lib/strapi';
+
+const { slug } = Astro.params;
+const team = await getTeam(slug);
+
+if (!team) {
+  throw Astro.redirect('/lag');
+}
+
+const photo = mediaUrl(team.photo, 'large');
+---
+
+<Base title={team.name}>
+  <div class="container-content py-12">
+    {photo && (
+      <img
+        src={photo}
+        alt={mediaAlt(team.photo)}
+        width={team.photo?.width ?? undefined}
+        height={team.photo?.height ?? undefined}
+        class="w-full rounded-card"
+      />
+    )}
+    <h1 class="mt-8 text-display">{team.name}</h1>
+
+    {team.description && <RichText nodes={team.description} class="mt-8" />}
+
+    {team.players && team.players.length > 0 && (
+      <div class="mt-12">
+        <h2 class="text-xl">Spillere</h2>
+        <ul class="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {team.players.map((player) => (
+            <li class="flex items-center gap-3 rounded-card border border-line bg-surface-raised p-3">
+              {player.photo && (
+                <img
+                  src={mediaUrl(player.photo, 'small') ?? ''}
+                  alt={mediaAlt(player.photo)}
+                  class="size-12 shrink-0 rounded-full object-cover"
+                />
+              )}
+              <div>
+                <p class="font-semibold">
+                  {player.number && (
+                    <span class="text-brand-500">#{player.number}</span>
+                  )}
+                  <span class="ml-1">{player.name}</span>
+                </p>
+                {player.position && (
+                  <p class="text-xs text-ink-muted">{player.position}</p>
+                )}
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+    )}
+  </div>
+</Base>

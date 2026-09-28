@@ -1,0 +1,34 @@
+---
+import Base from '../../layouts/Base.astro';
+import RichText from '../../components/RichText.astro';
+import { getArticle, mediaUrl, mediaAlt } from '../../lib/strapi';
+
+const { slug } = Astro.params;
+const article = await getArticle(slug);
+
+if (!article) {
+  throw Astro.redirect('/nyheter');
+}
+
+const cover = mediaUrl(article.cover, 'large');
+---
+
+<Base title={article.title} image={cover}>
+  <div class="container-content py-12">
+    {cover && (
+      <img
+        src={cover}
+        alt={mediaAlt(article.cover)}
+        width={article.cover?.width ?? undefined}
+        height={article.cover?.height ?? undefined}
+        class="w-full rounded-card"
+      />
+    )}
+    <h1 class="mt-8 text-display">{article.title}</h1>
+    <div class="mt-2 flex items-center gap-3 text-sm text-ink-muted">
+      <time datetime={article.publishDate}>{article.publishDate}</time>
+      {article.team && <span>{article.team.name}</span>}
+    </div>
+    <RichText nodes={article.body} class="mt-8" />
+  </div>
+</Base>
