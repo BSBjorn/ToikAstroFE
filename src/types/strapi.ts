@@ -172,6 +172,8 @@ export interface Frontpage extends StrapiEntity {
 }
 
 export interface Club extends StrapiEntity {
+  name: string;
+  slogan: string | null;
   logo: StrapiMedia | null;
   socialLinks: components["schemas"]["SharedSocialLinkEntry"][];
   grasrotandelenOrgNumber: string | null;

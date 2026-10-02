@@ -7,6 +7,9 @@
  * in-process TTL cache around the Strapi calls.
  */
 import "../styles/main.css";
+import SiteHeader from "../components/SiteHeader.astro";
+import SiteFooter from "../components/SiteFooter.astro";
+import { getClub } from "../lib/strapi";
 
 interface Props {
     title: string;
@@ -15,6 +18,8 @@ interface Props {
     /** Seconds Cloudflare may cache this page. 0 disables edge caching. */
     maxAge?: number;
     noindex?: boolean;
+    clubName?: string;
+    clubSlogan?: string;
 }
 
 const {
@@ -25,8 +30,14 @@ const {
     noindex = false,
 } = Astro.props;
 
-const siteName = "Tønsberg og Omegn Ishockeyklubb";
-const fullTitle = title === siteName ? title : `${title} · TOIK`;
+/** Fetch club data (TTL-cached). Props override fetched values. */
+const clubRaw = await getClub().catch(() => ({ data: null }));
+const club = clubRaw?.data ?? { name: "Team Name", slogan: "" };
+
+const siteName = Astro.props.clubName ?? club.name;
+const clubSlogan = Astro.props.clubSlogan ?? club.slogan;
+
+const fullTitle = title === siteName ? title : `${title} · ${siteName}`;
 const canonical = new URL(
     Astro.url.pathname,
     Astro.site ?? Astro.url.origin,
@@ -76,12 +87,16 @@ if (maxAge > 0) {
             Hopp til innhold
         </a>
 
-        <slot name="header" />
+        <slot name="header">
+            <SiteHeader logo={club.logo} clubName={siteName} clubSlogan={clubSlogan ?? undefined} />
+        </slot>
 
         <main id="innhold">
             <slot />
         </main>
 
-        <slot name="footer" />
+        <slot name="footer">
+            <SiteFooter orgNumber={club.grasrotandelenOrgNumber} clubName={siteName} clubSlogan={clubSlogan ?? undefined} />
+        </slot>
     </body>
 </html>

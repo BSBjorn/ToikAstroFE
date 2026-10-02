@@ -6,9 +6,11 @@ interface Props {
   orgNumber?: string | null;
   email?: string | null;
   address?: string | null;
+  clubName?: string;
+  clubSlogan?: string | null;
 }
 
-const { orgNumber, email, address } = Astro.props;
+const { orgNumber, email, address, clubName = "Team Name", clubSlogan = "team slogan" } = Astro.props;
 const year = new Date().getFullYear();
 
 const menuPages: Page[] = (await getPages({ menuOnly: true })) ?? [];
@@ -18,8 +20,8 @@ const menuPages: Page[] = (await getPages({ menuOnly: true })) ?? [];
   <div class="container-content">
     <div class="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
       <div>
-        <p class="font-display text-lg">Tønsberg og Omegn Ishockeyklubb</p>
-        <p class="mt-2 text-sm text-ink-muted">Én klubb, mange lag.</p>
+        <p class="font-display text-lg">{clubName}</p>
+        {clubSlogan && <p class="mt-2 text-sm text-ink-muted">{clubSlogan}</p>}
         {address && <p class="mt-4 whitespace-pre-line text-sm text-ink-muted">{address}</p>}
         {
           email && (
@@ -44,7 +46,7 @@ const menuPages: Page[] = (await getPages({ menuOnly: true })) ?? [];
     </div>
 
     <div class="mt-10 flex flex-col gap-2 border-t border-line pt-6 text-xs text-ink-muted sm:flex-row sm:justify-between">
-      <p>&copy; {year} Tønsberg og Omegn Ishockeyklubb</p>
+      <p>&copy; {year} {clubName}</p>
       {orgNumber && <p>Org.nr. {orgNumber}</p>}
     </div>
   </div>

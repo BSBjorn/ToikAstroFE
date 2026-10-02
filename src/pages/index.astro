@@ -10,8 +10,6 @@
  * their field names are yours. Wire the real ones where marked.
  */
 import Base from "../layouts/Base.astro";
-import SiteHeader from "../components/SiteHeader.astro";
-import SiteFooter from "../components/SiteFooter.astro";
 import ArticleCard from "../components/ArticleCard.astro";
 import FixtureList from "../components/FixtureList.astro";
 import SponsorGrid from "../components/SponsorGrid.astro";
@@ -104,12 +102,13 @@ sectionMap.sponsors = sectionMap.sponsors ?? true;
 ---
 
 <Base
-    title="Tønsberg og Omegn Ishockeyclub"
+    title={club.name}
     description={heroText}
     image={heroSrc}
     maxAge={300}
+    clubName={club.name}
+    clubSlogan={club.slogan ?? undefined}
 >
-    <SiteHeader slot="header" logo={club.logo} />
     <!-- Hero -->
     <section class="relative isolate overflow-hidden bg-brand-900 text-ink-invert">
         {heroSrc && (
@@ -278,11 +277,4 @@ sectionMap.sponsors = sectionMap.sponsors ?? true;
     {sectionMap.sponsors && <Grasrot orgNumber={orgNumber} />}
 
     {sectionMap.sponsors && <SponsorGrid sponsors={sponsors} />}
-
-    <SiteFooter
-        slot="footer"
-        orgNumber={orgNumber}
-        email={null}
-        address={null}
-    />
 </Base>
