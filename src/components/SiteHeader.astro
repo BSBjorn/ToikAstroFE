@@ -18,6 +18,7 @@ const {
     clubSlogan = "team slogan",
 } = Astro.props;
 
+// Fetch menu pages flat list
 const menuPages: Page[] = (await getPages({ menuOnly: true })) ?? [];
 const teamsRes = await getTeams().catch(() => null);
 const articlesRes = await getArticles({ pageSize: 1 }).catch(() => null);
@@ -27,15 +28,49 @@ const showNyheter = (articlesRes?.data?.length ?? 0) > 0;
 const path = Astro.url.pathname;
 const isActive = (href: string) => path === href || path.startsWith(`${href}/`);
 
-type MenuItem = { label: string; href: string };
-const menuItems: MenuItem[] = [
-    ...(showNyheter ? [{ label: "Nyheter", href: "/nyheter" }] : []),
-    ...(showLag ? [{ label: "Lag", href: "/lag" }] : []),
-    ...menuPages.map((page) => ({
-        label: page.title,
-        href: `/${page.parent?.slug ? `${page.parent.slug}/${page.slug}` : page.slug}`,
-    })),
-];
+// --- Build menu structure: flat items + dropdowns per parent page ---
+
+interface NavItem { label: string; href: string }
+
+type Group =
+    | { kind: "flat"; item: NavItem }
+    | { kind: "dropdown"; parent: NavItem; children: NavItem[] };
+
+const groups: Group[] = [];
+
+// Flat items first
+if (showNyheter) groups.push({ kind: "flat", item: { label: "Nyheter", href: "/nyheter" } });
+if (showLag) groups.push({ kind: "flat", item: { label: "Lag", href: "/lag" } });
+
+// For each menu page, try to find children by fetching that page as a single
+// entity — the populate[children] on that call gives us the real child list.
+const processedSlugs = new Set<string>();
+
+for (const mp of menuPages) {
+    if (!mp.slug || !mp.title) continue;
+
+    // Skip if already handled as a child somewhere
+    const isChildOfExistingParent = groups.some(
+        (g) => g.kind === "dropdown" && menuPages.some((c) => c.parent?.slug === g.parent.href.split('/').pop() && c.slug === mp.slug),
+    );
+    if (isChildOfExistingParent) continue;
+
+    // Fetch page with children populated — this is the same call that works on /lag/[slug]
+    const single = await getPages({ slug: mp.slug }).catch(() => null);
+    const children = single?.children ?? [];
+
+    const childItems = children
+        .filter((c) => c.showInMenu !== false && c.title)
+        .map((c) => ({ label: c.title, href: `/klubben/${c.slug}` }));
+
+    processedSlugs.add(mp.slug);
+
+    if (childItems.length > 0) {
+        groups.push({ kind: "dropdown", parent: { label: mp.title, href: `/klubben/${mp.slug}` }, children: childItems });
+    } else {
+        groups.push({ kind: "flat", item: { label: mp.title, href: `/klubben/${mp.slug}` } });
+    }
+}
 
 const logoSrc = logo ? mediaUrl(logo, "thumbnail") : null;
 ---
@@ -43,79 +78,80 @@ const logoSrc = logo ? mediaUrl(logo, "thumbnail") : null;
 <header class="sticky top-0 z-40 border-b border-line bg-surface/90 backdrop-blur">
     <div class="container-content flex h-16 items-center justify-between gap-6">
 
-        <a
-            href="/"
-            class="flex items-center gap-3 font-display text-lg leading-none"
-        >
+        <a href="/" class="flex items-center gap-3 font-display text-lg leading-none">
             {logoSrc ? (
                 <img src={logoSrc} alt={`${clubName} logo`} />
             ) : (
-                <span class="grid size-9 shrink-0 place-items-center rounded-pill bg-brand-900 text-sm font-bold text-white">
-                    {clubName}
-                </span>
+                <span class="grid size-9 shrink-0 place-items-center rounded-pill bg-brand-900 text-sm font-bold text-white">{clubName}</span>
             )}
         </a>
 
         <!-- Desktop nav -->
         <nav aria-label="Hovedmeny" class="hidden md:block">
             <ul class="flex items-center gap-1">
-                {menuItems.map((item) => (
-                    <li>
+                {groups.map((group) => (
+                    <li class:list={["relative", group.kind === "dropdown" ? "group/parent" : ""]}>
+                        <!-- Trigger link -->
                         <a
-                            href={item.href}
-                            aria-current={isActive(item.href) ? "page" : undefined}
+                            href={group.kind === "dropdown" ? group.parent.href : group.item.href}
+                            aria-current={isActive(group.kind === "dropdown" ? group.parent.href : group.item.href) ? "page" : undefined}
                             class:list={[
                                 "rounded-pill px-3 py-2 text-sm font-semibold uppercase tracking-wide transition",
-                                isActive(item.href)
+                                isActive(group.kind === "dropdown" ? group.parent.href : group.item.href)
                                     ? "bg-surface-sunken text-ink"
                                     : "text-ink-muted hover:bg-surface-sunken hover:text-ink",
                             ]}
                         >
-                            {item.label}
+                            {group.kind === "dropdown" ? group.parent.label : group.item.label}
+                            <svg class="ml-0.5 size-[13px] shrink-0 transition-transform group-hover/parent:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M6 9l6 6 6-6"/></svg>
                         </a>
+
+                        <!-- Dropdown panel -->
+                        {group.kind === "dropdown" && group.children.length > 0 ? (
+                            <ul class="pointer-events-none absolute left-1/2 top-full mt-2 w-max -translate-x-1/2 rounded-card border border-line bg-surface-raised py-1 shadow-card opacity-0 transition-all duration-200 group-hover:pointer-events-auto group-hover:opacity-100">
+                                {group.children.map((child) => (
+                                    <li>
+                                        <a
+                                            href={child.href}
+                                            aria-current={isActive(child.href) ? "page" : undefined}
+                                            class:list={[
+                                                "block px-4 py-2 text-sm font-semibold uppercase tracking-wide transition",
+                                                isActive(child.href)
+                                                    ? "bg-surface-sunken text-ink"
+                                                    : "text-ink-muted hover:bg-surface-sunken hover:text-ink",
+                                            ]}
+                                        >
+                                            {child.label}
+                                        </a>
+                                    </li>
+                                ))}
+                            </ul>
+                        ) : null}
                     </li>
                 ))}
             </ul>
         </nav>
 
-        <!-- No-JS mobile menu -->
+        <!-- Mobile nav -->
         <details class="md:hidden [&[open]_svg.close]:block [&[open]_svg.open]:hidden">
             <summary class="grid size-10 cursor-pointer items-center justify-center rounded-pill text-ink-muted">
-                <svg
-                    class="open size-5"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    aria-hidden="true"
-                >
-                    <path d="M4 6h16M4 12h16M4 18h16" stroke-linecap="round" />
-                </svg>
-                <svg
-                    class="close hidden size-5"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    aria-hidden="true"
-                >
-                    <path d="M6 6l12 12M18 6L6 18" stroke-linecap="round" />
-                </svg>
+                <svg class="open size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16" stroke-linecap="round"/></svg>
+                <svg class="close hidden size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke-linecap="round"/></svg>
             </summary>
-            <nav
-                aria-label="Mobilmeny"
-                class="absolute inset-x-0 top-16 border-b border-line bg-surface-raised shadow-card"
-            >
+            <nav aria-label="Mobilmeny" class="absolute inset-x-0 top-16 border-b border-line bg-surface-raised shadow-card">
                 <ul class="container-content flex flex-col py-2">
-                    {menuItems.map((item) => (
+                    {groups.map((group) => (
                         <li>
-                            <a
-                                href={item.href}
-                                aria-current={isActive(item.href) ? "page" : undefined}
-                                class="block border-b border-line py-3 font-semibold uppercase tracking-wide last:border-0"
-                            >
-                                {item.label}
-                            </a>
+                            {group.kind === "flat" ? (
+                                <a href={group.item.href} aria-current={isActive(group.item.href) ? "page" : undefined} class="block border-b border-line py-3 font-semibold uppercase tracking-wide last:border-0">{group.item.label}</a>
+                            ) : (
+                                <>
+                                    <span class="border-b border-line py-3 text-sm font-bold uppercase tracking-wide">{group.parent.label}</span>
+                                    {group.children.map((child) => (
+                                        <a href={child.href} aria-current={isActive(child.href) ? "page" : undefined} class="block border-b border-line py-2 pl-4 text-sm uppercase tracking-wide last:border-0 text-ink-muted hover:text-ink">{child.label}</a>
+                                    ))}
+                                </>
+                            )}
                         </li>
                     ))}
                 </ul>

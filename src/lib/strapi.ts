@@ -269,7 +269,7 @@ export async function getPages(options: { slug?: string; parent?: string; menuOn
     'pagination[pageSize]': 100,
   };
   if (slug) query['filters[slug][$eq]'] = slug;
-  if (parent) query['filters[parent][$eq]'] = parent;
+  if (parent) query['filters[parent][slug][$eq]'] = parent;
   if (menuOnly) query['filters[showInMenu][$eq]'] = true;
 
   const res = await get<StrapiResponse<Page[]>>('page', TTL.page, '/api/pages', query);
