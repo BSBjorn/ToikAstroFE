@@ -110,17 +110,18 @@ Match data comes from a custom Strapi endpoint (`/api/matches`) — not a standa
 
 | Route | Source | Notes |
 |-------|--------|-------|
-| `/` | `src/pages/index.astro` | Front page |
-| `/nyheter` | Dynamic — uses `getArticles()` | Article listing |
-| `/nyhem/[slug]` | Dynamic — uses `getArticle(slug)` | Single article |
-| `/lag` | Dynamic — uses `getTeams()` | Team listing |
-| `/lag/[slug]` | Dynamic — uses `getTeam(slug)` | Single team with players |
-| `/kamper` | Dynamic — uses `getFixtures()` | Fixtures/results |
-| `/klubben/*` | Dynamic — uses `getPage(slug)` | Static pages (styre, historie, etc.) |
-| `/sponsorer` | Dynamic — uses `getSponsors()` | Sponsor listing |
-| `/kontakt` | Dynamic — uses `getPage('kontakt')` | Contact page |
+| `/` | `index.astro` | Front page — hero, live match, fixtures, news, sponsors |
+| `/nyheter` | `nyheter.astro` | Article listing |
+| `/nyheter/[slug]` | `nyheter/[slug].astro` | Single article |
+| `/lag` | `lag.astro` | Team listing |
+| `/lag/[slug]` | `lag/[slug].astro` | Single team with players |
+| `/kamper` | `kamper.astro` | Fixtures/results |
+| `/klubben/[slug]` | `klubben/[slug].astro` | Static pages (styre, historie, etc.) |
+| `/sponsorer` | `sponsorer.astro` | Sponsor listing |
+| `/kontakt` | `kontakt.astro` | Contact page |
+| `/varsle` | `varsle.astro` | Alert/notification banner — uses POST revalidate for updates |
 
-The exact route structure depends on Astro file conventions and any dynamic routes not yet created.
+Routes map directly from `src/pages/` file paths (Astro conventions). No other dynamic routes exist.
 
 ## Coding Conventions
 

@@ -803,7 +803,7 @@ export interface components {
             updatedAt?: string;
             /**
              * @description A datetime field
-             * @default 2026-09-28T18:58:22.198Z
+             * @default 2026-10-02T06:40:54.125Z
              */
             publishedAt: string;
             related: unknown;
@@ -842,7 +842,7 @@ export interface components {
             updatedAt?: string;
             /**
              * @description A datetime field
-             * @default 2026-09-28T18:58:22.202Z
+             * @default 2026-10-02T06:40:54.129Z
              */
             publishedAt: string;
             /** @description A media field */
@@ -893,7 +893,7 @@ export interface components {
             updatedAt?: string;
             /**
              * @description A datetime field
-             * @default 2026-09-28T18:58:22.205Z
+             * @default 2026-10-02T06:40:54.133Z
              */
             publishedAt: string;
             /** @description A media field */
@@ -943,7 +943,7 @@ export interface components {
             updatedAt?: string;
             /**
              * @description A datetime field
-             * @default 2026-09-28T18:58:22.201Z
+             * @default 2026-10-02T06:40:54.127Z
              */
             publishedAt: string;
             /** @description A media field */
@@ -1078,7 +1078,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-09-28T18:58:22.193Z
+                             * @default 2026-10-02T06:40:54.120Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -1166,7 +1166,7 @@ export interface operations {
                         category: "nyhet" | "kampreferat" | "informasjon";
                         /**
                          * @description A datetime field
-                         * @default 2026-09-28T18:58:34.898Z
+                         * @default 2026-10-02T06:45:42.999Z
                          */
                         publishedAt: string;
                         /** @description A media field */
@@ -1222,7 +1222,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-09-28T18:58:22.211Z
+                             * @default 2026-10-02T06:40:54.139Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -1336,7 +1336,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-09-28T18:58:22.208Z
+                             * @default 2026-10-02T06:40:54.136Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -1426,7 +1426,7 @@ export interface operations {
                         category?: "nyhet" | "kampreferat" | "informasjon";
                         /**
                          * @description A datetime field
-                         * @default 2026-09-28T18:58:34.940Z
+                         * @default 2026-10-02T06:45:43.041Z
                          */
                         publishedAt?: string;
                         /** @description A media field */
@@ -1482,7 +1482,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-09-28T18:58:22.214Z
+                             * @default 2026-10-02T06:40:54.141Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -1591,7 +1591,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-09-28T18:58:22.216Z
+                             * @default 2026-10-02T06:40:54.143Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -1677,7 +1677,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-09-28T18:58:22.222Z
+                             * @default 2026-10-02T06:40:54.147Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -1744,7 +1744,7 @@ export interface operations {
                     data: {
                         /**
                          * @description A datetime field
-                         * @default 2026-09-28T18:58:34.985Z
+                         * @default 2026-10-02T06:45:43.082Z
                          */
                         publishedAt?: string;
                         /** @description A media field */
@@ -1776,7 +1776,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-09-28T18:58:22.224Z
+                             * @default 2026-10-02T06:40:54.149Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -1859,7 +1859,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-09-28T18:58:22.225Z
+                             * @default 2026-10-02T06:40:54.150Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -1958,7 +1958,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-09-28T18:58:22.228Z
+                             * @default 2026-10-02T06:40:54.153Z
                              */
                             publishedAt: string;
                             /** @description A component field */
@@ -2036,7 +2036,7 @@ export interface operations {
                         phone?: string;
                         /**
                          * @description A datetime field
-                         * @default 2026-09-28T18:58:35.026Z
+                         * @default 2026-10-02T06:45:43.119Z
                          */
                         publishedAt?: string;
                         /** @description A component field */
@@ -2079,7 +2079,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-09-28T18:58:22.230Z
+                             * @default 2026-10-02T06:40:54.155Z
                              */
                             publishedAt: string;
                             /** @description A component field */
@@ -2173,7 +2173,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-09-28T18:58:22.231Z
+                             * @default 2026-10-02T06:40:54.156Z
                              */
                             publishedAt: string;
                             /** @description A component field */
@@ -2264,7 +2264,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-09-28T18:58:22.233Z
+                             * @default 2026-10-02T06:40:54.159Z
                              */
                             publishedAt: string;
                             /** @description A component field */
@@ -2340,7 +2340,7 @@ export interface operations {
                         featuredSponsorTier?: "hoved" | "partner" | "stotte";
                         /**
                          * @description A datetime field
-                         * @default 2026-09-28T18:58:35.066Z
+                         * @default 2026-10-02T06:45:43.156Z
                          */
                         publishedAt?: string;
                         /** @description A component field */
@@ -2384,7 +2384,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-09-28T18:58:22.236Z
+                             * @default 2026-10-02T06:40:54.164Z
                              */
                             publishedAt: string;
                             /** @description A component field */
@@ -2476,7 +2476,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-09-28T18:58:22.237Z
+                             * @default 2026-10-02T06:40:54.166Z
                              */
                             publishedAt: string;
                             /** @description A component field */
@@ -2772,7 +2772,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-09-28T18:58:22.240Z
+                             * @default 2026-10-02T06:40:54.169Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -2850,7 +2850,7 @@ export interface operations {
                         bio?: string;
                         /**
                          * @description A datetime field
-                         * @default 2026-09-28T18:58:35.114Z
+                         * @default 2026-10-02T06:45:43.204Z
                          */
                         publishedAt: string;
                         /** @description A media field */
@@ -2893,7 +2893,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-09-28T18:58:22.247Z
+                             * @default 2026-10-02T06:40:54.172Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -2997,7 +2997,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-09-28T18:58:22.242Z
+                             * @default 2026-10-02T06:40:54.171Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -3077,7 +3077,7 @@ export interface operations {
                         bio?: string;
                         /**
                          * @description A datetime field
-                         * @default 2026-09-28T18:58:35.149Z
+                         * @default 2026-10-02T06:45:43.234Z
                          */
                         publishedAt?: string;
                         /** @description A media field */
@@ -3120,7 +3120,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-09-28T18:58:22.248Z
+                             * @default 2026-10-02T06:40:54.174Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -3219,7 +3219,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-09-28T18:58:22.250Z
+                             * @default 2026-10-02T06:40:54.175Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -3333,7 +3333,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-09-28T18:58:22.253Z
+                             * @default 2026-10-02T06:40:54.178Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -3417,7 +3417,7 @@ export interface operations {
                         sortOrder: number;
                         /**
                          * @description A datetime field
-                         * @default 2026-09-28T18:58:35.203Z
+                         * @default 2026-10-02T06:45:43.280Z
                          */
                         publishedAt: string;
                         /** @description A media field */
@@ -3466,7 +3466,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-09-28T18:58:22.257Z
+                             * @default 2026-10-02T06:40:54.182Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -3576,7 +3576,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-09-28T18:58:22.255Z
+                             * @default 2026-10-02T06:40:54.180Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -3662,7 +3662,7 @@ export interface operations {
                         sortOrder?: number;
                         /**
                          * @description A datetime field
-                         * @default 2026-09-28T18:58:35.239Z
+                         * @default 2026-10-02T06:45:43.310Z
                          */
                         publishedAt?: string;
                         /** @description A media field */
@@ -3711,7 +3711,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-09-28T18:58:22.259Z
+                             * @default 2026-10-02T06:40:54.184Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -3816,7 +3816,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-09-28T18:58:22.261Z
+                             * @default 2026-10-02T06:40:54.189Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -3940,7 +3940,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-09-28T18:58:22.264Z
+                             * @default 2026-10-02T06:40:54.192Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -4038,7 +4038,7 @@ export interface operations {
                         sortOrder: number;
                         /**
                          * @description A datetime field
-                         * @default 2026-09-28T18:58:35.290Z
+                         * @default 2026-10-02T06:45:43.356Z
                          */
                         publishedAt: string;
                         /** @description A media field */
@@ -4101,7 +4101,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-09-28T18:58:22.272Z
+                             * @default 2026-10-02T06:40:54.197Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -4225,7 +4225,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-09-28T18:58:22.267Z
+                             * @default 2026-10-02T06:40:54.194Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -4325,7 +4325,7 @@ export interface operations {
                         sortOrder?: number;
                         /**
                          * @description A datetime field
-                         * @default 2026-09-28T18:58:35.326Z
+                         * @default 2026-10-02T06:45:43.389Z
                          */
                         publishedAt?: string;
                         /** @description A media field */
@@ -4388,7 +4388,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-09-28T18:58:22.275Z
+                             * @default 2026-10-02T06:40:54.199Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -4507,7 +4507,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-09-28T18:58:22.277Z
+                             * @default 2026-10-02T06:40:54.201Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -4609,7 +4609,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-09-28T18:58:22.280Z
+                             * @default 2026-10-02T06:40:54.204Z
                              */
                             publishedAt: string;
                         };
@@ -4686,7 +4686,7 @@ export interface operations {
                         isActive?: ("0" | "1" | "t" | "true" | "f" | "false") | null;
                         /**
                          * @description A datetime field
-                         * @default 2026-09-28T18:58:35.370Z
+                         * @default 2026-10-02T06:45:43.430Z
                          */
                         publishedAt?: string;
                     };
@@ -4728,7 +4728,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-09-28T18:58:22.281Z
+                             * @default 2026-10-02T06:40:54.206Z
                              */
                             publishedAt: string;
                         };
@@ -4821,7 +4821,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-09-28T18:58:22.282Z
+                             * @default 2026-10-02T06:40:54.207Z
                              */
                             publishedAt: string;
                         };
