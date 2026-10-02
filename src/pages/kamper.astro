@@ -1,11 +1,16 @@
 ---
 import Base from '../layouts/Base.astro';
 import FixtureList from '../components/FixtureList.astro';
+import type { Fixture } from '../types/strapi';
 import { getFixtures } from '../lib/strapi';
 
 const team = import.meta.env.PUBLIC_FEATURED_TEAM_SLUG || 'a-lag';
-const upcoming = await getFixtures(team, 'upcoming', 10);
-const completed = await getFixtures(team, 'completed', 10);
+
+let upcoming: { data: Fixture[] } = { data: [] };
+let completed: { data: Fixture[] } = { data: [] };
+
+try { upcoming = await getFixtures(team, 'upcoming', 10); } catch {}
+try { completed = await getFixtures(team, 'completed', 10); } catch {}
 ---
 
 <Base title="Kamper">

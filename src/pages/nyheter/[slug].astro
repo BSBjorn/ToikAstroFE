@@ -4,31 +4,37 @@ import RichText from '../../components/RichText.astro';
 import { getArticle, mediaUrl, mediaAlt } from '../../lib/strapi';
 
 const { slug } = Astro.params;
-const article = await getArticle(slug);
-
-if (!article) {
-  throw Astro.redirect('/nyheter');
-}
-
-const cover = mediaUrl(article.cover, 'large');
+const article = await getArticle(slug).catch(() => null);
 ---
 
-<Base title={article.title} image={cover}>
-  <div class="container-content py-12">
-    {cover && (
-      <img
-        src={cover}
-        alt={mediaAlt(article.cover)}
-        width={article.cover?.width ?? undefined}
-        height={article.cover?.height ?? undefined}
-        class="w-full rounded-card"
-      />
-    )}
-    <h1 class="mt-8 text-display">{article.title}</h1>
-    <div class="mt-2 flex items-center gap-3 text-sm text-ink-muted">
-      <time datetime={article.publishDate}>{article.publishDate}</time>
-      {article.team && <span>{article.team.name}</span>}
+{article ? (
+  <Base title={article.title} image={mediaUrl(article.cover, 'large')}>
+    <div class="container-content py-12">
+      {article.cover && (
+        <img
+          src={mediaUrl(article.cover, 'large')}
+          alt={mediaAlt(article.cover)}
+          width={article.cover?.width ?? undefined}
+          height={article.cover?.height ?? undefined}
+          class="w-full rounded-card"
+        />
+      )}
+      <h1 class="mt-8 text-display">{article.title}</h1>
+      <div class="mt-2 flex items-center gap-3 text-sm text-ink-muted">
+        <time datetime={article.publishDate}>{article.publishDate}</time>
+        {article.team && <span>{article.team.name}</span>}
+      </div>
+      <RichText nodes={article.body} class="mt-8" />
     </div>
-    <RichText nodes={article.body} class="mt-8" />
-  </div>
-</Base>
+  </Base>
+) : (
+  <Base title="Siden ble ikke funnet" maxAge={0}>
+    <div class="container-content flex min-h-[60vh] flex-col items-center justify-center py-20 text-center">
+      <p class="font-display text-8xl font-bold text-brand-900">404</p>
+      <h1 class="mt-4 text-display">Siden ble ikke funnet</h1>
+      <p class="mt-3 max-w-md text-lg text-ink-muted">
+        Denne artikkelen finnes ikke.
+      </p>
+    </div>
+  </Base>
+)}

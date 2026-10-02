@@ -39,47 +39,41 @@ import type {
 /** The team whose fixtures lead the front page. */
 const FEATURED_TEAM = import.meta.env.PUBLIC_FEATURED_TEAM_SLUG || "a-lag";
 
-const [
-    articlesRes,
-    upcomingRes,
-    recentRes,
-    sponsorsRes,
-    frontpageRes,
-    clubRes,
-] = await Promise.allSettled([
-    getArticles({ pageSize: 5 }),
-    getFixtures(FEATURED_TEAM, "upcoming", 4),
-    getFixtures(FEATURED_TEAM, "completed", 3),
-    getSponsors(),
-    getFrontpage(),
-    getClub(),
-]);
+let articles: Article[] = [];
+let upcoming: Fixture[] = [];
+let recent: Fixture[] = [];
+let sponsors: Sponsor[] = [];
+let frontpageRaw: { data: Frontpage | null } = { data: null };
+let clubRaw: { data: Club | null } = { data: null };
 
-const ok = <T,>(result: PromiseSettledResult<T>, fallback: T): T =>
-    result.status === "fulfilled" ? result.value : fallback;
+try {
+    [articles, upcoming, recent, sponsors, frontpageRaw, clubRaw] =
+        await Promise.all([
+            getArticles({ pageSize: 5 }).then(
+                (r) => r.data ?? [],
+                () => [],
+            ),
+            getFixtures(FEATURED_TEAM, "upcoming", 4).then(
+                (r) => r.data ?? [],
+                () => [],
+            ),
+            getFixtures(FEATURED_TEAM, "completed", 3).then(
+                (r) => r.data ?? [],
+                () => [],
+            ),
+            getSponsors().then(
+                (r) => r.data ?? [],
+                () => [],
+            ),
+            getFrontpage().catch(() => ({ data: null })),
+            getClub().catch(() => ({ data: null })),
+        ]);
+} catch {
+    /* should not happen — every item has fallbacks */
+}
 
-const articles: Article[] =
-    ok(articlesRes, { data: [], meta: {} } as any).data ?? [];
-const upcoming = ok(upcomingRes, { data: [], meta: {} } as any).data ?? [];
-const recent = ok(recentRes, { data: [], meta: {} } as any).data ?? [];
-const sponsors: Sponsor[] =
-    ok(sponsorsRes, { data: [], meta: {} } as any).data ?? [];
-const frontpageRaw = ok(frontpageRes, { data: null } as any);
-const clubRaw = ok(clubRes, { data: null } as any);
 const frontpage: Frontpage = frontpageRaw?.data ?? {};
 const club: Club = clubRaw?.data ?? {};
-// Log what failed — a silently empty front page is hard to debug later
-for (const [name, result] of Object.entries({
-    articles: articlesRes,
-    upcoming: upcomingRes,
-    recent: recentRes,
-    sponsors: sponsorsRes,
-    frontpage: frontpageRes,
-    club: clubRes,
-})) {
-    if (result.status === "rejected")
-        console.error(`[frontpage] ${name}:`, result.reason);
-}
 
 const heroTitle: string = frontpage.hero?.title ?? frontpage.title ?? "TITLE";
 const heroText: string = frontpage.hero?.subtitle ?? "SUBTITLE";
@@ -165,39 +159,41 @@ sectionMap.sponsors = sectionMap.sponsors ?? true;
         <LiveMatch client:load strapiUrl={publicStrapiUrl()} />
     </section>
 
-    <!-- Matches -->
-    <section
-        class="container-content mb-16 grid gap-8 lg:grid-cols-2"
-        aria-labelledby="kamper"
-    >
-        <h2 id="kamper" class="sr-only">
-            Kamper
-        </h2>
-        <div>
-            <div class="mb-3 flex items-baseline justify-between">
-                <h3 class="text-xl">Neste kamper</h3>
-                <a
-                    href="/kamper"
-                    class="text-sm text-ink-muted hover:underline"
-                >
-                    Hele terminlisten
-                </a>
+    {/* Matches section hidden when no teams/fixtures configured yet */}
+    {(upcoming.length > 0 || recent.length > 0) && (
+        <section
+            class="container-content mb-16 grid gap-8 lg:grid-cols-2"
+            aria-labelledby="kamper"
+        >
+            <h2 id="kamper" class="sr-only">
+                Kamper
+            </h2>
+            <div>
+                <div class="mb-3 flex items-baseline justify-between">
+                    <h3 class="text-xl">Neste kamper</h3>
+                    <a
+                        href="/kamper"
+                        class="text-sm text-ink-muted hover:underline"
+                    >
+                        Hele terminlisten
+                    </a>
+                </div>
+                <FixtureList fixtures={upcoming} type="upcoming" />
             </div>
-            <FixtureList fixtures={upcoming} type="upcoming" />
-        </div>
-        <div>
-            <div class="mb-3 flex items-baseline justify-between">
-                <h3 class="text-xl">Siste resultater</h3>
-                <a
-                    href="/kamper?type=spilte"
-                    class="text-sm text-ink-muted hover:underline"
-                >
-                    Alle resultater
-                </a>
+            <div>
+                <div class="mb-3 flex items-baseline justify-between">
+                    <h3 class="text-xl">Siste resultater</h3>
+                    <a
+                        href="/kamper?type=spilte"
+                        class="text-sm text-ink-muted hover:underline"
+                    >
+                        Alle resultater
+                    </a>
+                </div>
+                <FixtureList fixtures={recent} type="completed" />
             </div>
-            <FixtureList fixtures={recent} type="completed" />
-        </div>
-    </section>
+        </section>
+    )}
 
     <!-- News -->
     {sectionMap.news && articles.length > 0 && (

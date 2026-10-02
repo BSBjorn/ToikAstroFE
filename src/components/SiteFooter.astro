@@ -1,4 +1,7 @@
 ---
+import type { Page } from '../types/strapi';
+import { getPages } from '../lib/strapi';
+
 interface Props {
   orgNumber?: string | null;
   email?: string | null;
@@ -7,6 +10,8 @@ interface Props {
 
 const { orgNumber, email, address } = Astro.props;
 const year = new Date().getFullYear();
+
+const menuPages: Page[] = (await getPages({ menuOnly: true })) ?? [];
 ---
 
 <footer class="mt-20 border-t border-line bg-surface-sunken py-12">
@@ -27,14 +32,13 @@ const year = new Date().getFullYear();
 
       <nav aria-label="Hovedlenker" class="grid flex-grow gap-8 sm:grid-cols-2 lg:grid-cols-3">
         <ul class="space-y-2 text-sm">
-          <li><a href="/lag" class="hover:underline underline-offset-2">Lag og treningsgrupper</a></li>
-          <li><a href="/kamper" class="hover:underline underline-offset-2">Kamper</a></li>
-          <li><a href="/nyheter" class="hover:underline underline-offset-2">Nyheter</a></li>
-        </ul>
-        <ul class="space-y-2 text-sm">
-          <li><a href="/sponsorer" class="hover:underline underline-offset-2">Samarbeidspartnere</a></li>
-          <li><a href="/kontakt" class="hover:underline underline-offset-2">Kontakt</a></li>
-          <li><a href="/varsle" class="hover:underline underline-offset-2">Varsle om kritikkverdige forhold</a></li>
+          {menuPages.filter((p) => !p.parent).map((page) => (
+            <li>
+              <a href={`/${page.slug}`} class="hover:underline underline-offset-2">
+                {page.title}
+              </a>
+            </li>
+          ))}
         </ul>
       </nav>
     </div>

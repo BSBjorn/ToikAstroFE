@@ -1,0 +1,31 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base title="Siden ble ikke funnet" maxAge={0}>
+  <div class="container-content flex min-h-[60vh] flex-col items-center justify-center py-20 text-center">
+    <p class="font-display text-8xl font-bold text-brand-900">404</p>
+    <h1 class="mt-4 text-display">Siden ble ikke funnet</h1>
+    <p class="mt-3 max-w-md text-lg text-ink-muted">
+      Denne siden finnes ikke, eller veien dit er stengt. Sjekk URL-en og prøv igjen.
+    </p>
+    <a
+      href="/"
+      class="mt-8 rounded-pill bg-brand-900 px-6 py-3 font-semibold text-white transition hover:bg-brand-800"
+    >
+      Tilbake til forsiden
+    </a>
+
+    <div class="mt-12 grid gap-4 sm:grid-cols-3">
+      <a href="/nyheter" class="rounded-card border border-line bg-surface-raised p-4 text-sm text-ink-muted hover:border-brand-900 hover:text-ink">
+        Nyheter →
+      </a>
+      <a href="/lag" class="rounded-card border border-line bg-surface-raised p-4 text-sm text-ink-muted hover:border-brand-900 hover:text-ink">
+        Lag →
+      </a>
+      <a href="/kamper" class="rounded-card border border-line bg-surface-raised p-4 text-sm text-ink-muted hover:border-brand-900 hover:text-ink">
+        Kamper →
+      </a>
+    </div>
+  </div>
+</Base>
