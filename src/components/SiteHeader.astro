@@ -1,11 +1,10 @@
 ---
 /**
- * Site header. Navigation is driven by Pages where `showInMenu` is true —
- * editors add/remove menu items directly in Strapi.
+ * Site header. Navigation driven by Pages (Strapi) plus dynamic "Nyheter" and
+ * "Lag" items that appear only when entries exist in those collections.
  */
 import type { Page, StrapiMedia } from "../types/strapi";
-import { mediaUrl } from "../lib/strapi";
-import { getPages } from "../lib/strapi";
+import { getArticles, getPages, getTeams, mediaUrl } from "../lib/strapi";
 
 interface Props {
     logo: StrapiMedia | null;
@@ -19,16 +18,31 @@ const {
     clubSlogan = "team slogan",
 } = Astro.props;
 
-const menuPages: Page[] = (await getPages({ menuOnly: true })) ?? null;
+const menuPages: Page[] = (await getPages({ menuOnly: true })) ?? [];
+const teamsRes = await getTeams().catch(() => null);
+const articlesRes = await getArticles({ pageSize: 1 }).catch(() => null);
+const showLag = (teamsRes?.data?.length ?? 0) > 0;
+const showNyheter = (articlesRes?.data?.length ?? 0) > 0;
 
 const path = Astro.url.pathname;
 const isActive = (href: string) => path === href || path.startsWith(`${href}/`);
+
+type MenuItem = { label: string; href: string };
+const menuItems: MenuItem[] = [
+    ...(showNyheter ? [{ label: "Nyheter", href: "/nyheter" }] : []),
+    ...(showLag ? [{ label: "Lag", href: "/lag" }] : []),
+    ...menuPages.map((page) => ({
+        label: page.title,
+        href: `/${page.parent?.slug ? `${page.parent.slug}/${page.slug}` : page.slug}`,
+    })),
+];
 
 const logoSrc = logo ? mediaUrl(logo, "thumbnail") : null;
 ---
 
 <header class="sticky top-0 z-40 border-b border-line bg-surface/90 backdrop-blur">
     <div class="container-content flex h-16 items-center justify-between gap-6">
+
         <a
             href="/"
             class="flex items-center gap-3 font-display text-lg leading-none"
@@ -42,36 +56,29 @@ const logoSrc = logo ? mediaUrl(logo, "thumbnail") : null;
             )}
         </a>
 
+        <!-- Desktop nav -->
         <nav aria-label="Hovedmeny" class="hidden md:block">
             <ul class="flex items-center gap-1">
-                {menuPages.map((page) => (
+                {menuItems.map((item) => (
                     <li>
                         <a
-                            href={`/${page.parent?.slug ? `${page.parent.slug}/${page.slug}` : page.slug}`}
-                            aria-current={
-                                isActive(
-                                    `/${page.parent?.slug ? `${page.parent.slug}/${page.slug}` : page.slug}`,
-                                )
-                                    ? "page"
-                                    : undefined
-                            }
+                            href={item.href}
+                            aria-current={isActive(item.href) ? "page" : undefined}
                             class:list={[
                                 "rounded-pill px-3 py-2 text-sm font-semibold uppercase tracking-wide transition",
-                                isActive(
-                                    `/${page.parent?.slug ? `${page.parent.slug}/${page.slug}` : page.slug}`,
-                                )
+                                isActive(item.href)
                                     ? "bg-surface-sunken text-ink"
                                     : "text-ink-muted hover:bg-surface-sunken hover:text-ink",
                             ]}
                         >
-                            {page.title}
+                            {item.label}
                         </a>
                     </li>
                 ))}
             </ul>
         </nav>
 
-        <!-- No-JS mobile menu: details element, open state handled by browser -->
+        <!-- No-JS mobile menu -->
         <details class="md:hidden [&[open]_svg.close]:block [&[open]_svg.open]:hidden">
             <summary class="grid size-10 cursor-pointer items-center justify-center rounded-pill text-ink-muted">
                 <svg
@@ -100,20 +107,14 @@ const logoSrc = logo ? mediaUrl(logo, "thumbnail") : null;
                 class="absolute inset-x-0 top-16 border-b border-line bg-surface-raised shadow-card"
             >
                 <ul class="container-content flex flex-col py-2">
-                    {menuPages.map((page) => (
+                    {menuItems.map((item) => (
                         <li>
                             <a
-                                href={`/${page.parent?.slug ? `${page.parent.slug}/${page.slug}` : page.slug}`}
-                                aria-current={
-                                    isActive(
-                                        `/${page.parent?.slug ? `${page.parent.slug}/${page.slug}` : page.slug}`,
-                                    )
-                                        ? "page"
-                                        : undefined
-                                }
+                                href={item.href}
+                                aria-current={isActive(item.href) ? "page" : undefined}
                                 class="block border-b border-line py-3 font-semibold uppercase tracking-wide last:border-0"
                             >
-                                {page.title}
+                                {item.label}
                             </a>
                         </li>
                     ))}
