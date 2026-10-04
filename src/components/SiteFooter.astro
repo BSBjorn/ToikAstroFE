@@ -1,6 +1,6 @@
 ---
-import type { Page } from '../types/strapi';
-import { getPages } from '../lib/strapi';
+import type { StrapiMedia } from '../types/strapi';
+import { getPageTree } from '../lib/strapi';
 
 interface Props {
   orgNumber?: string | null;
@@ -13,7 +13,24 @@ interface Props {
 const { orgNumber, email, address, clubName = "Team Name", clubSlogan = "team slogan" } = Astro.props;
 const year = new Date().getFullYear();
 
-const menuPages: Page[] = (await getPages({ menuOnly: true })) ?? [];
+// Pages with proper parent→children hierarchy from custom endpoint
+const tree = await getPageTree().catch(() => []);
+
+// Flatten tree to list of all menu pages for footer links
+const buildFlatLinks = (nodes: import('../lib/strapi').TreeNode[]): Array<{ title: string; slug: string }> => {
+    const result: Array<{ title: string; slug: string }> = [];
+    for (const node of nodes) {
+        if (node.showInMenu !== false && node.title) {
+            result.push({ title: node.title, slug: node.slug });
+        }
+        for (const child of (node.children ?? [])) {
+            if (child.showInMenu !== false && child.title) {
+                result.push({ title: child.title, slug: child.slug });
+            }
+        }
+    }
+    return result;
+};
 ---
 
 <footer class="mt-20 border-t border-line bg-surface-sunken py-12">
@@ -32,11 +49,11 @@ const menuPages: Page[] = (await getPages({ menuOnly: true })) ?? [];
         }
       </div>
 
-      <nav aria-label="Hovedlenker" class="grid flex-grow gap-8 sm:grid-cols-2 lg:grid-cols-3">
-        <ul class="space-y-2 text-sm">
-          {menuPages.filter((p) => !p.parent).map((page) => (
+      <nav aria-label="Hovedlenker" class="flex-grow">
+        <ul class="grid grid-cols-2 gap-x-8 gap-y-2 text-sm sm:grid-cols-3 md:grid-cols-4 lg:gap-x-12">
+          {buildFlatLinks(tree).map((page) => (
             <li>
-              <a href={`/${page.slug}`} class="hover:underline underline-offset-2">
+              <a href={`/p/${page.slug}`} class="hover:underline underline-offset-2">
                 {page.title}
               </a>
             </li>

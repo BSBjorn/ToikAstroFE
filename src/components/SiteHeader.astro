@@ -3,8 +3,8 @@
  * Site header. Navigation driven by Pages (Strapi) plus dynamic "Nyheter" and
  * "Lag" items that appear only when entries exist in those collections.
  */
-import type { Page, StrapiMedia } from "../types/strapi";
-import { getArticles, getPages, getTeams, mediaUrl } from "../lib/strapi";
+import type { StrapiMedia } from "../types/strapi";
+import { getPageTree, getArticles, getTeams, mediaUrl } from "../lib/strapi";
 
 interface Props {
     logo: StrapiMedia | null;
@@ -18,8 +18,8 @@ const {
     clubSlogan = "team slogan",
 } = Astro.props;
 
-// Fetch menu pages flat list
-const menuPages: Page[] = (await getPages({ menuOnly: true })) ?? [];
+// Fetch pages with proper parent→children hierarchy from custom endpoint
+const tree = await getPageTree().catch(() => []);
 const teamsRes = await getTeams().catch(() => null);
 const articlesRes = await getArticles({ pageSize: 1 }).catch(() => null);
 const showLag = (teamsRes?.data?.length ?? 0) > 0;
@@ -28,7 +28,7 @@ const showNyheter = (articlesRes?.data?.length ?? 0) > 0;
 const path = Astro.url.pathname;
 const isActive = (href: string) => path === href || path.startsWith(`${href}/`);
 
-// --- Build menu structure: flat items + dropdowns per parent page ---
+// --- Build menu items from tree hierarchy ---
 
 interface NavItem { label: string; href: string }
 
@@ -42,35 +42,23 @@ const groups: Group[] = [];
 if (showNyheter) groups.push({ kind: "flat", item: { label: "Nyheter", href: "/nyheter" } });
 if (showLag) groups.push({ kind: "flat", item: { label: "Lag", href: "/lag" } });
 
-// For each menu page, try to find children by fetching that page as a single
-// entity — the populate[children] on that call gives us the real child list.
-const processedSlugs = new Set<string>();
+// Pages from tree hierarchy — each node becomes either a dropdown or flat link
+const buildGroups = (nodes: TreeNode[]) => {
+    for (const page of nodes) {
+        const navItem = { label: page.title, href: `/p/${page.slug}` };
+        const childItems = (page.children ?? [])
+            .filter((c) => c.showInMenu !== false && c.title)
+            .map((c) => ({ label: c.title, href: `/p/${c.slug}` }));
 
-for (const mp of menuPages) {
-    if (!mp.slug || !mp.title) continue;
-
-    // Skip if already handled as a child somewhere
-    const isChildOfExistingParent = groups.some(
-        (g) => g.kind === "dropdown" && menuPages.some((c) => c.parent?.slug === g.parent.href.split('/').pop() && c.slug === mp.slug),
-    );
-    if (isChildOfExistingParent) continue;
-
-    // Fetch page with children populated — this is the same call that works on /lag/[slug]
-    const single = await getPages({ slug: mp.slug }).catch(() => null);
-    const children = single?.children ?? [];
-
-    const childItems = children
-        .filter((c) => c.showInMenu !== false && c.title)
-        .map((c) => ({ label: c.title, href: `/klubben/${c.slug}` }));
-
-    processedSlugs.add(mp.slug);
-
-    if (childItems.length > 0) {
-        groups.push({ kind: "dropdown", parent: { label: mp.title, href: `/klubben/${mp.slug}` }, children: childItems });
-    } else {
-        groups.push({ kind: "flat", item: { label: mp.title, href: `/klubben/${mp.slug}` } });
+        if (childItems.length > 0) {
+            groups.push({ kind: "dropdown", parent: navItem, children: childItems });
+        } else {
+            groups.push({ kind: "flat", item: navItem });
+        }
     }
-}
+};
+
+buildGroups(tree);
 
 const logoSrc = logo ? mediaUrl(logo, "thumbnail") : null;
 ---
@@ -88,27 +76,29 @@ const logoSrc = logo ? mediaUrl(logo, "thumbnail") : null;
 
         <!-- Desktop nav -->
         <nav aria-label="Hovedmeny" class="hidden md:block">
-            <ul class="flex items-center gap-1">
+            <ul class="flex items-center gap-x-6">
                 {groups.map((group) => (
-                    <li class:list={["relative", group.kind === "dropdown" ? "group/parent" : ""]}>
+                    <li class="relative group">
                         <!-- Trigger link -->
                         <a
                             href={group.kind === "dropdown" ? group.parent.href : group.item.href}
                             aria-current={isActive(group.kind === "dropdown" ? group.parent.href : group.item.href) ? "page" : undefined}
                             class:list={[
-                                "rounded-pill px-3 py-2 text-sm font-semibold uppercase tracking-wide transition",
+                                "flex items-center rounded-pill px-3 py-2 text-sm font-semibold uppercase tracking-wide transition",
                                 isActive(group.kind === "dropdown" ? group.parent.href : group.item.href)
                                     ? "bg-surface-sunken text-ink"
                                     : "text-ink-muted hover:bg-surface-sunken hover:text-ink",
                             ]}
                         >
                             {group.kind === "dropdown" ? group.parent.label : group.item.label}
-                            <svg class="ml-0.5 size-[13px] shrink-0 transition-transform group-hover/parent:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M6 9l6 6 6-6"/></svg>
+                            {group.kind === "dropdown" && (
+                                <svg class="ml-0.5 size-[13px] shrink-0 transition-transform duration-200 group-hover:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M6 9l6 6 6-6"/></svg>
+                            )}
                         </a>
 
                         <!-- Dropdown panel -->
                         {group.kind === "dropdown" && group.children.length > 0 ? (
-                            <ul class="pointer-events-none absolute left-1/2 top-full mt-2 w-max -translate-x-1/2 rounded-card border border-line bg-surface-raised py-1 shadow-card opacity-0 transition-all duration-200 group-hover:pointer-events-auto group-hover:opacity-100">
+                            <ul class="pointer-events-none absolute left-1/2 top-full mt-2 z-10 w-max -translate-x-1/2 rounded-card border border-line bg-surface-raised py-1 shadow-card opacity-0 transition-all duration-200 group-hover:pointer-events-auto group-hover:opacity-100">
                                 {group.children.map((child) => (
                                     <li>
                                         <a

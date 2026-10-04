@@ -257,24 +257,29 @@ export async function getWhistleblow(): Promise<Whistleblow | null> {
   return res.data ?? null;
 }
 
-export async function getPages(options: { slug?: string; parent?: string; menuOnly?: boolean } = {}) {
-  const { slug, parent, menuOnly = false } = options;
+export async function getPages(options: { slug?: string; parent?: string } = {}) {
+  const { slug, parent } = options;
   const query: Record<string, QueryValue> = {
-    'populate[parent][fields][0]': 'title',
-    'populate[parent][fields][1]': 'slug',
-    'populate[children][fields][0]': 'title',
-    'populate[children][fields][1]': 'slug',
     'sort[0]': 'sortOrder:asc',
     'pagination[page]': 1,
     'pagination[pageSize]': 100,
   };
   if (slug) query['filters[slug][$eq]'] = slug;
-  if (parent) query['filters[parent][slug][$eq]'] = parent;
-  if (menuOnly) query['filters[showInMenu][$eq]'] = true;
+  // parent-based filtering is unreliable (Strapi v5 self-ref bug), skip
 
   const res = await get<StrapiResponse<Page[]>>('page', TTL.page, '/api/pages', query);
   if (slug) return res.data[0] ?? null;
   return res.data;
+}
+
+/** Page tree with proper parent→children hierarchy. Uses custom endpoint to bypass Strapi v5 ORM self-ref bug. */
+export interface TreeNode extends Omit<Page, 'content' | 'parent'> {
+  children: TreeNode[];
+}
+
+export async function getPageTree(): Promise<TreeNode[]> {
+  const res = await get<{ data: TreeNode[] }>('page', TTL.page, '/pages/tree');
+  return res.data ?? [];
 }
 
 export async function getPersons(): Promise<Person[]> {
