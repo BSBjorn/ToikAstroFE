@@ -22,6 +22,7 @@ import {
     getFixtures,
     getFrontpage,
     getSponsors,
+    enrichFixturesWithStats,
     mediaAlt,
     mediaUrl,
     publicStrapiUrl,
@@ -39,7 +40,7 @@ const FEATURED_TEAM = import.meta.env.PUBLIC_FEATURED_TEAM_SLUG || "a-lag";
 
 let articles: Article[] = [];
 let upcoming: Fixture[] = [];
-let recent: Fixture[] = [];
+let recent: Array<Fixture & { stats: any }> = [];
 let sponsors: Sponsor[] = [];
 let frontpageRaw: { data: Frontpage | null } = { data: null };
 let clubRaw: { data: Club | null } = { data: null };
@@ -55,9 +56,8 @@ try {
                 (r) => r.data ?? [],
                 () => [],
             ),
-            getFixtures(FEATURED_TEAM, "completed", 3).then(
-                (r) => r.data ?? [],
-                () => [],
+            enrichFixturesWithStats(
+                (await getFixtures(FEATURED_TEAM, "completed", 3)).data ?? [],
             ),
             getSponsors().then(
                 (r) => r.data ?? [],
@@ -155,7 +155,16 @@ sectionMap.sponsors = sectionMap.sponsors ?? true;
     there is nothing to conditionally hide here.
     -->
     <section class="container-content mt-10 mb-14">
-        <LiveMatch client:load strapiUrl={publicStrapiUrl()} />
+        <LiveMatch
+            client:load
+            strapiUrl={publicStrapiUrl()}
+            team={FEATURED_TEAM}
+        />
+        <!-- <LiveMatch
+            client:load
+            strapiUrl={publicStrapiUrl()}
+            matchId="8390477"
+        /> -->
     </section>
 
     {/* Matches section hidden when no teams/fixtures configured yet */}

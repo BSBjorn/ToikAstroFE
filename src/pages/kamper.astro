@@ -2,15 +2,21 @@
 import Base from '../layouts/Base.astro';
 import FixtureList from '../components/FixtureList.astro';
 import type { Fixture } from '../types/strapi';
-import { getFixtures } from '../lib/strapi';
+import { enrichFixturesWithStats, getFixtures } from '../lib/strapi';
 
 const team = import.meta.env.PUBLIC_FEATURED_TEAM_SLUG || 'a-lag';
 
-let upcoming: { data: Fixture[] } = { data: [] };
-let completed: { data: Fixture[] } = { data: [] };
+let upcoming: Fixture[] = [];
+let completed: Array<Fixture & { stats: any }> = [];
 
-try { upcoming = await getFixtures(team, 'upcoming', 10); } catch {}
-try { completed = await getFixtures(team, 'completed', 10); } catch {}
+try {
+  upcoming = (await getFixtures(team, 'upcoming', 10)).data ?? [];
+} catch {}
+
+try {
+  const raw = await getFixtures(team, 'completed', 10);
+  completed = await enrichFixturesWithStats(raw.data ?? []);
+} catch {}
 ---
 
 <Base title="Kamper">
@@ -20,12 +26,12 @@ try { completed = await getFixtures(team, 'completed', 10); } catch {}
     <div class="mt-8 grid gap-12 md:grid-cols-2">
       <div>
         <h2 class="text-xl">Kommande kamper</h2>
-        <FixtureList fixtures={upcoming.data} type="upcoming" />
+        <FixtureList fixtures={upcoming} type="upcoming" />
       </div>
 
       <div>
         <h2 class="text-xl">Siste kamper</h2>
-        <FixtureList fixtures={completed.data} type="completed" />
+        <FixtureList fixtures={completed} type="completed" />
       </div>
     </div>
   </div>

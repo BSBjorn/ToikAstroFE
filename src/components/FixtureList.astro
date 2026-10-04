@@ -1,76 +1,250 @@
 ---
-import type { Fixture } from '../types/strapi';
-import { formatDateShort } from '../lib/strapi';
+import type { Fixture } from "../types/strapi";
+import { formatDateShort } from "../lib/strapi";
+
+interface Stats {
+    shots?: { home: number; away: number };
+    penalties?: { home: number; away: number };
+    penaltyMinutes?: { home: number; away: number };
+    faceoffs?: {
+        home: number;
+        away: number;
+        total: number;
+        homePct: number | null;
+    };
+    timeline: Array<{
+        period: number | null;
+        time: number;
+        team: "home" | "away";
+        scorer: string | null;
+        assists: string[];
+        flags: string[];
+        score: { home: number; away: number };
+    }>;
+}
+
+interface EnrichedFixture extends Fixture {
+    stats?: Stats | null;
+}
 
 interface Props {
-  fixtures: Fixture[];
-  type: 'upcoming' | 'completed';
-  /** Shown when there is nothing to list — an empty season is normal in summer. */
-  emptyText?: string;
+    fixtures: EnrichedFixture[];
+    type: "upcoming" | "completed";
+    /** Shown when there is nothing to list — an empty season is normal in summer. */
+    emptyText?: string;
 }
 
 const { fixtures, type, emptyText } = Astro.props;
 
 const OUTCOME: Record<string, { label: string; class: string }> = {
-  win: { label: 'S', class: 'bg-emerald-600 text-white' },
-  loss: { label: 'T', class: 'bg-accent-600 text-white' },
-  draw: { label: 'U', class: 'bg-ice-400 text-white' },
+    win: { label: "S", class: "bg-emerald-600 text-white" },
+    loss: { label: "T", class: "bg-accent-600 text-white" },
+    draw: { label: "U", class: "bg-ice-400 text-white" },
 };
+
+/** Format period time (seconds) as "MM:SS". */
+function fmtTime(totalSeconds: number): string {
+    const m = Math.floor(totalSeconds / 60);
+    const s = totalSeconds % 60;
+    return `${m}:${String(s).padStart(2, "0")}`;
+}
 ---
 
-{
-  fixtures.length === 0 ? (
+{fixtures.length === 0 ? (
     <p class="rounded-card border border-dashed border-line px-4 py-6 text-center text-sm text-ink-muted">
-      {emptyText ?? (type === 'upcoming' ? 'Ingen kamper satt opp ennå.' : 'Ingen spilte kamper ennå.')}
+        {emptyText ??
+            (type === "upcoming"
+                ? "Ingen kamper satt opp ennå."
+                : "Ingen spilte kamper ennå.")}
     </p>
-  ) : (
+) : (
     <ul class="divide-y divide-line overflow-hidden rounded-card border border-line bg-surface-raised">
-      {fixtures.map((fixture) => (
-        <li
-          class:list={[
-            'flex items-center gap-4 px-4 py-3',
-            fixture.isHome && 'border-l-2 border-l-brand-500',
-          ]}
-        >
-          <div class="w-20 shrink-0">
-            <p class="text-sm font-semibold tabular-nums">{formatDateShort(fixture.date)}</p>
-            {fixture.time && <p class="text-xs text-ink-muted tabular-nums">{fixture.time}</p>}
-          </div>
+        {fixtures.map((fixture) => (
+            <li
+                class:list={[
+                    "group flex items-start gap-x-4 px-4 py-3 flex-wrap",
+                    fixture.isHome && "border-l-2 border-l-brand-500",
+                ]}
+            >
+                <div class="w-20 shrink-0">
+                    <p class="text-sm font-semibold tabular-nums">
+                        {formatDateShort(fixture.date)}
+                    </p>
+                    {fixture.time && (
+                        <p class="text-xs text-ink-muted tabular-nums">
+                            {fixture.time}
+                        </p>
+                    )}
+                </div>
 
-          <div class="min-w-0 flex-1">
-            <p class="truncate text-sm">
-              <span class:list={[fixture.isHome && 'font-semibold']}>{fixture.homeTeam}</span>
-              <span class="mx-1.5 text-ink-muted">–</span>
-              <span class:list={[!fixture.isHome && 'font-semibold']}>{fixture.awayTeam}</span>
-            </p>
-            {fixture.venue && (
-              <p class="truncate text-xs text-ink-muted">
-                {fixture.venue}
-                {fixture.isHome && <span class="ml-1 text-brand-500">· Hjemmekamp</span>}
-              </p>
-            )}
-          </div>
+                <div class="min-w-0 flex-1">
+                    <p class="truncate text-sm">
+                        <span class:list={[fixture.isHome && "font-semibold"]}>
+                            {fixture.homeTeam}
+                        </span>
+                        <span class="mx-1.5 text-ink-muted">–</span>
+                        <span class:list={[!fixture.isHome && "font-semibold"]}>
+                            {fixture.awayTeam}
+                        </span>
+                    </p>
+                    {fixture.venue && (
+                        <p class="truncate text-xs text-ink-muted">
+                            {fixture.venue}
+                            {fixture.isHome && (
+                                <span class="ml-1 text-brand-500">
+                                    · Hjemmekamp
+                                </span>
+                            )}
+                        </p>
+                    )}
+                </div>
 
-          {type === 'completed' && fixture.result && (
-            <div class="flex shrink-0 items-center gap-2">
-              <span class="font-display text-lg tabular-nums">{fixture.result}</span>
-              {fixture.outcome && (
-                <span
-                  class:list={[
-                    'grid size-6 place-items-center rounded-pill text-xs font-bold',
-                    OUTCOME[fixture.outcome]?.class,
-                  ]}
-                  aria-label={
-                    fixture.outcome === 'win' ? 'Seier' : fixture.outcome === 'loss' ? 'Tap' : 'Uavgjort'
-                  }
-                >
-                  {OUTCOME[fixture.outcome]?.label}
-                </span>
-              )}
-            </div>
-          )}
-        </li>
-      ))}
+                {type === "completed" && fixture.result && (
+                    <div class="flex shrink-0 items-center gap-2">
+                        <span class="font-display text-lg tabular-nums">
+                            {fixture.result}
+                        </span>
+                        {fixture.outcome && (
+                            <span
+                                class:list={[
+                                    "grid size-6 place-items-center rounded-pill text-xs font-bold",
+                                    OUTCOME[fixture.outcome]?.class,
+                                ]}
+                                aria-label={
+                                    fixture.outcome === "win"
+                                        ? "Seier"
+                                        : fixture.outcome === "loss"
+                                          ? "Tap"
+                                          : "Uavgjort"
+                                }
+                            >
+                                {OUTCOME[fixture.outcome]?.label}
+                            </span>
+                        )}
+                    </div>
+                )}
+
+                {/* Expanded stats for completed matches */}
+                {type === "completed" && fixture.stats?.timeline.length > 0 && (
+                    <details class="w-full mt-1">
+                        <summary class="cursor-pointer text-xs text-ink-muted hover:text-ink group/open:-translate-y-px">
+                            {fixture.stats.timeline.length} mål · Skudd{" "}
+                            {fixture.stats.shots
+                                ? `${fixture.stats.shots.home}–${fixture.stats.shots.away}`
+                                : "–"}{" "}
+                            · Utvisninger{" "}
+                            {fixture.stats.penalties
+                                ? `${fixture.stats.penalties.home}–${fixture.stats.penalties.away}`
+                                : "–"}
+                        </summary>
+
+                        {/* Goal timeline */}
+                        <ol class="mt-2 space-y-1 border-t border-line pt-2 text-sm">
+                            {fixture.stats.timeline.map((goal, i) => {
+                                const teamLabel =
+                                    goal.team === "home"
+                                        ? (fixture.homeTeam?.split(
+                                              " – ",
+                                          )?.[0] ?? "")
+                                        : (fixture.awayTeam?.split(
+                                              " – ",
+                                          )?.[0] ?? "");
+                                return (
+                                    <li class="flex items-start gap-2">
+                                        <span class="tabular-nums text-ink-muted">
+                                            {i + 1}.
+                                        </span>
+                                        <div class="min-w-0 flex-1">
+                                            <span
+                                                class:list={[
+                                                    "font-medium",
+                                                    goal.team === "home"
+                                                        ? ""
+                                                        : "text-ink-muted",
+                                                ]}
+                                            >
+                                                {teamLabel}
+                                            </span>
+                                            <span class="text-ink-muted">
+                                                {" "}
+                                                –{" "}
+                                            </span>
+                                            <span class="font-medium">
+                                                {goal.scorer}
+                                            </span>
+                                            {goal.assists.length > 0 && (
+                                                <>
+                                                    <span class="text-ink-muted">
+                                                        , assist:{" "}
+                                                    </span>
+                                                    <span>
+                                                        {goal.assists.join(
+                                                            ", ",
+                                                        )}
+                                                    </span>
+                                                </>
+                                            )}
+                                        </div>
+                                        <span class="shrink-0 tabular-nums text-xs text-ink-muted">
+                                            {goal.period != null
+                                                ? `${goal.period}.`
+                                                : ""}
+                                            {fmtTime(goal.time)} ·{" "}
+                                            {goal.score.home}–{goal.score.away}
+                                        </span>
+                                    </li>
+                                );
+                            })}
+                        </ol>
+
+                        {/* Stats grid */}
+                        <dl class="mt-2 border-t border-line pt-2 grid grid-cols-3 gap-x-4 gap-y-1 text-xs">
+                            {fixture.stats.shots && (
+                                <>
+                                    <dt class="text-ink-muted">Skudd</dt>
+                                    <dd class="col-span-2 tabular-nums">
+                                        {fixture.stats.shots.home} –{" "}
+                                        {fixture.stats.shots.away}
+                                    </dd>
+                                </>
+                            )}
+                            {fixture.stats.penalties && (
+                                <>
+                                    <dt class="text-ink-muted">Utvisninger</dt>
+                                    <dd class="col-span-2 tabular-nums">
+                                        {fixture.stats.penalties.home} –{" "}
+                                        {fixture.stats.penalties.away}
+                                    </dd>
+                                </>
+                            )}
+                            {fixture.stats.penaltyMinutes && (
+                                <>
+                                    <dt class="text-ink-muted">
+                                        Utvisningsmin
+                                    </dt>
+                                    <dd class="col-span-2 tabular-nums">
+                                        {fixture.stats.penaltyMinutes.home} –{" "}
+                                        {fixture.stats.penaltyMinutes.away}
+                                    </dd>
+                                </>
+                            )}
+                            {fixture.stats.faceoffs &&
+                                fixture.stats.faceoffs.total > 0 && (
+                                    <>
+                                        <dt class="text-ink-muted">
+                                            Tekninger
+                                        </dt>
+                                        <dd class="col-span-2 tabular-nums">
+                                            {fixture.stats.faceoffs.homePct}% ·{" "}
+                                            {fixture.stats.faceoffs.home}–
+                                            {fixture.stats.faceoffs.away}
+                                        </dd>
+                                    </>
+                                )}
+                        </dl>
+                    </details>
+                )}
+            </li>
+        ))}
     </ul>
-  )
-}
+)}

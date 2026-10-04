@@ -15,6 +15,8 @@ const props = withDefaults(
     strapiUrl: string;
     /** Inspect a specific match instead of auto-detecting the active one. */
     matchId?: string;
+    /** Team slug or document ID for auto-detection (overrides arena default). */
+    team?: string;
     intervalMs?: number;
   }>(),
   { intervalMs: 15_000 }
@@ -28,6 +30,7 @@ let timer: ReturnType<typeof setInterval> | null = null;
 const endpoint = computed(() => {
   const url = new URL('/api/matches/live', props.strapiUrl);
   if (props.matchId) url.searchParams.set('matchId', props.matchId);
+  if (props.team) url.searchParams.set('team', props.team);
   return url.toString();
 });
 
