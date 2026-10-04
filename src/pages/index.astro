@@ -78,7 +78,6 @@ const heroText: string = frontpage.hero?.subtitle ?? "SUBTITLE";
 const heroImage: StrapiMedia | null = frontpage.hero?.image ?? null;
 const orgNumber: string | null = club.grasrotandelenOrgNumber ?? null;
 const pinnedArticle: Article | null = frontpage.pinnedArticle ?? null;
-console.log(frontpage.hero);
 const [lead, ...rest] = articles;
 const heroSrc = mediaUrl(heroImage, "large");
 

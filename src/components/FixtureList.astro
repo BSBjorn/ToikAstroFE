@@ -125,7 +125,7 @@ function fmtTime(totalSeconds: number): string {
                 )}
 
                 {/* Expanded stats for completed matches */}
-                {type === "completed" && fixture.stats?.timeline.length > 0 && (
+                {type === "completed" && fixture?.stats.timeline.length > 0 && (
                     <details class="w-full mt-1">
                         <summary class="cursor-pointer text-xs text-ink-muted hover:text-ink group/open:-translate-y-px">
                             {fixture.stats.timeline.length} mål · Skudd{" "}
@@ -150,19 +150,12 @@ function fmtTime(totalSeconds: number): string {
                                               " – ",
                                           )?.[0] ?? "");
                                 return (
-                                    <li class="flex items-start gap-2">
-                                        <span class="tabular-nums text-ink-muted">
+                                    <li class="flex items-start gap-2 mb-2">
+                                        <!-- <span class="tabular-nums text-ink-muted">
                                             {i + 1}.
-                                        </span>
+                                        </span> -->
                                         <div class="min-w-0 flex-1">
-                                            <span
-                                                class:list={[
-                                                    "font-medium",
-                                                    goal.team === "home"
-                                                        ? ""
-                                                        : "text-ink-muted",
-                                                ]}
-                                            >
+                                            <span class="font-medium text-ink-muted">
                                                 {teamLabel}
                                             </span>
                                             <span class="text-ink-muted">
@@ -175,7 +168,7 @@ function fmtTime(totalSeconds: number): string {
                                             {goal.assists.length > 0 && (
                                                 <>
                                                     <span class="text-ink-muted">
-                                                        , assist:{" "}
+                                                        , Assist:{" "}
                                                     </span>
                                                     <span>
                                                         {goal.assists.join(
@@ -187,9 +180,9 @@ function fmtTime(totalSeconds: number): string {
                                         </div>
                                         <span class="shrink-0 tabular-nums text-xs text-ink-muted">
                                             {goal.period != null
-                                                ? `${goal.period}.`
+                                                ? `${goal.period}. per · `
                                                 : ""}
-                                            {fmtTime(goal.time)} ·{" "}
+                                            <!-- {fmtTime(goal.time)} ·{" "} -->
                                             {goal.score.home}–{goal.score.away}
                                         </span>
                                     </li>
@@ -220,7 +213,7 @@ function fmtTime(totalSeconds: number): string {
                             {fixture.stats.penaltyMinutes && (
                                 <>
                                     <dt class="text-ink-muted">
-                                        Utvisningsmin
+                                        Utvisningsminutter
                                     </dt>
                                     <dd class="col-span-2 tabular-nums">
                                         {fixture.stats.penaltyMinutes.home} –{" "}
@@ -231,9 +224,7 @@ function fmtTime(totalSeconds: number): string {
                             {fixture.stats.faceoffs &&
                                 fixture.stats.faceoffs.total > 0 && (
                                     <>
-                                        <dt class="text-ink-muted">
-                                            Tekninger
-                                        </dt>
+                                        <dt class="text-ink-muted">Faceoffs</dt>
                                         <dd class="col-span-2 tabular-nums">
                                             {fixture.stats.faceoffs.homePct}% ·{" "}
                                             {fixture.stats.faceoffs.home}–
