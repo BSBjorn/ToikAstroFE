@@ -924,7 +924,7 @@ export interface components {
              * @description An enum field
              * @enum {string}
              */
-            category: "hockeyskole" | "yngres" | "senior" | "trim";
+            category: "hockeyskole" | "junior" | "senior" | "trim";
             /** @description An integer field */
             birthYear?: number;
             /**
@@ -3921,7 +3921,7 @@ export interface operations {
                              * @description An enum field
                              * @enum {string}
                              */
-                            category: "hockeyskole" | "yngres" | "senior" | "trim";
+                            category: "hockeyskole" | "junior" | "senior" | "trim";
                             /** @description An integer field */
                             birthYear?: number;
                             /**
@@ -4023,7 +4023,7 @@ export interface operations {
                          * @description An enum field
                          * @enum {string}
                          */
-                        category: "hockeyskole" | "yngres" | "senior" | "trim";
+                        category: "hockeyskole" | "junior" | "senior" | "trim";
                         /** @description A float field */
                         birthYear?: number;
                         /**
@@ -4082,7 +4082,7 @@ export interface operations {
                              * @description An enum field
                              * @enum {string}
                              */
-                            category: "hockeyskole" | "yngres" | "senior" | "trim";
+                            category: "hockeyskole" | "junior" | "senior" | "trim";
                             /** @description An integer field */
                             birthYear?: number;
                             /**
@@ -4206,7 +4206,7 @@ export interface operations {
                              * @description An enum field
                              * @enum {string}
                              */
-                            category: "hockeyskole" | "yngres" | "senior" | "trim";
+                            category: "hockeyskole" | "junior" | "senior" | "trim";
                             /** @description An integer field */
                             birthYear?: number;
                             /**
@@ -4310,7 +4310,7 @@ export interface operations {
                          * @description An enum field
                          * @enum {string}
                          */
-                        category?: "hockeyskole" | "yngres" | "senior" | "trim";
+                        category?: "hockeyskole" | "junior" | "senior" | "trim";
                         /** @description A float field */
                         birthYear?: number;
                         /**
@@ -4369,7 +4369,7 @@ export interface operations {
                              * @description An enum field
                              * @enum {string}
                              */
-                            category: "hockeyskole" | "yngres" | "senior" | "trim";
+                            category: "hockeyskole" | "junior" | "senior" | "trim";
                             /** @description An integer field */
                             birthYear?: number;
                             /**
@@ -4488,7 +4488,7 @@ export interface operations {
                              * @description An enum field
                              * @enum {string}
                              */
-                            category: "hockeyskole" | "yngres" | "senior" | "trim";
+                            category: "hockeyskole" | "junior" | "senior" | "trim";
                             /** @description An integer field */
                             birthYear?: number;
                             /**

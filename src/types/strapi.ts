@@ -82,7 +82,7 @@ export interface Article extends StrapiEntity {
   team?: Team | null;
 }
 
-export type TeamCategory = 'hockeyskole' | 'yngres' | 'senior' | 'trim';
+export type TeamCategory = 'hockeyskole' | 'junior' | 'senior' | 'trim';
 
 export interface Team extends StrapiEntity {
   name: string;

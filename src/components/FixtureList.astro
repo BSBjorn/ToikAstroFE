@@ -63,22 +63,46 @@ function fmtTime(totalSeconds: number): string {
             <li
                 class:list={[
                     "group flex items-start gap-x-4 px-4 py-3 flex-wrap",
-                    fixture.isHome && "border-l-2 border-l-brand-500",
+                    fixture.isHome && "border-l-4 border-l-brand-300",
                 ]}
             >
                 <div class="w-20 shrink-0">
                     <p class="text-sm font-semibold tabular-nums">
                         {formatDateShort(fixture.date)}
                     </p>
-                    {fixture.time && (
-                        <p class="text-xs text-ink-muted tabular-nums">
+                    {fixture.time && type !== "completed" && (
+                        <p class="text-m text-ink-muted tabular-nums">
                             {fixture.time}
                         </p>
+                    )}
+                    {type === "completed" && fixture.result && (
+                        <div class="flex shrink-0 items-center gap-2">
+                            {fixture.outcome && (
+                                <span
+                                    class:list={[
+                                        "grid size-6 place-items-center rounded-pill text-xs font-bold",
+                                        OUTCOME[fixture.outcome]?.class,
+                                    ]}
+                                    aria-label={
+                                        fixture.outcome === "win"
+                                            ? "Seier"
+                                            : fixture.outcome === "loss"
+                                              ? "Tap"
+                                              : "Uavgjort"
+                                    }
+                                >
+                                    {OUTCOME[fixture.outcome]?.label}
+                                </span>
+                            )}
+                            <span class="font-display text-lg tabular-nums">
+                                {fixture.result}
+                            </span>
+                        </div>
                     )}
                 </div>
 
                 <div class="min-w-0 flex-1">
-                    <p class="truncate text-sm">
+                    <p class="truncate text-sm flex flex-wrap">
                         <span class:list={[fixture.isHome && "font-semibold"]}>
                             {fixture.homeTeam}
                         </span>
@@ -98,31 +122,6 @@ function fmtTime(totalSeconds: number): string {
                         </p>
                     )}
                 </div>
-
-                {type === "completed" && fixture.result && (
-                    <div class="flex shrink-0 items-center gap-2">
-                        <span class="font-display text-lg tabular-nums">
-                            {fixture.result}
-                        </span>
-                        {fixture.outcome && (
-                            <span
-                                class:list={[
-                                    "grid size-6 place-items-center rounded-pill text-xs font-bold",
-                                    OUTCOME[fixture.outcome]?.class,
-                                ]}
-                                aria-label={
-                                    fixture.outcome === "win"
-                                        ? "Seier"
-                                        : fixture.outcome === "loss"
-                                          ? "Tap"
-                                          : "Uavgjort"
-                                }
-                            >
-                                {OUTCOME[fixture.outcome]?.label}
-                            </span>
-                        )}
-                    </div>
-                )}
 
                 {/* Expanded stats for completed matches */}
                 {type === "completed" && fixture?.stats.timeline.length > 0 && (

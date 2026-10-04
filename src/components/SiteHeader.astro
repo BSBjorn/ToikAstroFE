@@ -30,7 +30,10 @@ const isActive = (href: string) => path === href || path.startsWith(`${href}/`);
 
 // --- Build menu items from tree hierarchy ---
 
-interface NavItem { label: string; href: string }
+interface NavItem {
+    label: string;
+    href: string;
+}
 
 type Group =
     | { kind: "flat"; item: NavItem }
@@ -39,8 +42,10 @@ type Group =
 const groups: Group[] = [];
 
 // Flat items first
-if (showNyheter) groups.push({ kind: "flat", item: { label: "Nyheter", href: "/nyheter" } });
-if (showLag) groups.push({ kind: "flat", item: { label: "Lag", href: "/lag" } });
+if (showNyheter)
+    groups.push({ kind: "flat", item: { label: "Nyheter", href: "/nyheter" } });
+if (showLag)
+    groups.push({ kind: "flat", item: { label: "Lag", href: "/lag" } });
 
 // Pages from tree hierarchy — each node becomes either a dropdown or flat link
 const buildGroups = (nodes: TreeNode[]) => {
@@ -51,7 +56,11 @@ const buildGroups = (nodes: TreeNode[]) => {
             .map((c) => ({ label: c.title, href: `/p/${c.slug}` }));
 
         if (childItems.length > 0) {
-            groups.push({ kind: "dropdown", parent: navItem, children: childItems });
+            groups.push({
+                kind: "dropdown",
+                parent: navItem,
+                children: childItems,
+            });
         } else {
             groups.push({ kind: "flat", item: navItem });
         }
@@ -65,12 +74,16 @@ const logoSrc = logo ? mediaUrl(logo, "thumbnail") : null;
 
 <header class="sticky top-0 z-40 border-b border-line bg-surface/90 backdrop-blur">
     <div class="container-content flex h-16 items-center justify-between gap-6">
-
-        <a href="/" class="flex items-center gap-3 font-display text-lg leading-none">
+        <a
+            href="/"
+            class="flex items-center gap-3 font-display text-lg leading-none"
+        >
             {logoSrc ? (
                 <img src={logoSrc} alt={`${clubName} logo`} />
             ) : (
-                <span class="grid size-9 shrink-0 place-items-center rounded-pill bg-brand-900 text-sm font-bold text-white">{clubName}</span>
+                <span class="grid size-9 shrink-0 place-items-center rounded-pill bg-brand-900 text-sm font-bold text-white">
+                    {clubName}
+                </span>
             )}
         </a>
 
@@ -81,29 +94,60 @@ const logoSrc = logo ? mediaUrl(logo, "thumbnail") : null;
                     <li class="relative group">
                         <!-- Trigger link -->
                         <a
-                            href={group.kind === "dropdown" ? group.parent.href : group.item.href}
-                            aria-current={isActive(group.kind === "dropdown" ? group.parent.href : group.item.href) ? "page" : undefined}
+                            href={
+                                group.kind === "dropdown"
+                                    ? group.parent.href
+                                    : group.item.href
+                            }
+                            aria-current={
+                                isActive(
+                                    group.kind === "dropdown"
+                                        ? group.parent.href
+                                        : group.item.href,
+                                )
+                                    ? "page"
+                                    : undefined
+                            }
                             class:list={[
                                 "flex items-center rounded-pill px-3 py-2 text-sm font-semibold uppercase tracking-wide transition",
-                                isActive(group.kind === "dropdown" ? group.parent.href : group.item.href)
+                                isActive(
+                                    group.kind === "dropdown"
+                                        ? group.parent.href
+                                        : group.item.href,
+                                )
                                     ? "bg-surface-sunken text-ink"
                                     : "text-ink-muted hover:bg-surface-sunken hover:text-ink",
                             ]}
                         >
-                            {group.kind === "dropdown" ? group.parent.label : group.item.label}
+                            {group.kind === "dropdown"
+                                ? group.parent.label
+                                : group.item.label}
                             {group.kind === "dropdown" && (
-                                <svg class="ml-0.5 size-[13px] shrink-0 transition-transform duration-200 group-hover:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M6 9l6 6 6-6"/></svg>
+                                <svg
+                                    class="ml-0.5 size-6 shrink-0 transition-transform duration-200 group-hover:rotate-180"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="3"
+                                >
+                                    <path d="M6 9l6 6 6-6" />
+                                </svg>
                             )}
                         </a>
 
                         <!-- Dropdown panel -->
-                        {group.kind === "dropdown" && group.children.length > 0 ? (
-                            <ul class="pointer-events-none absolute left-1/2 top-full mt-2 z-10 w-max -translate-x-1/2 rounded-card border border-line bg-surface-raised py-1 shadow-card opacity-0 transition-all duration-200 group-hover:pointer-events-auto group-hover:opacity-100">
+                        {group.kind === "dropdown" &&
+                        group.children.length > 0 ? (
+                            <ul class="pointer-events-none absolute left-1/2 top-full z-10 w-max -translate-x-1/2 rounded-card border border-line bg-surface-raised py-1 shadow-card opacity-0 transition-all duration-200 group-hover:pointer-events-auto group-hover:opacity-100">
                                 {group.children.map((child) => (
                                     <li>
                                         <a
                                             href={child.href}
-                                            aria-current={isActive(child.href) ? "page" : undefined}
+                                            aria-current={
+                                                isActive(child.href)
+                                                    ? "page"
+                                                    : undefined
+                                            }
                                             class:list={[
                                                 "block px-4 py-2 text-sm font-semibold uppercase tracking-wide transition",
                                                 isActive(child.href)
@@ -125,20 +169,63 @@ const logoSrc = logo ? mediaUrl(logo, "thumbnail") : null;
         <!-- Mobile nav -->
         <details class="md:hidden [&[open]_svg.close]:block [&[open]_svg.open]:hidden">
             <summary class="grid size-10 cursor-pointer items-center justify-center rounded-pill text-ink-muted">
-                <svg class="open size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16" stroke-linecap="round"/></svg>
-                <svg class="close hidden size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke-linecap="round"/></svg>
+                <svg
+                    class="open size-5"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    aria-hidden="true"
+                >
+                    <path d="M4 6h16M4 12h16M4 18h16" stroke-linecap="round" />
+                </svg>
+                <svg
+                    class="close hidden size-5"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    aria-hidden="true"
+                >
+                    <path d="M6 6l12 12M18 6L6 18" stroke-linecap="round" />
+                </svg>
             </summary>
-            <nav aria-label="Mobilmeny" class="absolute inset-x-0 top-16 border-b border-line bg-surface-raised shadow-card">
+            <nav
+                aria-label="Mobilmeny"
+                class="absolute inset-x-0 top-16 border-b border-line bg-surface-raised shadow-card"
+            >
                 <ul class="container-content flex flex-col py-2">
                     {groups.map((group) => (
                         <li>
                             {group.kind === "flat" ? (
-                                <a href={group.item.href} aria-current={isActive(group.item.href) ? "page" : undefined} class="block border-b border-line py-3 font-semibold uppercase tracking-wide last:border-0">{group.item.label}</a>
+                                <a
+                                    href={group.item.href}
+                                    aria-current={
+                                        isActive(group.item.href)
+                                            ? "page"
+                                            : undefined
+                                    }
+                                    class="block border-b border-line py-3 font-semibold uppercase tracking-wide last:border-0"
+                                >
+                                    {group.item.label}
+                                </a>
                             ) : (
                                 <>
-                                    <span class="border-b border-line py-3 text-sm font-bold uppercase tracking-wide">{group.parent.label}</span>
+                                    <span class="border-b border-line py-3 text-sm font-bold uppercase tracking-wide">
+                                        {group.parent.label}
+                                    </span>
                                     {group.children.map((child) => (
-                                        <a href={child.href} aria-current={isActive(child.href) ? "page" : undefined} class="block border-b border-line py-2 pl-4 text-sm uppercase tracking-wide last:border-0 text-ink-muted hover:text-ink">{child.label}</a>
+                                        <a
+                                            href={child.href}
+                                            aria-current={
+                                                isActive(child.href)
+                                                    ? "page"
+                                                    : undefined
+                                            }
+                                            class="block border-b border-line py-2 pl-4 text-sm uppercase tracking-wide last:border-0 text-ink-muted hover:text-ink"
+                                        >
+                                            {child.label}
+                                        </a>
                                     ))}
                                 </>
                             )}
