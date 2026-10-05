@@ -109,62 +109,64 @@ sectionMap.sponsors = sectionMap.sponsors ?? true;
     clubSlogan={club.slogan ?? undefined}
 >
     <!-- Hero -->
-    <section class="relative isolate overflow-hidden bg-brand-900 text-ink-invert">
-        {heroSrc && (
-            <img
-                src={heroSrc}
-                alt={mediaAlt(heroImage)}
-                class="absolute inset-0 -z-10 size-full object-cover opacity-85"
-                fetchpriority="high"
-                decoding="async"
-            />
-        )}
-        <div class="container-content py-20 sm:py-28">
-            <h1 class="max-w-3xl text-hero text-white">{heroTitle}</h1>
-            <p class="mt-5 max-w-xl text-lg text-ice-200">{heroText}</p>
-            <div class="mt-8 flex flex-wrap gap-3">
-                {frontpage.hero?.ctaText && frontpage.hero?.ctaLink ? (
+    {frontpage.hero || frontpage.title ? (
+        <section class="relative isolate overflow-hidden bg-brand-900 text-ink-invert">
+            {heroSrc && (
+                <img
+                    src={heroSrc}
+                    alt={mediaAlt(heroImage)}
+                    class="absolute inset-0 -z-10 size-full object-cover opacity-85"
+                    fetchpriority="high"
+                    decoding="async"
+                />
+            )}
+            <div class="container-content py-20 sm:py-28">
+                <h1 class="max-w-3xl text-hero text-white">{heroTitle}</h1>
+                <p class="mt-5 max-w-xl text-lg text-ice-200">{heroText}</p>
+                <div class="mt-8 flex flex-wrap gap-3">
+                    {frontpage.hero?.ctaText && frontpage.hero?.ctaLink ? (
+                        <a
+                            href={frontpage.hero.ctaLink}
+                            class="rounded-pill bg-accent-500 px-6 py-3 font-semibold text-white transition hover:bg-accent-400"
+                        >
+                            {frontpage.hero.ctaText}
+                        </a>
+                    ) : (
+                        <a
+                            href="/p/ny-i-klubben"
+                            class="rounded-pill bg-accent-500 px-6 py-3 font-semibold text-white transition hover:bg-accent-400"
+                        >
+                            Bli med i klubben
+                        </a>
+                    )}
                     <a
-                        href={frontpage.hero.ctaLink}
-                        class="rounded-pill bg-accent-500 px-6 py-3 font-semibold text-white transition hover:bg-accent-400"
+                        href="/kamper"
+                        class="rounded-pill border border-ice-400/40 px-6 py-3 font-semibold text-white transition hover:bg-white/10"
                     >
-                        {frontpage.hero.ctaText}
+                        Se kampoppsettet
                     </a>
-                ) : (
-                    <a
-                        href="/p/ny-i-klubben"
-                        class="rounded-pill bg-accent-500 px-6 py-3 font-semibold text-white transition hover:bg-accent-400"
-                    >
-                        Bli med i klubben
-                    </a>
-                )}
-                <a
-                    href="/kamper"
-                    class="rounded-pill border border-ice-400/40 px-6 py-3 font-semibold text-white transition hover:bg-white/10"
-                >
-                    Se kampoppsettet
-                </a>
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
+    ) : (
+        <section class="relative isolate overflow-hidden bg-brand-900 text-ink-invert">
+            <div class="container-content py-20 sm:py-28">
+                <h1 class="max-w-3xl text-hero text-white/75">Velkommen til TOIK</h1>
+                <p class="mt-5 max-w-xl text-lg text-ice-300">Rediger hero-innhold i Strapi admin for å vise eget bilde og tekst.</p>
+            </div>
+        </section>
+    )}
 
-    <!--
-    Live match. Hydrated on load because it must poll; everything else on this
-    page ships zero JavaScript. It renders its own "ingen kamp nå" state, so
-    there is nothing to conditionally hide here.
-    -->
-    <section class="container-content mt-10 mb-14">
-        <LiveMatch
-            client:load
-            strapiUrl={publicStrapiUrl()}
-            team={FEATURED_TEAM}
-        />
-        <!-- <LiveMatch
-            client:load
-            strapiUrl={publicStrapiUrl()}
-            matchId="8390477"
-        /> -->
-    </section>
+    <!-- Live match. Only render when fixtures exist so we don't poll a non-existent team -->
+    {upcoming.length > 0 || recent.length > 0 ? (
+        <section class="container-content mt-10 mb-14">
+            <LiveMatch
+                client:load
+                strapiUrl={publicStrapiUrl()}
+                team={FEATURED_TEAM}
+            />
+        </section>
+    ) : null}
 
     {/* Matches section hidden when no teams/fixtures configured yet */}
     {(upcoming.length > 0 || recent.length > 0) && (

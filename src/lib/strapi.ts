@@ -296,12 +296,18 @@ export async function getPersons(): Promise<Person[]> {
 
 // --- Matches -----------------------------------------------------------
 
+/** Fetch fixtures for a team. Returns empty array if the team or fixture API is unavailable. */
 export async function getFixtures(
   team: string,
   type: 'upcoming' | 'completed' = 'upcoming',
   limit = 5
 ): Promise<FixtureResponse> {
-  return get<FixtureResponse>('fixtures', TTL.fixtures, '/api/matches', { team, type, limit });
+  try {
+    return await get<FixtureResponse>('fixtures', TTL.fixtures, '/api/matches', { team, type, limit });
+  } catch (err: any) {
+    if (err?.message?.includes('-> 404') || err?.status === 404) return { data: [] };
+    throw err;
+  }
 }
 
 export async function getMatchStats(matchId: number) {
