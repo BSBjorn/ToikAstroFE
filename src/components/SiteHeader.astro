@@ -1,7 +1,7 @@
 ---
 /**
- * Site header. Navigation driven by Pages (Strapi) plus dynamic "Nyheter" and
- * "Lag" items that appear only when entries exist in those collections.
+ * Site header. Navigation driven by Pages (Strapi) plus dynamic "Nyheter"
+ * "Lag" items appear only entries exist in collections.
  */
 import type { StrapiMedia } from "../types/strapi";
 import { getPageTree, getArticles, getTeams, mediaUrl } from "../lib/strapi";
@@ -18,7 +18,7 @@ const {
     clubSlogan = "team slogan",
 } = Astro.props;
 
-// Fetch pages with proper parent→children hierarchy from custom endpoint
+// Fetch pages proper parent→children hierarchy custom endpoint
 const tree = await getPageTree().catch(() => []);
 const teamsRes = await getTeams().catch(() => null);
 const articlesRes = await getArticles({ pageSize: 1 }).catch(() => null);
@@ -28,7 +28,7 @@ const showNyheter = (articlesRes?.data?.length ?? 0) > 0;
 const path = Astro.url.pathname;
 const isActive = (href: string) => path === href || path.startsWith(`${href}/`);
 
-// --- Build menu items from tree hierarchy ---
+// --- Build menu items tree hierarchy ---
 
 interface NavItem {
     label: string;
@@ -39,7 +39,7 @@ type Group =
     | { kind: "flat"; item: NavItem }
     | { kind: "dropdown"; parent: NavItem; children: NavItem[] };
 
-const groups: Group[] = [];
+let groups: Group[] = [];
 
 // Flat items first
 if (showNyheter)
@@ -47,24 +47,23 @@ if (showNyheter)
 if (showLag)
     groups.push({ kind: "flat", item: { label: "Lag", href: "/lag" } });
 
-// Pages from tree hierarchy — each node becomes either a dropdown or flat link
-const buildGroups = (nodes: TreeNode[]) => {
-    for (const page of nodes) {
-        const navItem = { label: page.title, href: `/p/${page.slug}` };
-        const childItems = (page.children ?? [])
-            .filter((c) => c.showInMenu !== false && c.title)
-            .map((c) => ({ label: c.title, href: `/p/${c.slug}` }));
-
-        if (childItems.length > 0) {
+// Pages from Strapi
+const buildGroups = (items: { id: string; title: string; slug: string; children?: { id: string; title: string; slug: string }[] }[]) => {
+    items.forEach((navItem) => {
+        const hasChildren = navItem.children && navItem.children.length > 0;
+        if (hasChildren) {
             groups.push({
                 kind: "dropdown",
-                parent: navItem,
-                children: childItems,
+                parent: { label: navItem.title, href: `/${navItem.slug}` },
+                children: navItem.children.map((child) => ({
+                    label: child.title,
+                    href: `/${navItem.slug}/${child.slug}`,
+                })),
             });
         } else {
-            groups.push({ kind: "flat", item: navItem });
+            groups.push({ kind: "flat", item: { label: navItem.title, href: `/${navItem.slug}` } });
         }
-    }
+    });
 };
 
 buildGroups(tree);
@@ -74,6 +73,8 @@ const logoSrc = logo ? mediaUrl(logo, "thumbnail") : null;
 
 <header class="sticky top-0 z-40 border-b border-line bg-surface/90 backdrop-blur">
     <div class="container-content flex h-16 items-center justify-between gap-6">
+
+        <!-- Logo -->
         <a
             href="/"
             class="flex items-center gap-3 font-display text-lg leading-none"
@@ -91,148 +92,279 @@ const logoSrc = logo ? mediaUrl(logo, "thumbnail") : null;
         <nav aria-label="Hovedmeny" class="hidden md:block">
             <ul class="flex items-center gap-x-6">
                 {groups.map((group) => (
-                    <li class="relative group">
-                        <!-- Trigger link -->
-                        <a
-                            href={
-                                group.kind === "dropdown"
-                                    ? group.parent.href
-                                    : group.item.href
-                            }
-                            aria-current={
-                                isActive(
-                                    group.kind === "dropdown"
-                                        ? group.parent.href
-                                        : group.item.href,
-                                )
-                                    ? "page"
-                                    : undefined
-                            }
-                            class:list={[
-                                "flex items-center rounded-pill px-3 py-2 text-sm font-semibold uppercase tracking-wide transition",
-                                isActive(
-                                    group.kind === "dropdown"
-                                        ? group.parent.href
-                                        : group.item.href,
-                                )
-                                    ? "bg-surface-sunken text-ink"
-                                    : "text-ink-muted hover:bg-surface-sunken hover:text-ink",
-                            ]}
-                        >
-                            {group.kind === "dropdown"
-                                ? group.parent.label
-                                : group.item.label}
-                            {group.kind === "dropdown" && (
-                                <svg
-                                    class="ml-0.5 size-6 shrink-0 transition-transform duration-200 group-hover:rotate-180"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    stroke-width="3"
+                    <li class="relative">
+                        {group.kind === "dropdown" ? (
+                            <>
+                                <!-- Dropdown trigger with aria-expanded -->
+                                <button
+                                    type="button"
+                                    aria-expanded="false"
+                                    aria-controls={`dropdown-${group.parent.href.replace(/\//g, '-')}`}
+                                    class="flex items-center gap-1 rounded-pill px-3 py-2 text-sm font-semibold uppercase tracking-wide transition text-ink-muted hover:bg-surface-sunken hover:text-ink"
                                 >
-                                    <path d="M6 9l6 6 6-6" />
-                                </svg>
-                            )}
-                        </a>
-
-                        <!-- Dropdown panel -->
-                        {group.kind === "dropdown" &&
-                        group.children.length > 0 ? (
-                            <ul class="pointer-events-none absolute left-1/2 top-full z-10 w-max -translate-x-1/2 rounded-card border border-line bg-surface-raised py-1 shadow-card opacity-0 transition-all duration-200 group-hover:pointer-events-auto group-hover:opacity-100">
-                                {group.children.map((child) => (
-                                    <li>
-                                        <a
-                                            href={child.href}
-                                            aria-current={
-                                                isActive(child.href)
-                                                    ? "page"
-                                                    : undefined
-                                            }
-                                            class:list={[
-                                                "block px-4 py-2 text-sm font-semibold uppercase tracking-wide transition",
-                                                isActive(child.href)
-                                                    ? "bg-surface-sunken text-ink"
-                                                    : "text-ink-muted hover:bg-surface-sunken hover:text-ink",
-                                            ]}
-                                        >
-                                            {child.label}
-                                        </a>
-                                    </li>
-                                ))}
-                            </ul>
-                        ) : null}
+                                    <span>{group.parent.label}</span>
+                                    <svg
+                                        class="size-3.5 transition-transform duration-200"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="2.5"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        aria-hidden="true"
+                                    >
+                                        <path d="M6 9l6 6 6-6" />
+                                    </svg>
+                                </button>
+                                <!-- Dropdown panel -->
+                                <ul
+                                    id={`dropdown-${group.parent.href.replace(/\//g, '-')}`}
+                                    role="menu"
+                                    class="absolute left-1/2 top-full -translate-x-1/2 mt-2 w-48 rounded-lg border border-line bg-surface-raised shadow-card p-1 opacity-0 invisible transition-all duration-200 pointer-events-none"
+                                >
+                                    {group.children.map((child) => (
+                                        <li role="none">
+                                            <a
+                                                href={child.href}
+                                                role="menuitem"
+                                                aria-current={isActive(child.href) ? "page" : undefined}
+                                                class:list={[
+                                                    "block rounded-md px-3 py-2 text-sm font-medium transition",
+                                                    isActive(child.href)
+                                                        ? "bg-surface-sunken text-ink"
+                                                        : "text-ink-muted hover:bg-surface-sunken hover:text-ink",
+                                                ]}
+                                            >
+                                                {child.label}
+                                            </a>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </>
+                        ) : (
+                            <a
+                                href={group.item.href}
+                                aria-current={isActive(group.item.href) ? "page" : undefined}
+                                class:list={[
+                                    "flex items-center rounded-pill px-3 py-2 text-sm font-semibold uppercase tracking-wide transition",
+                                    isActive(group.item.href)
+                                        ? "bg-surface-sunken text-ink"
+                                        : "text-ink-muted hover:bg-surface-sunken hover:text-ink",
+                                ]}
+                            >
+                                {group.item.label}
+                            </a>
+                        )}
                     </li>
                 ))}
             </ul>
         </nav>
 
-        <!-- Mobile nav -->
-        <details class="md:hidden [&[open]_svg.close]:block [&[open]_svg.open]:hidden">
-            <summary class="grid size-10 cursor-pointer items-center justify-center rounded-pill text-ink-muted">
-                <svg
-                    class="open size-5"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    aria-hidden="true"
-                >
-                    <path d="M4 6h16M4 12h16M4 18h16" stroke-linecap="round" />
-                </svg>
-                <svg
-                    class="close hidden size-5"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    aria-hidden="true"
-                >
-                    <path d="M6 6l12 12M18 6L6 18" stroke-linecap="round" />
-                </svg>
-            </summary>
-            <nav
-                aria-label="Mobilmeny"
-                class="absolute inset-x-0 top-16 border-b border-line bg-surface-raised shadow-card"
+        <!-- Mobile menu button -->
+        <button
+            type="button"
+            id="mobile-menu-toggle"
+            aria-expanded="false"
+            aria-controls="mobile-menu"
+            aria-label="Åpne meny"
+            class="grid size-10 shrink-0 place-items-center rounded-pill text-ink-muted hover:bg-surface-sunken hover:text-ink md:hidden"
+        >
+            <svg
+                id="mobile-menu-icon-open"
+                class="size-5"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                aria-hidden="true"
             >
-                <ul class="container-content flex flex-col py-2">
-                    {groups.map((group) => (
-                        <li>
-                            {group.kind === "flat" ? (
-                                <a
-                                    href={group.item.href}
-                                    aria-current={
-                                        isActive(group.item.href)
-                                            ? "page"
-                                            : undefined
-                                    }
-                                    class="block border-b border-line py-3 font-semibold uppercase tracking-wide last:border-0"
+                <path d="M4 6h16M4 12h16M4 18h16" stroke-linecap="round" />
+            </svg>
+            <svg
+                id="mobile-menu-icon-close"
+                class="size-5 hidden"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                aria-hidden="true"
+            >
+                <path d="M6 6l12 12M18 6L6 18" stroke-linecap="round" />
+            </svg>
+        </button>
+    </div>
+
+    <!-- Mobile menu panel -->
+    <div
+        id="mobile-menu"
+        class="fixed inset-x-0 top-16 z-50 hidden border-b border-line bg-surface-raised shadow-card md:hidden"
+    >
+        <nav aria-label="Mobilmeny" class="container-content flex flex-col py-2">
+            <ul>
+                {groups.map((group) => (
+                    <li>
+                        {group.kind === "flat" ? (
+                            <a
+                                href={group.item.href}
+                                aria-current={isActive(group.item.href) ? "page" : undefined}
+                                class="block border-b border-line py-3 px-3 font-semibold uppercase tracking-wide last:border-0 hover:bg-surface-sunken"
+                            >
+                                {group.item.label}
+                            </a>
+                        ) : (
+                            <>
+                                <!-- Mobile dropdown parent -->
+                                <button
+                                    type="button"
+                                    class="mobile-dropdown-trigger w-full border-b border-line py-3 px-3 text-left text-sm font-bold uppercase tracking-wide text-ink-muted hover:bg-surface-sunken"
+                                    aria-expanded="false"
+                                    aria-controls={`mobile-dropdown-${group.parent.href.replace(/\//g, '-')}`}
                                 >
-                                    {group.item.label}
-                                </a>
-                            ) : (
-                                <>
-                                    <span class="border-b border-line py-3 text-sm font-bold uppercase tracking-wide">
-                                        {group.parent.label}
+                                    <span class="flex items-center justify-between">
+                                        <span>{group.parent.label}</span>
+                                        <svg
+                                            class="size-4 transition-transform duration-200"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            stroke-width="2.5"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            aria-hidden="true"
+                                        >
+                                            <path d="M6 9l6 6 6-6" />
+                                        </svg>
                                     </span>
+                                </button>
+                                <!-- Mobile dropdown children -->
+                                <ul
+                                    id={`mobile-dropdown-${group.parent.href.replace(/\//g, '-')}`}
+                                    class="mobile-dropdown-panel hidden bg-surface-sunken/50"
+                                >
                                     {group.children.map((child) => (
                                         <a
                                             href={child.href}
-                                            aria-current={
-                                                isActive(child.href)
-                                                    ? "page"
-                                                    : undefined
-                                            }
-                                            class="block border-b border-line py-2 pl-4 text-sm uppercase tracking-wide last:border-0 text-ink-muted hover:text-ink"
+                                            aria-current={isActive(child.href) ? "page" : undefined}
+                                            class="block border-b border-line py-2.5 pl-6 pr-3 text-sm font-medium last:border-0 hover:bg-surface-sunken"
                                         >
                                             {child.label}
                                         </a>
                                     ))}
-                                </>
-                            )}
-                        </li>
-                    ))}
-                </ul>
-            </nav>
-        </details>
+                                </ul>
+                            </>
+                        )}
+                    </li>
+                ))}
+            </ul>
+        </nav>
     </div>
 </header>
+
+<script>
+    // Desktop dropdown toggles
+    document.querySelectorAll('[aria-controls^="dropdown-"]').forEach((btn) => {
+        const trigger = btn as HTMLButtonElement;
+        const panelId = trigger.getAttribute('aria-controls');
+        const panel = panelId ? document.getElementById(panelId) : null;
+        if (!panel) return;
+
+        let open = false;
+
+        const setOpen = (state: boolean) => {
+            open = state;
+            trigger.setAttribute('aria-expanded', String(state));
+            panel.classList.toggle('opacity-0', !state);
+            panel.classList.toggle('invisible', !state);
+            panel.classList.toggle('pointer-events-none', !state);
+            panel.classList.toggle('opacity-100', state);
+            panel.classList.toggle('visible', state);
+            panel.classList.toggle('transition-opacity', state);
+            (trigger.querySelector('svg') as SVGElement)?.style.setProperty('transform', state ? 'rotate(180deg)' : '');
+        };
+
+        trigger.addEventListener('click', () => setOpen(!open));
+
+        // Close on outside click
+        document.addEventListener('click', (e) => {
+            if (open && !trigger.contains(e.target as Node) && !panel.contains(e.target as Node)) {
+                setOpen(false);
+            }
+        });
+
+        // Close on Escape
+        document.addEventListener('keydown', (e) => {
+            if (open && e.key === 'Escape') {
+                setOpen(false);
+                trigger.focus();
+            }
+        });
+    });
+
+    // Mobile menu toggle
+    const mobileToggle = document.getElementById('mobile-menu-toggle');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const iconOpen = document.getElementById('mobile-menu-icon-open');
+    const iconClose = document.getElementById('mobile-menu-icon-close');
+
+    if (mobileToggle && mobileMenu) {
+        let menuOpen = false;
+
+        mobileToggle.addEventListener('click', () => {
+            menuOpen = !menuOpen;
+            mobileToggle.setAttribute('aria-expanded', String(menuOpen));
+            mobileMenu.classList.toggle('hidden', !menuOpen);
+            mobileToggle.setAttribute('aria-label', menuOpen ? 'Lukk meny' : 'Åpne meny');
+
+            if (iconOpen && iconClose) {
+                iconOpen.classList.toggle('hidden', menuOpen);
+                iconClose.classList.toggle('hidden', !menuOpen);
+            }
+        });
+
+        // Close mobile menu on link click
+        mobileMenu.querySelectorAll('a').forEach((link) => {
+            link.addEventListener('click', () => {
+                menuOpen = false;
+                mobileToggle.setAttribute('aria-expanded', 'false');
+                mobileMenu.classList.add('hidden');
+                mobileToggle.setAttribute('aria-label', 'Åpne meny');
+                if (iconOpen && iconClose) {
+                    iconOpen.classList.remove('hidden');
+                    iconClose.classList.add('hidden');
+                }
+            });
+        });
+
+        // Close on Escape
+        document.addEventListener('keydown', (e) => {
+            if (menuOpen && e.key === 'Escape') {
+                menuOpen = false;
+                mobileToggle.setAttribute('aria-expanded', 'false');
+                mobileMenu.classList.add('hidden');
+                mobileToggle.setAttribute('aria-label', 'Åpne meny');
+                if (iconOpen && iconClose) {
+                    iconOpen.classList.remove('hidden');
+                    iconClose.classList.add('hidden');
+                }
+                mobileToggle.focus();
+            }
+        });
+    }
+
+    // Mobile dropdown toggles
+    document.querySelectorAll('.mobile-dropdown-trigger').forEach((btn) => {
+        const trigger = btn as HTMLButtonElement;
+        const panelId = trigger.getAttribute('aria-controls');
+        const panel = panelId ? document.getElementById(panelId) : null;
+        if (!panel) return;
+
+        let open = false;
+
+        trigger.addEventListener('click', () => {
+            open = !open;
+            trigger.setAttribute('aria-expanded', String(open));
+            panel.classList.toggle('hidden', !open);
+            (trigger.querySelector('svg') as SVGElement)?.style.setProperty('transform', open ? 'rotate(180deg)' : '');
+        });
+    });
+</script>
