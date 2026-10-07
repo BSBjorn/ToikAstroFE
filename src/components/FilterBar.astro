@@ -1,0 +1,95 @@
+---
+interface Option {
+  value: string;
+  label: string;
+}
+
+interface Props {
+  /** Current search text (prefills the input). */
+  search?: string;
+  /** Filter options for category dropdown — omit to hide it. */
+  categories?: Array<Option>;
+  /** Currently selected category value. */
+  selectedCategory?: string;
+  /** Filter options for team/selector dropdown — omit to hide it. */
+  teams?: Array<Option>;
+  /** Currently selected team/option value. */
+  selectedTeam?: string;
+  /** Form action URL (defaults to current path). */
+  action?: string;
+}
+
+const { search = '', categories, selectedCategory, teams, selectedTeam, action } = Astro.props;
+
+const currentPath = action ?? Astro.url.pathname;
+---
+
+<form method="get" action={currentPath} class="flex flex-wrap items-end gap-3">
+  <!-- Search -->
+  <div class="flex min-w-48 flex-1 basis-[20ch]">
+    <label for="filter-search" class="sr-only">Søk</label>
+    <input
+      type="search"
+      id="filter-search"
+      name="search"
+      value={search}
+      placeholder="Søk i oversikt…"
+      autocomplete="off"
+      class="w-full rounded-card border border-line bg-surface px-3 py-2 text-sm outline-none transition-colors focus:border-brand-500"
+    />
+  </div>
+
+  <!-- Category dropdown (optional) -->
+  {categories && categories.length > 0 && (
+    <div class="flex flex-col gap-1">
+      <label for="filter-category" class="text-xs text-ink-muted">Kategori</label>
+      <select
+        id="filter-category"
+        name="category"
+        value={selectedCategory ?? ''}
+        class="rounded-card border border-line bg-surface px-3 py-2 text-sm outline-none transition-colors focus:border-brand-500"
+      >
+        <option value="">Alle</option>
+        {categories.map((c) => (
+          <option value={c.value}>{c.label}</option>
+        ))}
+      </select>
+    </div>
+  )}
+
+  <!-- Team/selector dropdown (optional) -->
+  {teams && teams.length > 0 && (
+    <div class="flex flex-col gap-1">
+      <label for="filter-team" class="text-xs text-ink-muted">Lag</label>
+      <select
+        id="filter-team"
+        name="team"
+        value={selectedTeam ?? ''}
+        class="rounded-card border border-line bg-surface px-3 py-2 text-sm outline-none transition-colors focus:border-brand-500"
+      >
+        <option value="">Alle</option>
+        {teams.map((t) => (
+          <option value={t.value}>{t.label}</option>
+        ))}
+      </select>
+    </div>
+  )}
+
+  <!-- Submit -->
+  <button
+    type="submit"
+    class="rounded-card border border-line bg-surface px-4 py-2 text-sm font-semibold transition-colors hover:bg-surface-sunken"
+  >
+    Søk
+  </button>
+
+  <!-- Clear (only shown when filters active) -->
+  {search || selectedCategory || selectedTeam ? (
+    <a
+      href={currentPath}
+      class="inline-block self-end text-xs text-ink-muted underline hover:text-ink"
+    >
+      Nullstill
+    </a>
+  ) : null}
+</form>
