@@ -1,0 +1,361 @@
+---
+/**
+ * Theme / Design System reference page.
+ * Not a public route — use while developing to preview tokens, colors, and patterns.
+ */
+import Base from "../layouts/Base.astro";
+
+const ramp = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950];
+const label = (n: number) => n === 950 ? "950" : String(n);
+---
+
+<Base title="Theme" maxAge={0}>
+  <div class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+    <!-- Header -->
+    <header class="mb-12">
+      <h1 class="font-display text-hero font-bold tracking-tight text-brand-900 dark:text-ice-50">Theme</h1>
+      <p class="mt-2 text-lg text-ice-600 dark:text-ice-400">Design tokens, colors, typography, and reusable patterns.</p>
+    </header>
+
+    <!-- Dark mode toggle -->
+    <div class="mb-12 flex items-center gap-4">
+      <button
+        id="theme-toggle"
+        class="inline-flex items-center gap-2 rounded-full border border-line bg-surface-raised px-4 py-2 text-sm font-medium shadow-sm transition hover:bg-ice-100 dark:border-brand-700 dark:hover:bg-brand-800"
+      >
+        <span id="toggle-icon">🌙</span>
+        <span id="toggle-label">Dark</span>
+      </button>
+      <span class="text-sm text-ice-500 dark:text-ice-400">Toggle to preview dark mode</span>
+    </div>
+
+    <!-- ─── Color Ramps ─────────────────────────────────────────────────── -->
+    <section class="mb-16">
+      <h2 class="mb-6 font-display text-display font-bold tracking-tight text-brand-900 dark:text-ice-50">Colors</h2>
+
+      <!-- Brand -->
+      <div class="mb-8">
+        <h3 class="mb-3 text-lg font-semibold text-brand-700 dark:text-brand-300">Brand</h3>
+        <div class="grid grid-cols-2 gap-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6">
+          {ramp.map((n) => (
+            <div
+              class="group relative overflow-hidden rounded-lg border border-line p-3 text-center shadow-sm transition hover:shadow-md"
+              style={`background-color: var(--color-brand-${label(n)}); color: ${n <= 500 ? "#ffffff" : "#0a1a2f"}`}
+            >
+              <div class="text-sm font-semibold">brand-{label(n)}</div>
+              <div class="mt-1 text-xs opacity-70">{n <= 500 ? "#ffffff" : "#0a1a2f"}</div>
+              <!-- hex tooltip -->
+              <div class="absolute inset-0 flex items-center justify-center bg-brand-900 bg-opacity-90 text-xs text-white opacity-0 transition group-hover:opacity-100">
+                {n === 50 && "#eef3f9"}
+                {n === 100 && "#d6e2f0"}
+                {n === 200 && "#adc4e0"}
+                {n === 300 && "#7c9fcb"}
+                {n === 400 && "#4a74a8"}
+                {n === 500 && "#2b5286"}
+                {n === 600 && "#1d3c66"}
+                {n === 700 && "#142c4c"}
+                {n === 800 && "#0f2138"}
+                {n === 900 && "#0a1a2f"}
+                {n === 950 && "#061120"}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <!-- Accent -->
+      <div class="mb-8">
+        <h3 class="mb-3 text-lg font-semibold text-accent-600 dark:text-accent-400">Accent</h3>
+        <div class="grid grid-cols-2 gap-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6">
+          {ramp.map((n) => (
+            <div
+              class="group relative overflow-hidden rounded-lg border border-line p-3 text-center shadow-sm transition hover:shadow-md"
+              style={`background-color: var(--color-accent-${label(n)}); color: ${n <= 500 ? "#ffffff" : "#0a1a2f"}`}
+            >
+              <div class="text-sm font-semibold">accent-{label(n)}</div>
+              <div class="mt-1 text-xs opacity-70">{n <= 500 ? "#ffffff" : "#0a1a2f"}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <!-- Ice -->
+      <div class="mb-8">
+        <h3 class="mb-3 text-lg font-semibold text-ice-600 dark:text-ice-400">Ice (neutrals)</h3>
+        <div class="grid grid-cols-2 gap-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6">
+          {ramp.map((n) => (
+            <div
+              class="group relative overflow-hidden rounded-lg border border-line p-3 text-center shadow-sm transition hover:shadow-md"
+              style={`background-color: var(--color-ice-${label(n)}); color: ${n <= 500 ? "#0a1a2f" : "#ffffff"}`}
+            >
+              <div class="text-sm font-semibold">ice-{label(n)}</div>
+              <div class="mt-1 text-xs opacity-70">#{n <= 500 ? "0a1a2f" : "ffffff"}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── Semantic Tokens ─────────────────────────────────────────────── -->
+    <section class="mb-16">
+      <h2 class="mb-6 font-display text-display font-bold tracking-tight text-brand-900 dark:text-ice-50">Semantic Tokens</h2>
+      <div class="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-5">
+        <div class="rounded-lg border border-line p-4 shadow-sm" style="background: var(--color-surface);">
+          <div class="font-semibold" style="color: var(--color-ink);">surface</div>
+          <div class="mt-1 text-xs opacity-60" style="color: var(--color-ink);">page bg</div>
+        </div>
+        <div class="rounded-lg border border-line p-4 shadow-sm" style="background: var(--color-surface-raised);">
+          <div class="font-semibold" style="color: var(--color-ink);">surface-raised</div>
+          <div class="mt-1 text-xs opacity-60" style="color: var(--color-ink);">card bg</div>
+        </div>
+        <div class="rounded-lg border border-line p-4 shadow-sm" style="background: var(--color-surface-sunken);">
+          <div class="font-semibold" style="color: var(--color-ink);">surface-sunken</div>
+          <div class="mt-1 text-xs opacity-60" style="color: var(--color-ink);">input bg</div>
+        </div>
+        <div class="rounded-lg border border-line p-4 shadow-sm" style="background: var(--color-surface-invert);">
+          <div class="font-semibold" style="color: var(--color-ink-invert);">surface-invert</div>
+          <div class="mt-1 text-xs opacity-60" style="color: var(--color-ink-invert);">dark bg</div>
+        </div>
+        <div class="rounded-lg border border-line p-4 shadow-sm">
+          <div class="font-semibold" style="color: var(--color-ink);">ink</div>
+          <div class="mt-1 text-xs opacity-60" style="color: var(--color-ink);">body text</div>
+        </div>
+        <div class="rounded-lg border border-line p-4 shadow-sm">
+          <div class="font-semibold" style="color: var(--color-ink-muted);">ink-muted</div>
+          <div class="mt-1 text-xs opacity-60" style="color: var(--color-ink-muted);">secondary text</div>
+        </div>
+        <div class="rounded-lg border border-line p-4 shadow-sm">
+          <div class="font-semibold" style="color: var(--color-line);">line</div>
+          <div class="mt-1 text-xs opacity-60" style="color: var(--color-line);">border</div>
+        </div>
+        <div class="rounded-lg border border-line p-4 shadow-sm">
+          <div class="font-semibold" style="color: var(--color-line-strong);">line-strong</div>
+          <div class="mt-1 text-xs opacity-60" style="color: var(--color-line-strong);">strong border</div>
+        </div>
+        <div class="rounded-lg border border-line p-4 shadow-sm">
+          <div class="font-semibold" style="color: var(--color-focus);">focus</div>
+          <div class="mt-1 text-xs opacity-60" style="color: var(--color-focus);">ring color</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── Typography ──────────────────────────────────────────────────── -->
+    <section class="mb-16">
+      <h2 class="mb-6 font-display text-display font-bold tracking-tight text-brand-900 dark:text-ice-50">Typography</h2>
+
+      <div class="space-y-6 rounded-lg border border-line bg-surface-raised p-6 shadow-sm">
+        <div>
+          <div class="mb-1 text-xs font-medium uppercase tracking-wider text-ice-500">Display</div>
+          <p class="font-display text-hero font-bold tracking-tight text-brand-900 dark:text-ice-50">Display Heading</p>
+        </div>
+        <div>
+          <div class="mb-1 text-xs font-medium uppercase tracking-wider text-ice-500">Hero</div>
+          <p class="font-display text-hero font-bold tracking-tight text-brand-900 dark:text-ice-50">Hero Heading</p>
+        </div>
+        <div>
+          <div class="mb-1 text-xs font-medium uppercase tracking-wider text-ice-500">Heading 1</div>
+          <h1 class="font-display text-4xl font-bold tracking-tight text-brand-900 dark:text-ice-50">Heading 1</h1>
+        </div>
+        <div>
+          <div class="mb-1 text-xs font-medium uppercase tracking-wider text-ice-500">Heading 2</div>
+          <h2 class="font-display text-3xl font-bold tracking-tight text-brand-900 dark:text-ice-50">Heading 2</h2>
+        </div>
+        <div>
+          <div class="mb-1 text-xs font-medium uppercase tracking-wider text-ice-500">Heading 3</div>
+          <h3 class="font-display text-2xl font-bold tracking-tight text-brand-900 dark:text-ice-50">Heading 3</h3>
+        </div>
+        <div>
+          <div class="mb-1 text-xs font-medium uppercase tracking-wider text-ice-500">Heading 4</div>
+          <h4 class="font-display text-xl font-bold tracking-tight text-brand-900 dark:text-ice-50">Heading 4</h4>
+        </div>
+        <div>
+          <div class="mb-1 text-xs font-medium uppercase tracking-wider text-ice-500">Body</div>
+          <p class="text-base leading-7 text-ink">The quick brown fox jumps over the lazy dog. Body text is set in Inter for readability at all sizes.</p>
+        </div>
+        <div>
+          <div class="mb-1 text-xs font-medium uppercase tracking-wider text-ice-500">Muted</div>
+          <p class="text-base leading-7 text-ink-muted">Secondary text, captions, and helper copy use muted ink.</p>
+        </div>
+        <div>
+          <div class="mb-1 text-xs font-medium uppercase tracking-wider text-ice-500">Mono</div>
+          <code class="rounded bg-ice-100 px-2 py-1 font-mono text-sm text-brand-700 dark:bg-brand-800 dark:text-brand-200">const x = 42</code>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── Buttons ─────────────────────────────────────────────────────── -->
+    <section class="mb-16">
+      <h2 class="mb-6 font-display text-display font-bold tracking-tight text-brand-900 dark:text-ice-50">Buttons</h2>
+
+      <div class="space-y-8 rounded-lg border border-line bg-surface-raised p-6 shadow-sm">
+        <!-- Variants -->
+        <div>
+          <h3 class="mb-3 text-sm font-semibold uppercase tracking-wider text-ice-500">Variants</h3>
+          <div class="flex flex-wrap items-center gap-3">
+            <button class="inline-flex items-center justify-center rounded-lg bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-400">Primary</button>
+            <button class="inline-flex items-center justify-center rounded-lg bg-accent-500 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-accent-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-400">Accent</button>
+            <button class="inline-flex items-center justify-center rounded-lg border border-brand-600 px-5 py-2.5 text-sm font-semibold text-brand-600 transition hover:bg-brand-50 dark:border-brand-400 dark:text-brand-400 dark:hover:bg-brand-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-400">Outline</button>
+            <button class="inline-flex items-center justify-center rounded-lg bg-ice-100 px-5 py-2.5 text-sm font-semibold text-ink transition hover:bg-ice-200 dark:bg-brand-800 dark:hover:bg-brand-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-400">Subtle</button>
+            <button class="inline-flex items-center justify-center rounded-lg px-5 py-2.5 text-sm font-semibold text-brand-600 transition hover:bg-brand-50 dark:text-brand-400 dark:hover:bg-brand-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-400">Ghost</button>
+          </div>
+        </div>
+
+        <!-- Sizes -->
+        <div>
+          <h3 class="mb-3 text-sm font-semibold uppercase tracking-wider text-ice-500">Sizes</h3>
+          <div class="flex flex-wrap items-center gap-3">
+            <button class="inline-flex items-center justify-center rounded-lg bg-brand-600 px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition hover:bg-brand-500">Small</button>
+            <button class="inline-flex items-center justify-center rounded-lg bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-500">Default</button>
+            <button class="inline-flex items-center justify-center rounded-lg bg-brand-600 px-6 py-3 text-base font-semibold text-white shadow-sm transition hover:bg-brand-500">Large</button>
+          </div>
+        </div>
+
+        <!-- States -->
+        <div>
+          <h3 class="mb-3 text-sm font-semibold uppercase tracking-wider text-ice-500">States</h3>
+          <div class="flex flex-wrap items-center gap-3">
+            <button class="inline-flex items-center justify-center rounded-lg bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-500">Hover me</button>
+            <button disabled class="inline-flex items-center justify-center rounded-lg bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm opacity-50 cursor-not-allowed">Disabled</button>
+          </div>
+        </div>
+
+        <!-- Pill -->
+        <div>
+          <h3 class="mb-3 text-sm font-semibold uppercase tracking-wider text-ice-500">Pill</h3>
+          <div class="flex flex-wrap items-center gap-3">
+            <button class="inline-flex items-center justify-center rounded-full bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-500">Pill Primary</button>
+            <button class="inline-flex items-center justify-center rounded-full border border-brand-600 px-5 py-2.5 text-sm font-semibold text-brand-600 transition hover:bg-brand-50 dark:border-brand-400 dark:text-brand-400 dark:hover:bg-brand-900">Pill Outline</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── Cards ───────────────────────────────────────────────────────── -->
+    <section class="mb-16">
+      <h2 class="mb-6 font-display text-display font-bold tracking-tight text-brand-900 dark:text-ice-50">Cards</h2>
+
+      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <!-- Default raised card -->
+        <div class="overflow-hidden rounded-lg border border-line bg-surface-raised shadow-card transition hover:shadow-lift">
+          <div class="h-40 bg-gradient-to-br from-brand-400 to-brand-600"></div>
+          <div class="p-5">
+            <div class="mb-2 text-xs font-semibold uppercase tracking-wider text-accent-500">Label</div>
+            <h3 class="font-display text-xl font-bold text-brand-900 dark:text-ice-50">Default Card</h3>
+            <p class="mt-2 text-sm leading-6 text-ink-muted">Raised card with image placeholder, used for articles, fixtures, and sponsor listings.</p>
+            <div class="mt-4 flex items-center gap-3">
+              <button class="inline-flex items-center justify-center rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-500">Action</button>
+              <button class="text-sm font-semibold text-brand-600 underline underline-offset-2 transition hover:text-brand-500 dark:text-brand-400">Learn more →</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Inverted card -->
+        <div class="overflow-hidden rounded-lg border border-line bg-surface-invert shadow-card transition hover:shadow-lift">
+          <div class="h-40 bg-gradient-to-br from-accent-500 to-accent-700"></div>
+          <div class="p-5">
+            <div class="mb-2 text-xs font-semibold uppercase tracking-wider text-accent-300">Label</div>
+            <h3 class="font-display text-xl font-bold text-ink-invert">Inverted Card</h3>
+            <p class="mt-2 text-sm leading-6 text-ink-invert opacity-80">Dark surface with light text — ideal for call-to-action banners or featured content.</p>
+            <div class="mt-4 flex items-center gap-3">
+              <button class="inline-flex items-center justify-center rounded-lg bg-accent-500 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-accent-400">Action</button>
+              <button class="text-sm font-semibold text-ink-invert opacity-80 underline underline-offset-2 transition hover:opacity-100">Learn more →</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Simple / flat card -->
+        <div class="overflow-hidden rounded-lg border border-line bg-surface-raised shadow-card transition hover:shadow-lift">
+          <div class="p-5">
+            <div class="mb-2 text-xs font-semibold uppercase tracking-wider text-accent-500">Label</div>
+            <h3 class="font-display text-xl font-bold text-brand-900 dark:text-ice-50">Simple Card</h3>
+            <p class="mt-2 text-sm leading-6 text-ink-muted">Flat card without image — use for stats, quick info, or metadata blocks.</p>
+            <div class="mt-4 flex items-center gap-3">
+              <button class="inline-flex items-center justify-center rounded-lg border border-brand-600 px-4 py-2 text-sm font-semibold text-brand-600 transition hover:bg-brand-50 dark:border-brand-400 dark:text-brand-400 dark:hover:bg-brand-900">Outline</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── Shadows & Radius ────────────────────────────────────────────── -->
+    <section class="mb-16">
+      <h2 class="mb-6 font-display text-display font-bold tracking-tight text-brand-900 dark:text-ice-50">Shadows &amp; Radius</h2>
+
+      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div class="flex flex-col items-center gap-2 rounded-lg border border-line bg-surface-raised p-6 shadow-card">
+          <div class="h-16 w-16 rounded-lg bg-brand-500"></div>
+          <span class="text-xs font-medium text-ice-500">shadow-card</span>
+        </div>
+        <div class="flex flex-col items-center gap-2 rounded-lg border border-line bg-surface-raised p-6 shadow-lift">
+          <div class="h-16 w-16 rounded-lg bg-brand-500"></div>
+          <span class="text-xs font-medium text-ice-500">shadow-lift</span>
+        </div>
+        <div class="flex flex-col items-center gap-2 rounded-lg border border-line bg-surface-raised p-6" style="border-radius: var(--radius-card);">
+          <div class="h-16 w-16 bg-brand-500" style="border-radius: var(--radius-card);"></div>
+          <span class="text-xs font-medium text-ice-500">radius-card (0.75rem)</span>
+        </div>
+        <div class="flex flex-col items-center gap-2 rounded-lg border border-line bg-surface-raised p-6">
+          <div class="h-16 w-16 rounded-full bg-brand-500"></div>
+          <span class="text-xs font-medium text-ice-500">radius-pill (999px)</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── Spacing ─────────────────────────────────────────────────────── -->
+    <section class="mb-16">
+      <h2 class="mb-6 font-display text-display font-bold tracking-tight text-brand-900 dark:text-ice-50">Spacing</h2>
+      <div class="rounded-lg border border-line bg-surface-raised p-6 shadow-sm">
+        <div class="flex items-center gap-4">
+          <div class="h-8 w-8 rounded bg-brand-400"></div>
+          <span class="text-sm font-medium text-ice-500">--spacing-gutter = 1rem</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── Prose ───────────────────────────────────────────────────────── -->
+    <section class="mb-16">
+      <h2 class="mb-6 font-display text-display font-bold tracking-tight text-brand-900 dark:text-ice-50">Prose</h2>
+      <div class="prose max-w-none rounded-lg border border-line bg-surface-raised p-6 shadow-sm dark:prose-invert">
+        <h3>Rich text example</h3>
+        <p>This is a paragraph rendered with Tailwind's <code>prose</code> utility. It handles headings, links, lists, and other block elements the way Strapi rich-text content would appear on the site.</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+        <ul>
+          <li>First list item</li>
+          <li>Second list item</li>
+          <li>Third list item</li>
+        </ul>
+        <p><a href="#" class="text-brand-600 underline">Example link</a> — styled with the brand color.</p>
+      </div>
+    </section>
+  </div>
+</Base>
+
+<script client:load>
+  function apply(mode) {
+    var root = document.documentElement;
+    if (mode === "dark") {
+      root.classList.add("dark");
+      root.setAttribute("data-theme", "dark");
+    } else {
+      root.classList.remove("dark");
+      root.setAttribute("data-theme", "light");
+    }
+    var icon = document.getElementById("toggle-icon");
+    var label = document.getElementById("toggle-label");
+    if (icon) icon.textContent = mode === "dark" ? "☀️" : "🌙";
+    if (label) label.textContent = mode === "dark" ? "Light" : "Dark";
+  }
+
+  var toggle = document.getElementById("theme-toggle");
+  if (toggle) {
+    toggle.addEventListener("click", function () {
+      var isDark = document.documentElement.classList.contains("dark");
+      apply(isDark ? "light" : "dark");
+    });
+  }
+
+  // Respect system preference on load
+  if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+    apply("dark");
+  }
+</script>

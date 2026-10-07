@@ -14,6 +14,8 @@
   the accent earns attention because almost nothing else uses it.
 */
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   /* --- Brand ramp: navy ------------------------------------------------ */
   --color-brand-50: #eef3f9;
