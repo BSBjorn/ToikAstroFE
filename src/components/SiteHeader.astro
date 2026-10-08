@@ -100,7 +100,7 @@ const logoSrc = logo ? mediaUrl(logo, "thumbnail") : null;
                                     type="button"
                                     aria-expanded="false"
                                     aria-controls={`dropdown-${group.parent.href.replace(/\//g, '-')}`}
-                                    class="flex items-center gap-1 rounded-pill px-3 py-2 text-sm font-semibold uppercase tracking-wide transition text-ink-muted hover:bg-surface-sunken hover:text-ink"
+                                    class="nav-link gap-1"
                                 >
                                     <span>{group.parent.label}</span>
                                     <svg
@@ -146,10 +146,10 @@ const logoSrc = logo ? mediaUrl(logo, "thumbnail") : null;
                                 href={group.item.href}
                                 aria-current={isActive(group.item.href) ? "page" : undefined}
                                 class:list={[
-                                    "flex items-center rounded-pill px-3 py-2 text-sm font-semibold uppercase tracking-wide transition",
+                                    "nav-link",
                                     isActive(group.item.href)
-                                        ? "bg-surface-sunken text-ink"
-                                        : "text-ink-muted hover:bg-surface-sunken hover:text-ink",
+                                        ? "nav-link-active"
+                                        : "",
                                 ]}
                             >
                                 {group.item.label}
@@ -167,7 +167,7 @@ const logoSrc = logo ? mediaUrl(logo, "thumbnail") : null;
             aria-expanded="false"
             aria-controls="mobile-menu"
             aria-label="Åpne meny"
-            class="grid size-10 shrink-0 place-items-center rounded-pill text-ink-muted hover:bg-surface-sunken hover:text-ink md:hidden"
+            class="grid size-10 shrink-0 place-items-center rounded-pill text-ink-muted transition hover:bg-surface-sunken hover:text-ink md:hidden"
         >
             <svg
                 id="mobile-menu-icon-open"
@@ -207,7 +207,12 @@ const logoSrc = logo ? mediaUrl(logo, "thumbnail") : null;
                             <a
                                 href={group.item.href}
                                 aria-current={isActive(group.item.href) ? "page" : undefined}
-                                class="block border-b border-line py-3 px-3 font-semibold uppercase tracking-wide last:border-0 hover:bg-surface-sunken"
+                                class:list={[
+                                    "block border-b border-line py-3 px-3 font-semibold uppercase tracking-wide last:border-0",
+                                    isActive(group.item.href)
+                                        ? "nav-link-active"
+                                        : "hover:bg-surface-sunken",
+                                ]}
                             >
                                 {group.item.label}
                             </a>

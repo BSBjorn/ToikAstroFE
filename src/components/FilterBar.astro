@@ -44,7 +44,7 @@ const currentPath = action ?? Astro.url.pathname;
             value={search}
             placeholder="Søk i oversikt…"
             autocomplete="off"
-            class="w-full rounded-card border border-line bg-surface px-3 py-2 text-sm outline-none transition-colors focus:border-brand-500"
+            class="input"
         />
     </div>
 
@@ -58,7 +58,7 @@ const currentPath = action ?? Astro.url.pathname;
                 id="filter-category"
                 name="category"
                 value={selectedCategory ?? ""}
-                class="rounded-card border border-line bg-surface px-3 py-2 text-sm outline-none transition-colors focus:border-brand-500"
+                class="input-select"
             >
                 <option value="">Alle</option>
                 {categories.map((c) => (
@@ -78,7 +78,7 @@ const currentPath = action ?? Astro.url.pathname;
                 id="filter-team"
                 name="team"
                 value={selectedTeam ?? ""}
-                class="rounded-card border border-line bg-surface px-3 py-2 text-sm outline-none transition-colors focus:border-brand-500"
+                class="input-select"
             >
                 <option value="">Alle</option>
                 {teams.map((t) => (

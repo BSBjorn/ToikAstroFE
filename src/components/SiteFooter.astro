@@ -43,7 +43,7 @@ const buildFlatLinks = (nodes: import('../lib/strapi').TreeNode[]): Array<{ titl
         {
           email && (
             <p class="mt-2 text-sm">
-              <a href={`mailto:${email}`} class="underline underline-offset-2">{email}</a>
+              <a href={`mailto:${email}`} class="link-footer">{email}</a>
             </p>
           )
         }
@@ -53,7 +53,7 @@ const buildFlatLinks = (nodes: import('../lib/strapi').TreeNode[]): Array<{ titl
         <ul class="grid grid-cols-2 gap-x-8 gap-y-2 text-sm sm:grid-cols-3 md:grid-cols-4 lg:gap-x-12">
           {buildFlatLinks(tree).map((page) => (
             <li>
-              <a href={`/p/${page.slug}`} class="hover:underline underline-offset-2">
+              <a href={`/p/${page.slug}`} class="link-footer">
                 {page.title}
               </a>
             </li>
