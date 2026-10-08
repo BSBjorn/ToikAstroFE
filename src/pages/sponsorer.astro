@@ -1,15 +1,15 @@
 ---
-import Base from '../layouts/Base.astro';
-import SponsorGrid from '../components/SponsorGrid.astro';
-import { getSponsors } from '../lib/strapi';
+import Base from "../layouts/Base.astro";
+import SponsorGrid from "../components/SponsorGrid.astro";
+import { getSponsors } from "../lib/strapi";
 
 const response = await getSponsors();
 const sponsors = response?.data ?? [];
 ---
 
 <Base title="Samarbeidspartnere">
-  <div class="container-content py-12">
-    <h1 class="text-display">Våre samarbeidspartnere</h1>
-    <SponsorGrid sponsors={sponsors} />
-  </div>
+    <div class="container-content py-12 scheme-light">
+        <h1 class="text-display">Våre samarbeidspartnere</h1>
+        <SponsorGrid sponsors={sponsors} title={null} />
+    </div>
 </Base>

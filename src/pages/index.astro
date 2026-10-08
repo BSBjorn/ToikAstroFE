@@ -79,7 +79,7 @@ const heroImage: StrapiMedia | null = frontpage.hero?.image ?? null;
 const orgNumber: string | null = club.grasrotandelenOrgNumber ?? null;
 const pinnedArticle: Article | null = frontpage.pinnedArticle ?? null;
 const [lead, ...rest] = articles;
-const heroSrc = mediaUrl(heroImage, "large");
+const heroSrc = mediaUrl(heroImage) ?? null;
 
 // Build section map from frontpage sections config
 const sectionMap: Record<string, boolean> = {};
@@ -151,8 +151,13 @@ sectionMap.sponsors = sectionMap.sponsors ?? true;
     ) : (
         <section class="relative isolate overflow-hidden bg-brand-900 text-ink-invert">
             <div class="container-content py-20 sm:py-28">
-                <h1 class="max-w-3xl text-hero text-white/75">Velkommen til TOIK</h1>
-                <p class="mt-5 max-w-xl text-lg text-ice-300">Rediger hero-innhold i Strapi admin for å vise eget bilde og tekst.</p>
+                <h1 class="max-w-3xl text-hero text-white/75">
+                    Velkommen til TOIK
+                </h1>
+                <p class="mt-5 max-w-xl text-lg text-ice-300">
+                    Rediger hero-innhold i Strapi admin for å vise eget bilde og
+                    tekst.
+                </p>
             </div>
         </section>
     )}
@@ -283,8 +288,6 @@ sectionMap.sponsors = sectionMap.sponsors ?? true;
             </section>
         );
     })}
-
-    {sectionMap.sponsors && <Grasrot orgNumber={orgNumber} />}
 
     {sectionMap.sponsors && <SponsorGrid sponsors={sponsors} />}
 </Base>

@@ -1,19 +1,51 @@
 ---
 import Base from '../layouts/Base.astro';
 import ArticleCard from '../components/ArticleCard.astro';
-import { getArticles } from '../lib/strapi';
+import FilterBar from '../components/FilterBar.astro';
+import { getArticles, getTeams } from '../lib/strapi';
 
-const response = await getArticles({ page: 1, pageSize: 24 });
+const category = Astro.url.searchParams.get('category') ?? '';
+const team = Astro.url.searchParams.get('team') ?? '';
+const search = Astro.url.searchParams.get('search') ?? '';
+
+// Preload filter options (used only server-side)
+const allTeams = await getTeams();
+const teamsForFilter = allTeams?.data.map((t) => ({ value: t.slug, label: t.name })) ?? [];
+
+const ARTICLE_CATEGORIES: Array<{ value: string; label: string }> = [
+  { value: 'kampreferat', label: 'Kampreferat' },
+  { value: 'nyhet', label: 'Nyhet' },
+  { value: 'vikings', label: 'Vikings' },
+  { value: 'bredde', label: 'Bredde' },
+];
+
+const response = await getArticles({
+  category: category || undefined,
+  team: team || undefined,
+  search: search || undefined,
+});
 const articles = response?.data ?? [];
 ---
 
 <Base title="Nyheter">
   <div class="container-content py-12">
     <h1 class="text-display">Nyheter</h1>
-    <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-      {articles.map((article) => (
-        <ArticleCard article={article} />
-      ))}
-    </div>
+    <FilterBar
+      search={search}
+      categories={ARTICLE_CATEGORIES}
+      selectedCategory={category || undefined}
+      teams={teamsForFilter}
+      selectedTeam={team || undefined}
+      action="/nyheter"
+    />
+    {articles.length ? (
+      <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {articles.map((article) => (
+          <ArticleCard article={article} />
+        ))}
+      </div>
+    ) : (
+      <p class="mt-8 text-ink-muted">Ingen nyheter matchet filteret.</p>
+    )}
   </div>
 </Base>

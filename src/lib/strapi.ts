@@ -104,22 +104,30 @@ export async function getArticles(options: {
   section?: string;
   category?: string;
   team?: string;
+  search?: string;
   page?: number;
   pageSize?: number;
 } = {}) {
-  const { section, category, team, page = 1, pageSize = 12 } = options;
+  const { section, category, team, search, page = 1, pageSize = 12 } = options;
 
-  return get<StrapiResponse<Article[]>>('article', TTL.article, '/api/articles', {
+  const query: Record<string, QueryValue> = {
     'populate[cover]': 'true',
     'populate[team][fields][0]': 'name',
     'populate[team][fields][1]': 'slug',
-    'filters[section][$eq]': section,
-    'filters[category][$eq]': category,
-    'filters[team][slug][$eq]': team,
     'sort[0]': 'publishDate:desc',
     'pagination[page]': page,
     'pagination[pageSize]': pageSize,
-  });
+  };
+
+  if (section) query['filters[section][$eq]'] = section;
+  if (category) query['filters[category][$eq]'] = category;
+  if (team) query['filters[team][slug][$eq]'] = team;
+  if (search) {
+    query['filters[$or][0][title][$containsi]'] = search;
+    query['filters[$or][1][excerpt][$containsi]'] = search;
+  }
+
+  return get<StrapiResponse<Article[]>>('article', TTL.article, '/api/articles', query);
 }
 
 export async function getArticle(slug: string): Promise<Article | null> {

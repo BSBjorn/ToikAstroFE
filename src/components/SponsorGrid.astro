@@ -1,73 +1,80 @@
 ---
-import type { Sponsor } from '../types/strapi';
-import { mediaUrl } from '../lib/strapi';
+import type { Sponsor } from "../types/strapi";
+import { mediaUrl } from "../lib/strapi";
 
 interface Props {
-  sponsors: Sponsor[];
-  title?: string;
+    sponsors: Sponsor[];
+    title?: string | null;
 }
 
-const { sponsors, title = 'Våre samarbeidspartnere' } = Astro.props;
+const { sponsors, title = "Våre samarbeidspartnere" } = Astro.props;
 
 /** Main sponsors get more room; the rest share a denser grid. */
-const hoved = sponsors.filter((s) => s.tier === 'hoved');
-const others = sponsors.filter((s) => s.tier !== 'hoved');
+const hoved = sponsors.filter((s) => s.tier === "hoved");
+const others = sponsors.filter((s) => s.tier !== "hoved");
 
 const tiers = [
-  { items: hoved, cols: 'grid-cols-2 sm:grid-cols-3', size: 'h-20 sm:h-24' },
-  { items: others, cols: 'grid-cols-3 sm:grid-cols-4 lg:grid-cols-6', size: 'h-12 sm:h-14' },
+    { items: hoved, cols: "grid-cols-2 sm:grid-cols-3" },
+    {
+        items: others,
+        cols: "grid-cols-3 sm:grid-cols-4",
+    },
 ].filter((tier) => tier.items.length > 0);
 ---
 
-{
-  sponsors.length > 0 && (
+{sponsors.length > 0 && (
     <section class="py-12" aria-labelledby="sponsorer">
-      <div class="container-content">
-        <h2 id="sponsorer" class="text-center text-xl text-ink-muted">{title}</h2>
+        <div class="container-content">
+            <h2 id="sponsorer" class="text-center text-2xl text-ink-muted">
+                {title}
+            </h2>
 
-        {tiers.map((tier) => (
-          <ul class:list={['mt-8 grid items-center gap-x-8 gap-y-10', tier.cols]}>
-            {tier.items.map((sponsor) => {
-              const logo = mediaUrl(sponsor.logo, 'small');
-              if (!logo) return null;
+            {tiers.map((tier) => (
+                <ul
+                    class:list={[
+                        "mt-8 grid items-center gap-x-8 gap-y-10",
+                        tier.cols,
+                    ]}
+                >
+                    {tier.items.map((sponsor) => {
+                        const logo = mediaUrl(sponsor.logo, "medium");
+                        if (!logo) return null;
 
-              const image = (
-                <img
-                  src={logo}
-                  alt={sponsor.name}
-                  loading="lazy"
-                  decoding="async"
-                  class:list={[
-                    'mx-auto w-auto max-w-full object-contain',
-                    tier.size,
-                    // Logos come in every colour; a light grayscale keeps the row
-                    // coherent, full colour on hover rewards the sponsor.
-                    'opacity-80 grayscale transition hover:opacity-100 hover:grayscale-0',
-                  ]}
-                />
-              );
+                        const image = (
+                            <img
+                                src={logo}
+                                alt={sponsor.name}
+                                loading="lazy"
+                                decoding="async"
+                                class:list={[
+                                    "mx-auto w-auto max-w-full object-contain",
+                                    // Logos come in every colour; a light grayscale keeps the row
+                                    // coherent, full colour on hover rewards the sponsor.
+                                    "opacity-90 grayscale transition group-hover:opacity-100 group-hover:grayscale-0",
+                                ]}
+                            />
+                        );
 
-              return (
-                <li>
-                  {sponsor.url ? (
-                    <a
-                      href={sponsor.url}
-                      target="_blank"
-                      rel="sponsored noopener"
-                      title={sponsor.name}
-                      class="block"
-                    >
-                      {image}
-                    </a>
-                  ) : (
-                    image
-                  )}
-                </li>
-              );
-            })}
-          </ul>
-        ))}
-      </div>
+                        return (
+                            <li class="card aspect-square grid place-content-center p-8 group cursor-pointer bg-white dark:bg-white">
+                                {sponsor.url ? (
+                                    <a
+                                        href={sponsor.url}
+                                        target="_blank"
+                                        rel="sponsored noopener"
+                                        title={sponsor.name}
+                                        class="block w-full"
+                                    >
+                                        {image}
+                                    </a>
+                                ) : (
+                                    image
+                                )}
+                            </li>
+                        );
+                    })}
+                </ul>
+            ))}
+        </div>
     </section>
-  )
-}
+)}

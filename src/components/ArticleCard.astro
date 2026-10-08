@@ -22,7 +22,7 @@ const SECTION_LABEL: Record<string, string> = {
 
 <article
   class:list={[
-    'group relative flex flex-col overflow-hidden rounded-card border border-line bg-surface-raised shadow-card transition-shadow hover:shadow-lift',
+    'card group relative flex flex-col overflow-hidden',
     featured && 'sm:col-span-2 sm:flex-row',
   ]}
 >
@@ -44,7 +44,7 @@ const SECTION_LABEL: Record<string, string> = {
 
   <div class:list={['flex flex-1 flex-col p-5', featured && 'sm:justify-center sm:p-8']}>
     <div class="flex items-center gap-2 text-xs uppercase tracking-wide text-ink-muted">
-      <span class="rounded-pill bg-surface-sunken px-2 py-0.5 font-semibold text-ink">
+      <span class="badge">
         {SECTION_LABEL[article.section] ?? article.section}
       </span>
       {article.category === 'kampreferat' && <span>Kampreferat</span>}
