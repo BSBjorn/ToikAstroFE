@@ -17,18 +17,6 @@ const label = (n: number) => n === 950 ? "950" : String(n);
       <p class="mt-2 text-lg text-ice-600 dark:text-ice-400">Design tokens, colors, typography, and reusable patterns.</p>
     </header>
 
-    <!-- Dark mode toggle -->
-    <div class="mb-12 flex items-center gap-4">
-      <button
-        id="theme-toggle"
-        class="inline-flex items-center gap-2 rounded-full border border-line bg-surface-raised px-4 py-2 text-sm font-medium shadow-sm transition hover:bg-ice-100 dark:border-brand-700 dark:hover:bg-brand-800"
-      >
-        <span id="toggle-icon">🌙</span>
-        <span id="toggle-label">Dark</span>
-      </button>
-      <span class="text-sm text-ice-500 dark:text-ice-400">Toggle to preview dark mode</span>
-    </div>
-
     <!-- ─── Color Ramps ─────────────────────────────────────────────────── -->
     <section class="mb-16">
       <h2 class="mb-6 font-display text-display font-bold tracking-tight text-brand-900 dark:text-ice-50">Colors</h2>
@@ -236,7 +224,7 @@ const label = (n: number) => n === 950 ? "950" : String(n);
 
       <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         <!-- Default raised card -->
-        <div class="card">
+        <div class="card overflow-hidden">
           <div class="h-40 bg-gradient-to-br from-brand-400 to-brand-600"></div>
           <div class="p-5">
             <div class="section-label">Label</div>
@@ -250,7 +238,7 @@ const label = (n: number) => n === 950 ? "950" : String(n);
         </div>
 
         <!-- Inverted card -->
-        <div class="card card-inverted">
+        <div class="card card-inverted overflow-hidden">
           <div class="h-40 bg-gradient-to-br from-accent-500 to-accent-700"></div>
           <div class="p-5">
             <div class="section-label text-accent-300">Label</div>
@@ -366,33 +354,4 @@ const label = (n: number) => n === 950 ? "950" : String(n);
     </section>
   </div>
 </Base>
-
-<script client:load>
-  function apply(mode) {
-    var root = document.documentElement;
-    if (mode === "dark") {
-      root.classList.add("dark");
-      root.setAttribute("data-theme", "dark");
-    } else {
-      root.classList.remove("dark");
-      root.setAttribute("data-theme", "light");
-    }
-    var icon = document.getElementById("toggle-icon");
-    var label = document.getElementById("toggle-label");
-    if (icon) icon.textContent = mode === "dark" ? "☀️" : "🌙";
-    if (label) label.textContent = mode === "dark" ? "Light" : "Dark";
-  }
-
-  var toggle = document.getElementById("theme-toggle");
-  if (toggle) {
-    toggle.addEventListener("click", function () {
-      var isDark = document.documentElement.classList.contains("dark");
-      apply(isDark ? "light" : "dark");
-    });
-  }
-
-  // Respect system preference on load
-  if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-    apply("dark");
-  }
 </script>

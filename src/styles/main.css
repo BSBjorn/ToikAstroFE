@@ -240,7 +240,7 @@
 
   /* --- Cards ------------------------------------------------------------ */
   .card {
-    @apply overflow-hidden rounded-card border border-line bg-surface-raised shadow-card transition-shadow hover:shadow-lift;
+    @apply rounded-card border border-line bg-surface-raised shadow-card transition-shadow hover:shadow-lift;
   }
 
   .card-inverted {

@@ -160,6 +160,22 @@ const logoSrc = logo ? mediaUrl(logo, "thumbnail") : null;
             </ul>
         </nav>
 
+        <!-- Dark mode toggle -->
+        <button
+            type="button"
+            id="theme-toggle"
+            aria-label="Bytt mellom lys og mørk modus"
+            class="grid size-10 shrink-0 place-items-center rounded-pill text-ink-muted transition hover:bg-surface-sunken hover:text-ink"
+        >
+            <svg id="theme-icon-sun" class="size-5 hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <circle cx="12" cy="12" r="4" />
+                <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" stroke-linecap="round" />
+            </svg>
+            <svg id="theme-icon-moon" class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+        </button>
+
         <!-- Mobile menu button -->
         <button
             type="button"
@@ -371,5 +387,38 @@ const logoSrc = logo ? mediaUrl(logo, "thumbnail") : null;
             panel.classList.toggle('hidden', !open);
             (trigger.querySelector('svg') as SVGElement)?.style.setProperty('transform', open ? 'rotate(180deg)' : '');
         });
+    });
+
+    // Dark mode toggle
+    const themeToggle = document.getElementById('theme-toggle');
+    const iconSun = document.getElementById('theme-icon-sun');
+    const iconMoon = document.getElementById('theme-icon-moon');
+
+    function applyTheme(mode: 'dark' | 'light') {
+        if (mode === 'dark') {
+            document.documentElement.classList.add('dark');
+            document.documentElement.setAttribute('data-theme', 'dark');
+            iconSun?.classList.remove('hidden');
+            iconMoon?.classList.add('hidden');
+        } else {
+            document.documentElement.classList.remove('dark');
+            document.documentElement.setAttribute('data-theme', 'light');
+            iconSun?.classList.add('hidden');
+            iconMoon?.classList.remove('hidden');
+        }
+        // Persist preference
+        try { localStorage.setItem('theme', mode); } catch { /* noop */ }
+    }
+
+    // Restore saved preference or respect system
+    var saved = null;
+    try { saved = localStorage.getItem('theme'); } catch { /* noop */ }
+    if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        applyTheme('dark');
+    }
+
+    themeToggle?.addEventListener('click', () => {
+        const isDark = document.documentElement.classList.contains('dark');
+        applyTheme(isDark ? 'light' : 'dark');
     });
 </script>

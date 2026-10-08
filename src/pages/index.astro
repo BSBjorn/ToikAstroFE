@@ -79,7 +79,7 @@ const heroImage: StrapiMedia | null = frontpage.hero?.image ?? null;
 const orgNumber: string | null = club.grasrotandelenOrgNumber ?? null;
 const pinnedArticle: Article | null = frontpage.pinnedArticle ?? null;
 const [lead, ...rest] = articles;
-const heroSrc = mediaUrl(heroImage, "large");
+const heroSrc = mediaUrl(heroImage) ?? null;
 
 // Build section map from frontpage sections config
 const sectionMap: Record<string, boolean> = {};
