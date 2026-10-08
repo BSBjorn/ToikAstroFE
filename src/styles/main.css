@@ -135,6 +135,7 @@
   html {
     scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
+    font-size: 18px
   }
 
   @media (prefers-reduced-motion: reduce) {
