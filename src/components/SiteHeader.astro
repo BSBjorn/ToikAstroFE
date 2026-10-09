@@ -108,27 +108,38 @@ const logoSrc = logo ? mediaUrl(logo, "thumbnail") : null;
                     <li class="relative">
                         {group.kind === "dropdown" ? (
                             <>
-                                <!-- Dropdown trigger with aria-expanded -->
-                                <button
-                                    type="button"
-                                    aria-expanded="false"
-                                    aria-controls={`dropdown-${group.parent.href.replace(/\//g, '-')}`}
-                                    class="nav-link gap-1"
+                                <a
+                                    href={group.parent.href}
+                                    aria-current={isActive(group.parent.href) ? "page" : undefined}
+                                    class:list={[
+                                        "nav-link gap-1 items-center",
+                                        isActive(group.parent.href)
+                                            ? "nav-link-active"
+                                            : "",
+                                    ]}
                                 >
                                     <span>{group.parent.label}</span>
-                                    <svg
-                                        class="size-3.5 transition-transform duration-200"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        stroke-width="2.5"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        aria-hidden="true"
+                                    <!-- Chevron toggle — stopPropagation so nav link click fires -->
+                                    <button
+                                        type="button"
+                                        aria-expanded="false"
+                                        aria-controls={`dropdown-${group.parent.href.replace(/\//g, '-')}`}
+                                        class="nav-chevron -mr-1 p-0.5 text-ink-muted transition hover:text-ink"
                                     >
-                                        <path d="M6 9l6 6 6-6" />
-                                    </svg>
-                                </button>
+                                        <svg
+                                            class="size-3.5 transition-transform duration-200"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            stroke-width="2.5"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            aria-hidden="true"
+                                        >
+                                            <path d="M6 9l6 6 6-6" />
+                                        </svg>
+                                    </button>
+                                </a>
                                 <!-- Dropdown panel -->
                                 <ul
                                     id={`dropdown-${group.parent.href.replace(/\//g, '-')}`}
@@ -247,29 +258,41 @@ const logoSrc = logo ? mediaUrl(logo, "thumbnail") : null;
                             </a>
                         ) : (
                             <>
-                                <!-- Mobile dropdown parent -->
-                                <button
-                                    type="button"
-                                    class="mobile-dropdown-trigger w-full border-b border-line py-3 px-3 text-left text-sm font-bold uppercase tracking-wide text-ink-muted hover:bg-surface-sunken"
-                                    aria-expanded="false"
-                                    aria-controls={`mobile-dropdown-${group.parent.href.replace(/\//g, '-')}`}
+                                <!-- Mobile dropdown parent — label links, chevron toggles -->
+                                <a
+                                    href={group.parent.href}
+                                    aria-current={isActive(group.parent.href) ? "page" : undefined}
+                                    class:list={[
+                                        "block border-b border-line py-3 px-3 text-left text-sm font-bold uppercase tracking-wide last:border-0",
+                                        isActive(group.parent.href)
+                                            ? "nav-link-active"
+                                            : "hover:bg-surface-sunken",
+                                    ]}
                                 >
                                     <span class="flex items-center justify-between">
                                         <span>{group.parent.label}</span>
-                                        <svg
-                                            class="size-4 transition-transform duration-200"
-                                            viewBox="0 0 24 24"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            stroke-width="2.5"
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
-                                            aria-hidden="true"
+                                        <!-- Chevron toggle — stopPropagation so nav link click fires -->
+                                        <button
+                                            type="button"
+                                            aria-expanded="false"
+                                            aria-controls={`mobile-dropdown-${group.parent.href.replace(/\//g, '-')}`}
+                                            class="mobile-dropdown-chevron-toggle -mr-1 p-0.5 text-ink-muted transition hover:text-ink"
                                         >
-                                            <path d="M6 9l6 6 6-6" />
-                                        </svg>
+                                            <svg
+                                                class="size-4 transition-transform duration-200"
+                                                viewBox="0 0 24 24"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                stroke-width="2.5"
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                                aria-hidden="true"
+                                            >
+                                                <path d="M6 9l6 6 6-6" />
+                                            </svg>
+                                        </button>
                                     </span>
-                                </button>
+                                </a>
                                 <!-- Mobile dropdown children -->
                                 <ul
                                     id={`mobile-dropdown-${group.parent.href.replace(/\//g, '-')}`}
@@ -295,42 +318,42 @@ const logoSrc = logo ? mediaUrl(logo, "thumbnail") : null;
 </header>
 
 <script>
-    // Desktop dropdown toggles — use delegated listeners to avoid duplicate handlers
+    // Desktop dropdown toggles — only the chevron toggles, the parent <a> navigates
     const desktopDropdowns = document.querySelectorAll('[aria-controls^="dropdown-"]');
     const dropdownStates = new Map<Element, { open: boolean }>();
 
-    function setOpenState(trigger: Element, panel: Element, state: boolean) {
-        trigger.setAttribute('aria-expanded', String(state));
+    function setOpenState(chevron: Element, panel: Element, state: boolean) {
+        chevron.setAttribute('aria-expanded', String(state));
+        (chevron.querySelector('svg') as SVGElement)?.style.setProperty('transform', state ? 'rotate(180deg)' : '');
         panel.classList.toggle('opacity-0', !state);
         panel.classList.toggle('invisible', !state);
         panel.classList.toggle('pointer-events-none', !state);
         panel.classList.toggle('opacity-100', state);
         panel.classList.toggle('visible', state);
         panel.classList.toggle('transition-opacity', state);
-        (trigger.querySelector('svg') as SVGElement)?.style.setProperty('transform', state ? 'rotate(180deg)' : '');
     }
 
-    desktopDropdowns.forEach((btn) => {
-        const trigger = btn as HTMLButtonElement;
-        const panelId = trigger.getAttribute('aria-controls');
+    desktopDropdowns.forEach((chevron) => {
+        const panelId = chevron.getAttribute('aria-controls');
         const panel = panelId ? document.getElementById(panelId) : null;
         if (!panel) return;
-        dropdownStates.set(trigger, { open: false });
+        dropdownStates.set(chevron, { open: false });
 
-        trigger.addEventListener('click', () => {
-            const state = dropdownStates.get(trigger)!;
-            setOpenState(trigger, panel, !state.open);
+        chevron.addEventListener('click', (e) => {
+            e.stopPropagation();  // prevent parent <a> from navigating
+            const state = dropdownStates.get(chevron)!;
+            setOpenState(chevron, panel, !state.open);
             state.open = !state.open;
         });
     });
 
     // Close any dropdown on outside click
     document.addEventListener('click', (e) => {
-        dropdownStates.forEach((state, trigger) => {
-            const panelId = trigger.getAttribute('aria-controls');
+        dropdownStates.forEach((state, chevron) => {
+            const panelId = chevron.getAttribute('aria-controls');
             const panel = panelId ? document.getElementById(panelId) : null;
-            if (state.open && panel && !trigger.contains(e.target as Node) && !panel.contains(e.target as Node)) {
-                setOpenState(trigger, panel, false);
+            if (state.open && panel && !chevron.contains(e.target as Node) && !panel.contains(e.target as Node)) {
+                setOpenState(chevron, panel, false);
                 state.open = false;
             }
         });
@@ -339,33 +362,32 @@ const logoSrc = logo ? mediaUrl(logo, "thumbnail") : null;
     // Close any dropdown on Escape
     document.addEventListener('keydown', (e) => {
         if (e.key !== 'Escape') return;
-        dropdownStates.forEach((state, trigger) => {
+        dropdownStates.forEach((state, chevron) => {
             if (!state.open) return;
-            const panelId = trigger.getAttribute('aria-controls');
+            const panelId = chevron.getAttribute('aria-controls');
             const panel = panelId ? document.getElementById(panelId) : null;
-            setOpenState(trigger, panel ?? trigger, false);
+            setOpenState(chevron, panel ?? chevron, false);
             state.open = false;
-            trigger.focus();
         });
     });
 
-    // Mobile dropdown toggles — delegated for consistency
-    const mobileDropdownTriggers = document.querySelectorAll('.mobile-dropdown-trigger');
+    // Mobile dropdown toggles — only the chevron toggles, the parent <a> navigates
+    const mobileDropdownChevrons = document.querySelectorAll('.mobile-dropdown-chevron-toggle');
     const mobileDropdownStates = new Map<Element, { open: boolean }>();
 
-    mobileDropdownTriggers.forEach((btn) => {
-        const trigger = btn as HTMLButtonElement;
-        const panelId = trigger.getAttribute('aria-controls');
+    mobileDropdownChevrons.forEach((chevron) => {
+        const panelId = chevron.getAttribute('aria-controls');
         const panel = panelId ? document.getElementById(panelId) : null;
         if (!panel) return;
-        mobileDropdownStates.set(trigger, { open: false });
+        mobileDropdownStates.set(chevron, { open: false });
 
-        trigger.addEventListener('click', () => {
-            const state = mobileDropdownStates.get(trigger)!;
+        chevron.addEventListener('click', (e) => {
+            e.stopPropagation();  // prevent parent <a> from navigating
+            const state = mobileDropdownStates.get(chevron)!;
             state.open = !state.open;
-            trigger.setAttribute('aria-expanded', String(state.open));
+            chevron.setAttribute('aria-expanded', String(state.open));
             panel.classList.toggle('hidden', !state.open);
-            (trigger.querySelector('svg') as SVGElement)?.style.setProperty('transform', state.open ? 'rotate(180deg)' : '');
+            (chevron.querySelector('svg') as SVGElement)?.style.setProperty('transform', state.open ? 'rotate(180deg)' : '');
         });
     });
 
