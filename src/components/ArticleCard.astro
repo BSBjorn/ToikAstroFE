@@ -22,13 +22,17 @@ const SECTION_LABEL: Record<string, string> = {
 
 <article
   class:list={[
-    'card group relative flex flex-col overflow-hidden',
+    'card group relative flex flex-col overflow-hidden rounded-card',
     featured && 'sm:col-span-2 sm:flex-row',
   ]}
 >
   {
     cover && (
       <div class:list={['overflow-hidden bg-surface-sunken', featured ? 'sm:w-1/2' : '']}>
+        <!-- Featured cards get a gradient overlay so the title stays readable over any photo -->
+        {featured && (
+          <div class="pointer-events-none absolute inset-0 after:pointer-events-none after:absolute after:bottom-0 after:left-0 after:right-0 after:h-1/2 after:bg-gradient-to-t after:from-black/50" />
+        )}
         <img
           src={cover}
           alt={mediaAlt(article.cover)}
@@ -36,7 +40,10 @@ const SECTION_LABEL: Record<string, string> = {
           height={article.cover?.height ?? undefined}
           loading={featured ? 'eager' : 'lazy'}
           decoding="async"
-          class="aspect-[16/9] w-full object-cover transition-transform duration-500 group-hover:scale-[1.03] sm:h-full"
+          class:list={[
+            'w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]',
+            featured ? 'aspect-[4/3] sm:h-full' : 'aspect-[16/9]',
+          ]}
         />
       </div>
     )
