@@ -178,49 +178,44 @@ sectionMap.sponsors = sectionMap.sponsors ?? true;
         </section>
     )}
 
-    <!-- Live match. Only render when fixtures exist so we don't poll a non-existent team -->
-    {upcoming.length > 0 || recent.length > 0 ? (
-        <section class="container-content mt-10 mb-14">
-            <LiveMatch
-                client:load
-                strapiUrl={publicStrapiUrl()}
-                team={FEATURED_TEAM}
-            />
-        </section>
-    ) : null}
-
-    {/* Matches section hidden when no teams/fixtures configured yet */}
+    <!-- Live match + fixtures — prominent red-accent card -->
     {(upcoming.length > 0 || recent.length > 0) && (
-        <section
-            class="container-content mb-16 grid gap-8 lg:grid-cols-2"
-            aria-labelledby="kamper"
-        >
-            <h2 id="kamper" class="sr-only">
-                Kamper
-            </h2>
-            <div>
-                <div class="mb-3 flex items-baseline justify-between">
-                    <h3 class="text-xl">Neste kamper</h3>
-                    <a
-                        href="/kamper"
-                        class="text-sm text-ink-muted hover:underline"
-                    >
-                        Hele terminlisten
-                    </a>
+        <section class="container-content mt-12 mb-16" aria-labelledby="kamper">
+            <span class="section-label">KAMP · LIVE</span>
+
+            <div class="mt-4 overflow-hidden rounded-card border-l-4 border-accent-500 bg-surface-raised shadow-card">
+                <LiveMatch
+                    client:load
+                    strapiUrl={publicStrapiUrl()}
+                    team={FEATURED_TEAM}
+                />
+
+                <div class="grid gap-8 border-t border-line px-6 py-8 md:grid-cols-2">
+                    <div>
+                        <div class="mb-3 flex items-baseline justify-between">
+                            <h3 class="text-xl">Neste kamper</h3>
+                            <a
+                                href="/kamper"
+                                class="text-sm text-ink-muted hover:underline"
+                            >
+                                Hele terminlisten
+                            </a>
+                        </div>
+                        <FixtureList fixtures={upcoming} type="upcoming" />
+                    </div>
+                    <div>
+                        <div class="mb-3 flex items-baseline justify-between">
+                            <h3 class="text-xl">Siste resultater</h3>
+                            <a
+                                href="/kamper?type=spilte"
+                                class="text-sm text-ink-muted hover:underline"
+                            >
+                                Alle resultater
+                            </a>
+                        </div>
+                        <FixtureList fixtures={recent} type="completed" />
+                    </div>
                 </div>
-                <FixtureList fixtures={upcoming} type="upcoming" />
-            </div>
-            <div>
-                <div class="mb-3 flex items-baseline justify-between">
-                    <h3 class="text-xl">Siste resultater</h3>
-                    <a
-                        href="/kamper?type=spilte"
-                        class="text-sm text-ink-muted hover:underline"
-                    >
-                        Alle resultater
-                    </a>
-                </div>
-                <FixtureList fixtures={recent} type="completed" />
             </div>
         </section>
     )}
