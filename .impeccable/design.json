@@ -10,8 +10,8 @@
       "ice-50": { "role": "neutral-lightest", "displayName": "Rink White", "canonical": "#f8fafc", "tonalRamp": ["#f8fafc","#eef2f6","#dde4ec","#c3cedb","#94a4b8","#64748b","#47566b","#334154","#1f2937","#111827"] }
     },
     "typographyMeta": {
-      "display": { "displayName": "Display Heading", "canonical": "Barlow Condensed, Arial Narrow, system-ui, sans-serif" },
-      "body": { "displayName": "Body (Inter)", "canonical": "Inter, system-ui, -apple-system, Segoe UI, sans-serif" }
+      "display": { "displayName": "Display Heading", "canonical": "M PLUS 2, Arial Narrow, system-ui, sans-serif" },
+      "body": { "displayName": "Body (Lekton)", "canonical": "Lekton, system-ui, -apple-system, Segoe UI, sans-serif" }
     },
     "components": [
       {
@@ -67,16 +67,16 @@
         "Deep navy base with cold ice-blue neutrals",
         "Single hot red accent for live state and CTAs only",
         "Flat-by-default with subtle card shadows as stateful enhancements",
-        "Barlow Condensed display type; Inter for body copy",
+        "M PLUS 2 display type; Lekton for body copy",
         "Pill-shaped buttons for hero CTAs; 12px rounded rectangles for UI"
       ],
       "rules": [
         { "name": "The One Voice Rule", "body": "Scoreboard Red (#c8102e) is used on ≤10% of any given screen's area. It appears only on hero CTAs, live match state, and match outcome badges.", "section": "colors" },
-        { "name": "The Condensed-Only Rule", "body": "Barlow Condensed is never used below 0.75rem or in paragraphs. It carries headings and labels; Inter handles all reading text. Never mix them on the same line except for explicit contrast like condensed score numbers.", "section": "typography" },
+        { "name": "M PLUS 2 for headings only", "body": "M PLUS 2 is used for headings, scores, labels, and navigation text. Lekton handles all reading paragraphs and body copy. Never use M PLUS 2 below 0.75rem or in running text.", "section": "typography" },
         { "name": "The No-Shadow Rule", "body": "Text elements, buttons, badges, and inputs never carry shadows. Shadows appear only on card-like containers at rest or in hover state. Depth through transparency (header blur) is the only non-shadow elevation technique.", "section": "elevation" }
       ],
       "dos": [
-        "Do use Barlow Condensed for headings, scores, labels, and nav — never in body copy",
+        "Do use M PLUS 2 for headings, scores, labels, and nav — never in body copy",
         "Do keep accent red to ≤10% of visible area per screen",
         "Do use rounded-card (12px) for content containers and pill (999px) for badges and hero buttons",
         "Do apply shadows to cards at rest (shadow-card) and on hover (shadow-lift)",
