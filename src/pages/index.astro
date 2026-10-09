@@ -120,28 +120,37 @@ sectionMap.sponsors = sectionMap.sponsors ?? true;
                     decoding="async"
                 />
             )}
-            <div class="container-content py-20 sm:py-28">
-                <h1 class="max-w-3xl text-hero text-white">{heroTitle}</h1>
-                <p class="mt-5 max-w-xl text-lg text-ice-200">{heroText}</p>
+            <div class="container-content py-16 sm:py-24">
+                {/* Decorative background text — typographic depth layer */}
+                <span
+                    class="pointer-events-none absolute inset-0 -z-10 select-none font-display text-[13rem] leading-[0.9] text-white/[0.08]"
+                    aria-hidden="true"
+                >
+                    {heroTitle.split(/\s+/).at(-1)}
+                </span>
+                <h1 class="relative max-w-3xl text-hero text-white">
+                    {heroTitle}
+                </h1>
+                <p class="mt-3 max-w-md text-lg text-ice-200">{heroText}</p>
                 <div class="mt-8 flex flex-wrap gap-3">
                     {frontpage.hero?.ctaText && frontpage.hero?.ctaLink ? (
                         <a
                             href={frontpage.hero.ctaLink}
-                            class="rounded-pill bg-accent-500 px-6 py-3 font-semibold text-white transition hover:bg-accent-400"
+                            class="rounded-pill border-l-4 border-accent-500 bg-accent-500 px-8 py-3.5 font-semibold text-white transition hover:bg-accent-400"
                         >
                             {frontpage.hero.ctaText}
                         </a>
                     ) : (
                         <a
                             href="/p/ny-i-klubben"
-                            class="rounded-pill bg-accent-500 px-6 py-3 font-semibold text-white transition hover:bg-accent-400"
+                            class="rounded-pill border-l-4 border-accent-500 bg-accent-500 px-8 py-3.5 font-semibold text-white transition hover:bg-accent-400"
                         >
                             Bli med i klubben
                         </a>
                     )}
                     <a
                         href="/kamper"
-                        class="rounded-pill border border-ice-400/40 px-6 py-3 font-semibold text-white transition hover:bg-white/10"
+                        class="rounded-pill border border-ice-400/40 px-8 py-3.5 font-semibold text-white transition hover:bg-white/10"
                     >
                         Se kampoppsettet
                     </a>
@@ -150,11 +159,18 @@ sectionMap.sponsors = sectionMap.sponsors ?? true;
         </section>
     ) : (
         <section class="relative isolate overflow-hidden bg-brand-900 text-ink-invert">
-            <div class="container-content py-20 sm:py-28">
-                <h1 class="max-w-3xl text-hero text-white/75">
+            <div class="container-content py-16 sm:py-24">
+                {/* Decorative background text */}
+                <span
+                    class="pointer-events-none absolute inset-0 -z-10 select-none font-display text-[13rem] leading-[0.9] text-white/[0.08]"
+                    aria-hidden="true"
+                >
+                    TOIK
+                </span>
+                <h1 class="relative max-w-3xl text-hero text-white/75">
                     Velkommen til TOIK
                 </h1>
-                <p class="mt-5 max-w-xl text-lg text-ice-300">
+                <p class="mt-3 max-w-md text-lg text-ice-300">
                     Rediger hero-innhold i Strapi admin for å vise eget bilde og
                     tekst.
                 </p>
