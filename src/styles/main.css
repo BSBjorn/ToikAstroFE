@@ -262,9 +262,19 @@
     @apply rounded-pill bg-surface-sunken px-2 py-0.5 text-xs font-semibold text-ink;
   }
 
-  /* --- Section elements ------------------------------------------------- */
+  /* --- Section labels — red dot + display type for visual authority ----- */
   .section-label {
-    @apply text-xs font-semibold uppercase tracking-wide text-accent-500;
+    @apply text-xs font-display font-semibold uppercase tracking-widest text-accent-500;
+  }
+  .section-label::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: currentColor;
+    margin-right: 0.5rem;
+    vertical-align: middle;
   }
 
   .section-heading-muted {

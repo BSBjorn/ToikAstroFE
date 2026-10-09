@@ -224,6 +224,7 @@ sectionMap.sponsors = sectionMap.sponsors ?? true;
     {sectionMap.news && articles.length > 0 && (
         <section class="container-content mb-16" aria-labelledby="nyheter">
             <div class="mb-6 flex items-baseline justify-between">
+                <span class="section-label">NYHETER</span>
                 <h2 id="nyheter" class="text-display">
                     Siste nytt
                 </h2>
@@ -300,5 +301,5 @@ sectionMap.sponsors = sectionMap.sponsors ?? true;
         );
     })}
 
-    {sectionMap.sponsors && <SponsorGrid sponsors={sponsors} />}
+    {sectionMap.sponsors && <SponsorGrid sponsors={sponsors} label="SAMBANDSPARTNERE" />}
 </Base>

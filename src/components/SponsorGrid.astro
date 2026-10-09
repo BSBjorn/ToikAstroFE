@@ -5,9 +5,11 @@ import { mediaUrl } from "../lib/strapi";
 interface Props {
     sponsors: Sponsor[];
     title?: string | null;
+    /** Optional section label (e.g. "SAMBANDSPARTNERE") that appears above the title. */
+    label?: string | null;
 }
 
-const { sponsors, title = "Våre samarbeidspartnere" } = Astro.props;
+const { sponsors, title = "Våre samarbeidspartnere", label } = Astro.props;
 
 /** Main sponsors get more room; the rest share a denser grid. */
 const hoved = sponsors.filter((s) => s.tier === "hoved");
@@ -25,6 +27,7 @@ const tiers = [
 {sponsors.length > 0 && (
     <section class="py-12" aria-labelledby="sponsorer">
         <div class="container-content">
+            {label && <span class="section-label">{label}</span>}
             <h2 id="sponsorer" class="text-center text-2xl text-ink-muted">
                 {title}
             </h2>
