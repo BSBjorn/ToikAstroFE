@@ -58,7 +58,7 @@
   /* Display face carries the club's voice; swap when the profile lands.
      Both are system-stack fallbacks so nothing blocks first paint. */
   --font-display: 'M PLUS 2', 'Arial Narrow', system-ui, sans-serif;
-  --font-sans: 'Lekton', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-sans: 'Rubik', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-mono: ui-monospace, 'SF Mono', Menlo, monospace;
 
   --text-hero: clamp(2.5rem, 6vw, 4.5rem);

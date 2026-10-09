@@ -11,7 +11,7 @@
     },
     "typographyMeta": {
       "display": { "displayName": "Display Heading", "canonical": "M PLUS 2, Arial Narrow, system-ui, sans-serif" },
-      "body": { "displayName": "Body (Lekton)", "canonical": "Lekton, system-ui, -apple-system, Segoe UI, sans-serif" }
+      "body": { "displayName": "Body (Rubik)", "canonical": "Rubik, system-ui, -apple-system, Segoe UI, sans-serif" }
     },
     "components": [
       {
@@ -67,12 +67,12 @@
         "Deep navy base with cold ice-blue neutrals",
         "Single hot red accent for live state and CTAs only",
         "Flat-by-default with subtle card shadows as stateful enhancements",
-        "M PLUS 2 display type; Lekton for body copy",
+        "M PLUS 2 display type; Rubik for body copy",
         "Pill-shaped buttons for hero CTAs; 12px rounded rectangles for UI"
       ],
       "rules": [
         { "name": "The One Voice Rule", "body": "Scoreboard Red (#c8102e) is used on ≤10% of any given screen's area. It appears only on hero CTAs, live match state, and match outcome badges.", "section": "colors" },
-        { "name": "M PLUS 2 for headings only", "body": "M PLUS 2 is used for headings, scores, labels, and navigation text. Lekton handles all reading paragraphs and body copy. Never use M PLUS 2 below 0.75rem or in running text.", "section": "typography" },
+        { "name": "M PLUS 2 for headings only", "body": "M PLUS 2 is used for headings, scores, labels, and navigation text. Rubik handles all reading paragraphs and body copy. Never use M PLUS 2 below 0.75rem or in running text.", "section": "typography" },
         { "name": "The No-Shadow Rule", "body": "Text elements, buttons, badges, and inputs never carry shadows. Shadows appear only on card-like containers at rest or in hover state. Depth through transparency (header blur) is the only non-shadow elevation technique.", "section": "elevation" }
       ],
       "dos": [
