@@ -57,6 +57,16 @@ if (maxAge > 0) {
 <html lang="no">
     <head>
         <meta charset="utf-8" />
+        <!-- Apply theme before any paint — no async/defer so it runs sync -->
+        <script>
+            try {
+                var s = localStorage.getItem('theme');
+                if (s === 'dark' || (!s && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                    document.documentElement.classList.add('dark');
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                }
+            } catch(e) {}
+        </script>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>{fullTitle}</title>
         {description && <meta name="description" content={description} />}
