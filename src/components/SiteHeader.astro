@@ -108,18 +108,21 @@ const logoSrc = logo ? mediaUrl(logo, "thumbnail") : null;
                     <li class="relative">
                         {group.kind === "dropdown" ? (
                             <>
-                                <a
-                                    href={group.parent.href}
-                                    aria-current={isActive(group.parent.href) ? "page" : undefined}
-                                    class:list={[
-                                        "nav-link gap-1 items-center",
-                                        isActive(group.parent.href)
-                                            ? "nav-link-active"
-                                            : "",
-                                    ]}
-                                >
-                                    <span>{group.parent.label}</span>
-                                    <!-- Chevron toggle — stopPropagation so nav link click fires -->
+                                <span class="flex items-center gap-1">
+                                    <!-- Parent page link -->
+                                    <a
+                                        href={group.parent.href}
+                                        aria-current={isActive(group.parent.href) ? "page" : undefined}
+                                        class:list={[
+                                            "nav-link",
+                                            isActive(group.parent.href)
+                                                ? "nav-link-active"
+                                                : "",
+                                        ]}
+                                    >
+                                        {group.parent.label}
+                                    </a>
+                                    <!-- Chevron toggle button — outside <a> so it doesn't follow link -->
                                     <button
                                         type="button"
                                         aria-expanded="false"
@@ -139,7 +142,7 @@ const logoSrc = logo ? mediaUrl(logo, "thumbnail") : null;
                                             <path d="M6 9l6 6 6-6" />
                                         </svg>
                                     </button>
-                                </a>
+                                </span>
                                 <!-- Dropdown panel -->
                                 <ul
                                     id={`dropdown-${group.parent.href.replace(/\//g, '-')}`}
@@ -259,40 +262,41 @@ const logoSrc = logo ? mediaUrl(logo, "thumbnail") : null;
                         ) : (
                             <>
                                 <!-- Mobile dropdown parent — label links, chevron toggles -->
-                                <a
-                                    href={group.parent.href}
-                                    aria-current={isActive(group.parent.href) ? "page" : undefined}
-                                    class:list={[
-                                        "block border-b border-line py-3 px-3 text-left text-sm font-bold uppercase tracking-wide last:border-0",
-                                        isActive(group.parent.href)
-                                            ? "nav-link-active"
-                                            : "hover:bg-surface-sunken",
-                                    ]}
-                                >
-                                    <span class="flex items-center justify-between">
-                                        <span>{group.parent.label}</span>
-                                        <!-- Chevron toggle — stopPropagation so nav link click fires -->
-                                        <button
-                                            type="button"
-                                            aria-expanded="false"
-                                            aria-controls={`mobile-dropdown-${group.parent.href.replace(/\//g, '-')}`}
-                                            class="mobile-dropdown-chevron-toggle -mr-1 p-0.5 text-ink-muted transition hover:text-ink"
+                                <div class="flex items-center justify-between border-b border-line py-3 px-3 last:border-0">
+                                    <!-- Parent page link -->
+                                    <a
+                                        href={group.parent.href}
+                                        aria-current={isActive(group.parent.href) ? "page" : undefined}
+                                        class:list={[
+                                            "text-left text-sm font-bold uppercase tracking-wide",
+                                            isActive(group.parent.href)
+                                                ? "nav-link-active"
+                                                : "hover:bg-surface-sunken",
+                                        ]}
+                                    >
+                                        {group.parent.label}
+                                    </a>
+                                    <!-- Chevron toggle button — outside <a> so it doesn't follow link -->
+                                    <button
+                                        type="button"
+                                        aria-expanded="false"
+                                        aria-controls={`mobile-dropdown-${group.parent.href.replace(/\//g, '-')}`}
+                                        class="mobile-dropdown-chevron-toggle -mr-1 p-0.5 text-ink-muted transition hover:text-ink"
+                                    >
+                                        <svg
+                                            class="size-4 transition-transform duration-200"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            stroke-width="2.5"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            aria-hidden="true"
                                         >
-                                            <svg
-                                                class="size-4 transition-transform duration-200"
-                                                viewBox="0 0 24 24"
-                                                fill="none"
-                                                stroke="currentColor"
-                                                stroke-width="2.5"
-                                                stroke-linecap="round"
-                                                stroke-linejoin="round"
-                                                aria-hidden="true"
-                                            >
-                                                <path d="M6 9l6 6 6-6" />
-                                            </svg>
-                                        </button>
-                                    </span>
-                                </a>
+                                            <path d="M6 9l6 6 6-6" />
+                                        </svg>
+                                    </button>
+                                </div>
                                 <!-- Mobile dropdown children -->
                                 <ul
                                     id={`mobile-dropdown-${group.parent.href.replace(/\//g, '-')}`}
