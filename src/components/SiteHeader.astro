@@ -40,6 +40,7 @@ type Group =
     | { kind: "dropdown"; parent: NavItem; children: NavItem[] };
 
 let groups: Group[] = [];
+const seenSlugs = new Set<string>();
 
 // Flat items first
 if (showNyheter)
@@ -48,20 +49,32 @@ if (showLag)
     groups.push({ kind: "flat", item: { label: "Lag", href: "/lag" } });
 
 // Pages from Strapi
-const buildGroups = (items: { id: string; title: string; slug: string; children?: { id: string; title: string; slug: string }[] }[]) => {
+const buildGroups = (items: TreeNode[]) => {
     items.forEach((navItem) => {
+        // Skip pages that should not appear in navigation
+        if (navItem.showInMenu === false) return;
+
+        // Deduplicate: a page might appear as top-level and as child of another parent
+        if (seenSlugs.has(navItem.slug)) return;
+        seenSlugs.add(navItem.slug);
+
         const hasChildren = navItem.children && navItem.children.length > 0;
         if (hasChildren) {
             groups.push({
                 kind: "dropdown",
-                parent: { label: navItem.title, href: `/${navItem.slug}` },
-                children: navItem.children.map((child) => ({
+                parent: { label: navItem.title, href: `/p/${navItem.slug}` },
+                children: navItem.children.filter((child) => {
+                    if (child.showInMenu === false) return false;
+                    if (seenSlugs.has(child.slug)) return false;
+                    seenSlugs.add(child.slug);
+                    return true;
+                }).map((child) => ({
                     label: child.title,
-                    href: `/${navItem.slug}/${child.slug}`,
+                    href: `/p/${child.slug}`,
                 })),
             });
         } else {
-            groups.push({ kind: "flat", item: { label: navItem.title, href: `/${navItem.slug}` } });
+            groups.push({ kind: "flat", item: { label: navItem.title, href: `/p/${navItem.slug}` } });
         }
     });
 };
@@ -282,42 +295,77 @@ const logoSrc = logo ? mediaUrl(logo, "thumbnail") : null;
 </header>
 
 <script>
-    // Desktop dropdown toggles
-    document.querySelectorAll('[aria-controls^="dropdown-"]').forEach((btn) => {
+    // Desktop dropdown toggles — use delegated listeners to avoid duplicate handlers
+    const desktopDropdowns = document.querySelectorAll('[aria-controls^="dropdown-"]');
+    const dropdownStates = new Map<Element, { open: boolean }>();
+
+    function setOpenState(trigger: Element, panel: Element, state: boolean) {
+        trigger.setAttribute('aria-expanded', String(state));
+        panel.classList.toggle('opacity-0', !state);
+        panel.classList.toggle('invisible', !state);
+        panel.classList.toggle('pointer-events-none', !state);
+        panel.classList.toggle('opacity-100', state);
+        panel.classList.toggle('visible', state);
+        panel.classList.toggle('transition-opacity', state);
+        (trigger.querySelector('svg') as SVGElement)?.style.setProperty('transform', state ? 'rotate(180deg)' : '');
+    }
+
+    desktopDropdowns.forEach((btn) => {
         const trigger = btn as HTMLButtonElement;
         const panelId = trigger.getAttribute('aria-controls');
         const panel = panelId ? document.getElementById(panelId) : null;
         if (!panel) return;
+        dropdownStates.set(trigger, { open: false });
 
-        let open = false;
+        trigger.addEventListener('click', () => {
+            const state = dropdownStates.get(trigger)!;
+            setOpenState(trigger, panel, !state.open);
+            state.open = !state.open;
+        });
+    });
 
-        const setOpen = (state: boolean) => {
-            open = state;
-            trigger.setAttribute('aria-expanded', String(state));
-            panel.classList.toggle('opacity-0', !state);
-            panel.classList.toggle('invisible', !state);
-            panel.classList.toggle('pointer-events-none', !state);
-            panel.classList.toggle('opacity-100', state);
-            panel.classList.toggle('visible', state);
-            panel.classList.toggle('transition-opacity', state);
-            (trigger.querySelector('svg') as SVGElement)?.style.setProperty('transform', state ? 'rotate(180deg)' : '');
-        };
-
-        trigger.addEventListener('click', () => setOpen(!open));
-
-        // Close on outside click
-        document.addEventListener('click', (e) => {
-            if (open && !trigger.contains(e.target as Node) && !panel.contains(e.target as Node)) {
-                setOpen(false);
+    // Close any dropdown on outside click
+    document.addEventListener('click', (e) => {
+        dropdownStates.forEach((state, trigger) => {
+            const panelId = trigger.getAttribute('aria-controls');
+            const panel = panelId ? document.getElementById(panelId) : null;
+            if (state.open && panel && !trigger.contains(e.target as Node) && !panel.contains(e.target as Node)) {
+                setOpenState(trigger, panel, false);
+                state.open = false;
             }
         });
+    });
 
-        // Close on Escape
-        document.addEventListener('keydown', (e) => {
-            if (open && e.key === 'Escape') {
-                setOpen(false);
-                trigger.focus();
-            }
+    // Close any dropdown on Escape
+    document.addEventListener('keydown', (e) => {
+        if (e.key !== 'Escape') return;
+        dropdownStates.forEach((state, trigger) => {
+            if (!state.open) return;
+            const panelId = trigger.getAttribute('aria-controls');
+            const panel = panelId ? document.getElementById(panelId) : null;
+            setOpenState(trigger, panel ?? trigger, false);
+            state.open = false;
+            trigger.focus();
+        });
+    });
+
+    // Mobile dropdown toggles — delegated for consistency
+    const mobileDropdownTriggers = document.querySelectorAll('.mobile-dropdown-trigger');
+    const mobileDropdownStates = new Map<Element, { open: boolean }>();
+
+    mobileDropdownTriggers.forEach((btn) => {
+        const trigger = btn as HTMLButtonElement;
+        const panelId = trigger.getAttribute('aria-controls');
+        const panel = panelId ? document.getElementById(panelId) : null;
+        if (!panel) return;
+        mobileDropdownStates.set(trigger, { open: false });
+
+        trigger.addEventListener('click', () => {
+            const state = mobileDropdownStates.get(trigger)!;
+            state.open = !state.open;
+            trigger.setAttribute('aria-expanded', String(state.open));
+            panel.classList.toggle('hidden', !state.open);
+            (trigger.querySelector('svg') as SVGElement)?.style.setProperty('transform', state.open ? 'rotate(180deg)' : '');
         });
     });
 
@@ -342,18 +390,19 @@ const logoSrc = logo ? mediaUrl(logo, "thumbnail") : null;
             }
         });
 
-        // Close mobile menu on link click
-        mobileMenu.querySelectorAll('a').forEach((link) => {
-            link.addEventListener('click', () => {
-                menuOpen = false;
-                mobileToggle.setAttribute('aria-expanded', 'false');
-                mobileMenu.classList.add('hidden');
-                mobileToggle.setAttribute('aria-label', 'Åpne meny');
-                if (iconOpen && iconClose) {
-                    iconOpen.classList.remove('hidden');
-                    iconClose.classList.add('hidden');
-                }
-            });
+        // Close mobile menu on link click — single delegated listener
+        mobileMenu.addEventListener('click', (e) => {
+            const link = (e.target as Element).closest('a');
+            if (!link) return;
+            e.stopPropagation();
+            menuOpen = false;
+            mobileToggle.setAttribute('aria-expanded', 'false');
+            mobileMenu.classList.add('hidden');
+            mobileToggle.setAttribute('aria-label', 'Åpne meny');
+            if (iconOpen && iconClose) {
+                iconOpen.classList.remove('hidden');
+                iconClose.classList.add('hidden');
+            }
         });
 
         // Close on Escape
@@ -371,23 +420,6 @@ const logoSrc = logo ? mediaUrl(logo, "thumbnail") : null;
             }
         });
     }
-
-    // Mobile dropdown toggles
-    document.querySelectorAll('.mobile-dropdown-trigger').forEach((btn) => {
-        const trigger = btn as HTMLButtonElement;
-        const panelId = trigger.getAttribute('aria-controls');
-        const panel = panelId ? document.getElementById(panelId) : null;
-        if (!panel) return;
-
-        let open = false;
-
-        trigger.addEventListener('click', () => {
-            open = !open;
-            trigger.setAttribute('aria-expanded', String(open));
-            panel.classList.toggle('hidden', !open);
-            (trigger.querySelector('svg') as SVGElement)?.style.setProperty('transform', open ? 'rotate(180deg)' : '');
-        });
-    });
 
     // Dark mode toggle
     const themeToggle = document.getElementById('theme-toggle');
