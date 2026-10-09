@@ -174,7 +174,10 @@
   /* Editor-authored rich text from Strapi blocks */
   .prose-toik :where(p, ul, ol) {
     margin-block: 1em;
-    line-height: 1.7;
+    line-height: 1.8;
+  }
+  .prose-toik-prose {
+    max-width: 65ch;
   }
   .prose-toik :where(h2, h3) {
     margin-block: 1.6em 0.5em;

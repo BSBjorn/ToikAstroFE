@@ -10,8 +10,8 @@ const children = page ? await getPages({ parent: slug }).catch(() => []) : [];
 
 {page ? (
   <Base title={page.title}>
-    <div class="container-content py-12">
-      <h1 class="text-display">{page.title}</h1>
+    <div class="container-content py-16 lg:py-20">
+      <h1 class="border-l-4 border-brand-500 pl-4 text-display">{page.title}</h1>
 
       {children.length > 0 && (
         <nav class="mt-6 border-b border-line" aria-label="Undersider">
@@ -30,7 +30,11 @@ const children = page ? await getPages({ parent: slug }).catch(() => []) : [];
         </nav>
       )}
 
-      {page.content && <RichText nodes={page.content} class="mt-8" />}
+      {page.content && (
+        <div class="prose-toik-prose">
+          <RichText nodes={page.content} class="mt-8" />
+        </div>
+      )}
     </div>
   </Base>
 ) : (

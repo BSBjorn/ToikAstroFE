@@ -7,8 +7,8 @@ const teams = response?.data ?? [];
 ---
 
 <Base title="Lag">
-  <div class="container-content py-12">
-    <h1 class="text-display">Lag og treningsgrupper</h1>
+  <div class="container-content py-16 lg:py-20">
+    <h1 class="border-l-4 border-brand-500 pl-4 text-display">Lag og treningsgrupper</h1>
     <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {teams.map((team) => {
         const photo = mediaUrl(team.photo, 'small');
