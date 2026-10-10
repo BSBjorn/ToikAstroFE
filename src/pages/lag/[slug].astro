@@ -22,7 +22,9 @@ const photo = team ? mediaUrl(team.photo, 'large') : null;
       )}
       <h1 class="mt-8 border-l-4 border-brand-500 pl-4 text-display">{team.name}</h1>
 
-      {team.description && <RichText nodes={team.description} class="mt-8" />}
+      {team.description && <div class="prose-toik mt-8">
+                <RichText nodes={team.description} />
+            </div>}
 
       {team.players && team.players.length > 0 && (
         <div class="mt-12">

@@ -19,14 +19,16 @@ const article = await getArticle(slug).catch(() => null);
                     class="w-full aspect-video rounded-card object-cover"
                 />
             )}
-            <h1 class="mt-8 text-display font-bold">{article.title}</h1>
+            <h1 class="mt-8 text-hero font-bold">{article.title}</h1>
             <div class="mt-2 flex items-center gap-3 text-sm text-ink-muted">
                 <time datetime={article.publishDate}>
                     {article.publishDate}
                 </time>
                 {article.team && <span>{article.team.name}</span>}
             </div>
-            <RichText nodes={article.body} class="mt-8" />
+            <div class="prose-toik mt-8">
+                <RichText nodes={article.body} />
+            </div>
         </div>
     </Base>
 ) : (

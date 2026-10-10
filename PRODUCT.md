@@ -121,7 +121,7 @@ Type is the primary decorative element. Before reaching for imagery, ask: can ty
 ├── /sponsorer             Sponsor listing
 └── /kontakt               Contact page
 ```
-
+This is a community hub — warm and welcoming"
 The landing page can be bold and expressive. Inner pages prioritize clarity and scannability for information-dense content. The navigation and visual system remain identical across all pages.
 
 ---

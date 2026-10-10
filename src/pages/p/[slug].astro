@@ -31,7 +31,7 @@ const children = page ? await getPages({ parent: slug }).catch(() => []) : [];
       )}
 
       {page.content && (
-        <div class="prose-toik-prose">
+        <div class="prose-toik prose-toik-prose">
           <RichText nodes={page.content} class="mt-8" />
         </div>
       )}
