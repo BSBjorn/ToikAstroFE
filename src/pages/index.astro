@@ -223,9 +223,6 @@ sectionMap.sponsors = sectionMap.sponsors ?? true;
         <section class="container-content mb-16" aria-labelledby="nyheter">
             <div class="mb-6 flex items-baseline justify-between">
                 <span class="section-label">NYHETER</span>
-                <h2 id="nyheter" class="text-display">
-                    Siste nytt
-                </h2>
                 <a
                     href="/nyheter"
                     class="text-sm text-ink-muted hover:underline"
@@ -290,7 +287,10 @@ sectionMap.sponsors = sectionMap.sponsors ?? true;
                 )}
                 {!sectionImg && (
                     <div>
-                        <h2 id={`section-${id}`} class="text-display">
+                        <h2
+                            id={`section-${id}`}
+                            class="text-display font-black"
+                        >
                             {section.title}
                         </h2>
                         <div class="prose prose-lg mt-6 text-ink">
@@ -303,6 +303,6 @@ sectionMap.sponsors = sectionMap.sponsors ?? true;
     })}
 
     {sectionMap.sponsors && (
-        <SponsorGrid sponsors={sponsors} label="SAMBANDSPARTNERE" />
+        <SponsorGrid sponsors={sponsors} label="SAMARBEIDSPARTNERE" />
     )}
 </Base>

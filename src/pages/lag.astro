@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
-import { getTeams, mediaUrl, mediaAlt } from '../lib/strapi';
+import TeamCard from '../components/TeamCard.astro';
+import { getTeams } from '../lib/strapi';
 
 const response = await getTeams();
 const teams = response?.data ?? [];
@@ -8,31 +9,11 @@ const teams = response?.data ?? [];
 
 <Base title="Lag">
   <div class="container-content py-16 lg:py-20">
-    <h1 class="border-l-4 border-brand-500 pl-4 text-display">Lag og treningsgrupper</h1>
+    <h1 class="mt-8 font-bold text-hero">Lag og treningsgrupper</h1>
     <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-      {teams.map((team) => {
-        const photo = mediaUrl(team.photo, 'small');
-        return (
-          <a
-            href={`/lag/${team.slug}`}
-            class="group overflow-hidden rounded-card border border-line bg-surface-raised shadow-card transition-shadow hover:shadow-lift"
-          >
-            {photo && (
-              <img
-                src={photo}
-                alt={mediaAlt(team.photo)}
-                class="aspect-[16/9] w-full object-cover"
-              />
-            )}
-            <div class="p-5">
-              <h2 class="text-xl group-hover:underline">{team.name}</h2>
-              {team.category && (
-                <p class="mt-1 text-sm text-ink-muted capitalize">{team.category}</p>
-              )}
-            </div>
-          </a>
-        );
-      })}
+      {teams.map((team) => (
+        <TeamCard team={team} />
+      ))}
     </div>
   </div>
 </Base>
