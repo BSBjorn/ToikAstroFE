@@ -1,29 +1,37 @@
 ---
-import type { StrapiMedia } from '../types/strapi';
-import { getPageTree } from '../lib/strapi';
+import type { StrapiMedia } from "../types/strapi";
+import { getPageTree } from "../lib/strapi";
 
 interface Props {
-  orgNumber?: string | null;
-  email?: string | null;
-  address?: string | null;
-  clubName?: string;
-  clubSlogan?: string | null;
+    orgNumber?: string | null;
+    email?: string | null;
+    address?: string | null;
+    clubName?: string;
+    clubSlogan?: string | null;
 }
 
-const { orgNumber, email, address, clubName = "Team Name", clubSlogan = "team slogan" } = Astro.props;
+const {
+    orgNumber,
+    email,
+    address,
+    clubName = "Team Name",
+    clubSlogan = "team slogan",
+} = Astro.props;
 const year = new Date().getFullYear();
 
 // Pages with proper parent→children hierarchy from custom endpoint
 const tree = await getPageTree().catch(() => []);
 
 // Flatten tree to list of all menu pages for footer links
-const buildFlatLinks = (nodes: import('../lib/strapi').TreeNode[]): Array<{ title: string; slug: string }> => {
+const buildFlatLinks = (
+    nodes: import("../lib/strapi").TreeNode[],
+): Array<{ title: string; slug: string }> => {
     const result: Array<{ title: string; slug: string }> = [];
     for (const node of nodes) {
         if (node.showInMenu !== false && node.title) {
             result.push({ title: node.title, slug: node.slug });
         }
-        for (const child of (node.children ?? [])) {
+        for (const child of node.children ?? []) {
             if (child.showInMenu !== false && child.title) {
                 result.push({ title: child.title, slug: child.slug });
             }
@@ -34,42 +42,47 @@ const buildFlatLinks = (nodes: import('../lib/strapi').TreeNode[]): Array<{ titl
 ---
 
 <footer class="mt-20 border-t border-line bg-surface-sunken py-12">
-  <div class="container-content">
-    <div class="grid gap-12 lg:gap-16 sm:grid-cols-2 lg:grid-cols-4">
-      <div>
-        <p class="font-display text-lg">{clubName}</p>
-        {clubSlogan && <p class="mt-2 text-sm text-ink-muted">{clubSlogan}</p>}
-        {clubSlogan && (
-          <p class="mt-3 text-xs font-semibold uppercase tracking-widest text-accent-500/80">
-            MANGE LAG · ÉN KLUBB
-          </p>
-        )}
-        {address && <p class="mt-4 whitespace-pre-line text-sm text-ink-muted">{address}</p>}
-        {
-          email && (
-            <p class="mt-2 text-sm">
-              <a href={`mailto:${email}`} class="link-footer">{email}</a>
+    <div class="container-content">
+        <div class="grid gap-12 lg:gap-16 sm:grid-cols-2 lg:grid-cols-4">
+            <div>
+                <p class="font-display text-lg">{clubName}</p>
+                {clubSlogan && (
+                    <p class="mt-3 text-xs font-semibold uppercase tracking-widest text-accent-500/80">
+                        {clubSlogan}
+                    </p>
+                )}
+                {address && (
+                    <p class="mt-4 whitespace-pre-line text-sm text-ink-muted">
+                        {address}
+                    </p>
+                )}
+                {email && (
+                    <p class="mt-2 text-sm">
+                        <a href={`mailto:${email}`} class="link-footer">
+                            {email}
+                        </a>
+                    </p>
+                )}
+            </div>
+
+            <nav aria-label="Hovedlenker" class="flex-grow">
+                <ul class="grid grid-cols-2 gap-x-8 gap-y-2 text-sm sm:grid-cols-3 md:grid-cols-4 lg:gap-x-12">
+                    {buildFlatLinks(tree).map((page) => (
+                        <li>
+                            <a href={`/p/${page.slug}`} class="link-footer">
+                                {page.title}
+                            </a>
+                        </li>
+                    ))}
+                </ul>
+            </nav>
+        </div>
+
+        <div class="mt-10 flex flex-col gap-2 border-t border-line pt-6 text-xs text-ink-muted sm:flex-row sm:justify-between">
+            <p>
+                &copy; {year} {clubName}
             </p>
-          )
-        }
-      </div>
-
-      <nav aria-label="Hovedlenker" class="flex-grow">
-        <ul class="grid grid-cols-2 gap-x-8 gap-y-2 text-sm sm:grid-cols-3 md:grid-cols-4 lg:gap-x-12">
-          {buildFlatLinks(tree).map((page) => (
-            <li>
-              <a href={`/p/${page.slug}`} class="link-footer">
-                {page.title}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </nav>
+            {orgNumber && <p>Org.nr. {orgNumber}</p>}
+        </div>
     </div>
-
-    <div class="mt-10 flex flex-col gap-2 border-t border-line pt-6 text-xs text-ink-muted sm:flex-row sm:justify-between">
-      <p>&copy; {year} {clubName}</p>
-      {orgNumber && <p>Org.nr. {orgNumber}</p>}
-    </div>
-  </div>
 </footer>

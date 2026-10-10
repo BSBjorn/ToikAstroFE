@@ -111,23 +111,24 @@ sectionMap.sponsors = sectionMap.sponsors ?? true;
     <!-- Hero -->
     {frontpage.hero || frontpage.title ? (
         <section class="relative isolate overflow-hidden bg-brand-900 text-ink-invert">
+            <div class="pointer-events-none absolute inset-0 after:pointer-events-none after:absolute after:bottom-0 after:left-0 after:right-0 after:h-1/2 after:bg-gradient-to-t after:from-ice-900/50 -z-10" />
             {heroSrc && (
                 <img
                     src={heroSrc}
                     alt={mediaAlt(heroImage)}
-                    class="absolute inset-0 -z-10 size-full object-cover opacity-65"
+                    class="absolute inset-0 -z-20 size-full object-cover opacity-65"
                     fetchpriority="high"
                     decoding="async"
                 />
             )}
             <div class="container-content py-16 sm:py-24 text-ice-50 pl-20">
-                <h1 class="relative text-hero text-6xl leading-16 md:text-[9rem] md:leading-28 font-black -ml-15 text-shadow-lg">
+                <h1 class="relative text-hero text-6xl font-plus leading-16 md:text-[9rem] md:leading-28 font-black -ml-15 text-shadow-lg">
                     TØNSBERG VIKINGS
                 </h1>
-                <h2 class="text-3xl text-display font-bold mt-12 block">
+                <h2 class="text-3xl font-bold font-sans mt-12 block">
                     Tønsberg og Omegn ishockeyklubb
                 </h2>
-                <h3 class="mt-2 text-2xl font-bold"> {heroTitle}</h3>
+                <h3 class="mt-2 text-2xl font-bold font-sans"> {heroTitle}</h3>
                 <p class="mt-4 max-w-2xl text-xl">{heroText}</p>
                 <div class="mt-8 flex flex-wrap gap-3">
                     {frontpage.hero?.ctaText && frontpage.hero?.ctaLink ? (
@@ -185,7 +186,6 @@ sectionMap.sponsors = sectionMap.sponsors ?? true;
                     client:load
                     strapiUrl={publicStrapiUrl()}
                     team={FEATURED_TEAM}
-                    matchId="8436416"
                 />
 
                 <div class="grid gap-8 border-t border-line px-6 py-8 md:grid-cols-2">
@@ -276,7 +276,10 @@ sectionMap.sponsors = sectionMap.sponsors ?? true;
                             />
                         </div>
                         <div class="md:w-2/3 order-1">
-                            <h2 id={`section-${id}`} class="text-display">
+                            <h2
+                                id={`section-${id}`}
+                                class="text-display font-black"
+                            >
                                 {section.title}
                             </h2>
                             <div class="prose prose-lg mt-6 text-ink">

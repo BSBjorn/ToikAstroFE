@@ -31,16 +31,16 @@
   --color-brand-950: #061120;
 
   /* --- Accent ramp: rink red ------------------------------------------- */
-  --color-accent-50: #fdeaee;
-  --color-accent-100: #fbd0d8;
-  --color-accent-200: #f5a3b2;
-  --color-accent-300: #ee6c83;
-  --color-accent-400: #e03a58;
-  --color-accent-500: #c8102e;
-  --color-accent-600: #a60c26;
-  --color-accent-700: #82091e;
-  --color-accent-800: #5e0616;
-  --color-accent-900: #3d040e;
+  --color-accent-50: #fef4f5;
+  --color-accent-100: #feeaeb;
+  --color-accent-200: #fccfd3;
+  --color-accent-300: #f9a3ab;
+  --color-accent-400: #f56775;
+  --color-accent-500: #e81a30;
+  --color-accent-600: #d1122a;
+  --color-accent-700: #aa0f24;
+  --color-accent-800: #7d0c1c;
+  --color-accent-900: #550914;
 
   /* --- Ice: cool neutrals ---------------------------------------------- */
   --color-ice-50: #f8fafc;
@@ -57,7 +57,7 @@
   /* --- Type ------------------------------------------------------------ */
   /* Display face carries the club's voice; swap when the profile lands.
      Both are system-stack fallbacks so nothing blocks first paint. */
-  --font-display: 'M PLUS 2', 'Arial Narrow', system-ui, sans-serif;
+  --font-plus: 'M PLUS 2', 'Arial Narrow', system-ui, sans-serif;
   --font-sans: 'Rubik', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-mono: ui-monospace, 'SF Mono', Menlo, monospace;
 
@@ -158,10 +158,9 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  h1,
-  h2,
-  h3 {
-    font-family: var(--font-display);
+  h1, h2
+   {
+    font-family: var(--font-plus);
     text-transform: uppercase;
     letter-spacing: 0.005em;
   }
@@ -186,6 +185,9 @@
     color: var(--color-brand-500);
     text-decoration: underline;
     text-underline-offset: 0.15em;
+  }
+  .dark .prose-toik :where(a) {
+    color: var(--color-brand-300);
   }
   .prose-toik :where(img) {
     border-radius: var(--radius-card);
@@ -267,7 +269,7 @@
 
   /* --- Section labels — red dot + display type for visual authority ----- */
   .section-label {
-    @apply text-xs font-display font-semibold uppercase tracking-widest text-accent-500;
+    @apply text-xs font-plus font-semibold uppercase tracking-widest text-accent-500;
   }
   .section-label::before {
     content: '';

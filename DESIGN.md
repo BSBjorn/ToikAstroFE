@@ -20,7 +20,7 @@ colors:
     red-200: "#f5a3b2"
     red-300: "#ee6c83"
     red-400: "#e03a58"
-    red-500: "#c8102e"
+    red-500: "#e81a30"
     red-600: "#a60c26"
     red-700: "#82091e"
     red-800: "#5e0616"
@@ -137,7 +137,7 @@ Palette built on three ramps: navy (primary), rink red (accent), ice neutrals. W
 - **Ice-Bedrock Navy** (#1d3c66): Button-primary fill, primary link text, active nav indicators.
 
 ### Accent (Rink Red)
-- **Scoreboard Red** (#c8102e): Hero CTAs ("Bli med i klubben"), live match state, the only element that should draw eyes on a page with this palette. The One Voice Rule applies: one accent element per viewport at most.
+- **Scoreboard Red** (#e81a30): Hero CTAs ("Bli med i klubben"), live match state, the only element that should draw eyes on a page with this palette. The One Voice Rule applies: one accent element per viewport at most.
 
 ### Neutral (Ice)
 - **Rink White** (#f8fafc): Page body background (`ice-50`). Cold-toned off-white, never pure white.

@@ -6,7 +6,7 @@
     "colorMeta": {
       "navy-50": { "role": "primary-lightest", "displayName": "Navy Mist", "canonical": "#eef3f9", "tonalRamp": ["#eef3f9","#d6e2f0","#adc4e0","#7c9fcb","#4a74a8","#2b5286","#1d3c66","#142c4c","#0f2138","#0a1a2f","#061120"] },
       "navy-600": { "role": "primary", "displayName": "Ice-Bedrock Navy", "canonical": "#1d3c66", "tonalRamp": ["#eef3f9","#d6e2f0","#adc4e0","#7c9fcb","#4a74a8","#2b5286","#1d3c66","#142c4c","#0f2138","#0a1a2f","#061120"] },
-      "red-500": { "role": "accent", "displayName": "Scoreboard Red", "canonical": "#c8102e", "tonalRamp": ["#fdeaee","#fbd0d8","#f5a3b2","#ee6c83","#e03a58","#c8102e","#a60c26","#82091e","#5e0616","#3d040e"] },
+      "red-500": { "role": "accent", "displayName": "Scoreboard Red", "canonical": "#e81a30", "tonalRamp": ["#fef4f5","#feeaeb","#fccfd3","#f9a3ab","#f56775","#e81a30","#d1122a","#aa0f24","#7d0c1c","#550914"] },
       "ice-50": { "role": "neutral-lightest", "displayName": "Rink White", "canonical": "#f8fafc", "tonalRamp": ["#f8fafc","#eef2f6","#dde4ec","#c3cedb","#94a4b8","#64748b","#47566b","#334154","#1f2937","#111827"] }
     },
     "typographyMeta": {
@@ -22,7 +22,7 @@
       {
         "name": "button-accent-cta",
         "html": "<a href=\"#\" class=\"ds-btn-accent\">Bli med i klubben</a>",
-        "css": ".ds-btn-accent { display: inline-flex; align-items: center; justify-content: center; border-radius: 999px; padding: 0.75rem 1.5rem; font-size: 1rem; font-weight: 600; background-color: #c8102e; color: #ffffff; transition: background-color 0.15s ease; text-decoration: none; border: none; cursor: pointer; } .ds-btn-accent:hover { background-color: #e03a58; } .ds-btn-accent:focus-visible { outline: 2px solid #ee6c83; outline-offset: 2px; }"
+        "css": ".ds-btn-accent { display: inline-flex; align-items: center; justify-content: center; border-radius: 999px; padding: 0.75rem 1.5rem; font-size: 1rem; font-weight: 600; background-color: #e81a30; color: #ffffff; transition: background-color 0.15s ease; text-decoration: none; border: none; cursor: pointer; } .ds-btn-accent:hover { background-color: #f56775; } .ds-btn-accent:focus-visible { outline: 2px solid #f9a3ab; outline-offset: 2px; }"
       },
       {
         "name": "button-outline",
@@ -42,7 +42,7 @@
       {
         "name": "fixture-item",
         "html": "<div class=\"ds-fixture\"><span class=\"ds-fixture-date\">23. okt</span><div class=\"ds-fixture-teams\"><strong>TOIK</strong><span class=\"ds-fixture-divider\">–</span><span>Storhamar</span></div><span class=\"ds-fixture-badge ds-win\">S</span></div>",
-        "css": ".ds-fixture { display: flex; align-items: center; gap: 1rem; padding: 0.75rem 1rem; border-left: 4px solid #7c9fcb; } .ds-fixture-home { border-left-color: #7c9fcb; } .ds-fixture-date { width: 5rem; flex-shrink: 0; font-size: 0.875rem; font-weight: 600; font-variant-numeric: tabular-nums; } .ds-fixture-time { font-size: 0.75rem; color: #47566b; font-variant-numeric: tabular-nums; } .ds-fixture-teams { min-width: 0; flex: 1; display: flex; flex-wrap: wrap; align-items: center; font-size: 0.875rem; } .ds-fixture-divider { margin: 0 0.375rem; color: #47566b; } .ds-fixture-result { font-family: 'Barlow Condensed', Arial Narrow, system-ui, sans-serif; font-size: 1.125rem; font-weight: 700; font-variant-numeric: tabular-nums; } .ds-fixture-badge { display: inline-flex; align-items: center; justify-content: center; border-radius: 999px; width: 1.5rem; height: 1.5rem; font-size: 0.75rem; font-weight: 700; } .ds-fixture-badge.ds-win { background-color: #16a34a; color: #ffffff; } .ds-fixture-badge.ds-loss { background-color: #a60c26; color: #ffffff; } .ds-fixture-badge.ds-draw { background-color: #94a4b8; color: #ffffff; }"
+        "css": ".ds-fixture { display: flex; align-items: center; gap: 1rem; padding: 0.75rem 1rem; border-left: 4px solid #7c9fcb; } .ds-fixture-home { border-left-color: #7c9fcb; } .ds-fixture-date { width: 5rem; flex-shrink: 0; font-size: 0.875rem; font-weight: 600; font-variant-numeric: tabular-nums; } .ds-fixture-time { font-size: 0.75rem; color: #47566b; font-variant-numeric: tabular-nums; } .ds-fixture-teams { min-width: 0; flex: 1; display: flex; flex-wrap: wrap; align-items: center; font-size: 0.875rem; } .ds-fixture-divider { margin: 0 0.375rem; color: #47566b; } .ds-fixture-result { font-family: 'Barlow Condensed', Arial Narrow, system-ui, sans-serif; font-size: 1.125rem; font-weight: 700; font-variant-numeric: tabular-nums; } .ds-fixture-badge { display: inline-flex; align-items: center; justify-content: center; border-radius: 999px; width: 1.5rem; height: 1.5rem; font-size: 0.75rem; font-weight: 700; } .ds-fixture-badge.ds-win { background-color: #16a34a; color: #ffffff; } .ds-fixture-badge.ds-loss { background-color: #d1122a; color: #ffffff; } .ds-fixture-badge.ds-draw { background-color: #94a4b8; color: #ffffff; }"
       },
       {
         "name": "site-header",
@@ -57,7 +57,7 @@
       {
         "name": "hero-cta-row",
         "html": "<div class=\"ds-hero-actions\"><a href=\"#\" class=\"ds-btn-accent\">Bli med i klubben</a><a href=\"/kamper\" class=\"ds-btn-outline ds-dark\">Se kampoppsettet</a></div>",
-        "css": ".ds-hero-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 2rem; } .ds-btn-accent { display: inline-flex; align-items: center; justify-content: center; border-radius: 999px; padding: 0.75rem 1.5rem; font-size: 1rem; font-weight: 600; background-color: #c8102e; color: #ffffff; transition: background-color 0.15s ease; text-decoration: none; border: none; cursor: pointer; } .ds-btn-accent:hover { background-color: #e03a58; } .ds-btn-outline.ds-dark { display: inline-flex; align-items: center; justify-content: center; border-radius: 999px; padding: 0.75rem 1.5rem; font-size: 1rem; font-weight: 600; border: 1px solid rgb(148 164 184 / 0.4); color: #ffffff; background: transparent; transition: background-color 0.15s ease; text-decoration: none; cursor: pointer; } .ds-btn-outline.ds-dark:hover { background-color: rgb(255 255 255 / 0.1); }"
+        "css": ".ds-hero-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 2rem; } .ds-btn-accent { display: inline-flex; align-items: center; justify-content: center; border-radius: 999px; padding: 0.75rem 1.5rem; font-size: 1rem; font-weight: 600; background-color: #e81a30; color: #ffffff; transition: background-color 0.15s ease; text-decoration: none; border: none; cursor: pointer; } .ds-btn-accent:hover { background-color: #f56775; } .ds-btn-outline.ds-dark { display: inline-flex; align-items: center; justify-content: center; border-radius: 999px; padding: 0.75rem 1.5rem; font-size: 1rem; font-weight: 600; border: 1px solid rgb(148 164 184 / 0.4); color: #ffffff; background: transparent; transition: background-color 0.15s ease; text-decoration: none; cursor: pointer; } .ds-btn-outline.ds-dark:hover { background-color: rgb(255 255 255 / 0.1); }"
       }
     ],
     "narrative": {
@@ -71,7 +71,7 @@
         "Pill-shaped buttons for hero CTAs; 12px rounded rectangles for UI"
       ],
       "rules": [
-        { "name": "The One Voice Rule", "body": "Scoreboard Red (#c8102e) is used on ≤10% of any given screen's area. It appears only on hero CTAs, live match state, and match outcome badges.", "section": "colors" },
+        { "name": "The One Voice Rule", "body": "Scoreboard Red (#e81a30) is used on ≤10% of any given screen's area. It appears only on hero CTAs, live match state, and match outcome badges.", "section": "colors" },
         { "name": "M PLUS 2 for headings only", "body": "M PLUS 2 is used for headings, scores, labels, and navigation text. Rubik handles all reading paragraphs and body copy. Never use M PLUS 2 below 0.75rem or in running text.", "section": "typography" },
         { "name": "The No-Shadow Rule", "body": "Text elements, buttons, badges, and inputs never carry shadows. Shadows appear only on card-like containers at rest or in hover state. Depth through transparency (header blur) is the only non-shadow elevation technique.", "section": "elevation" }
       ],
