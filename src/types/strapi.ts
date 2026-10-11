@@ -135,6 +135,22 @@ export interface Person extends StrapiEntity {
   bio: string | null;
 }
 
+
+/** A link entry inside a footer group — either a page relation or manual URL. */
+export interface FooterGroupLink {
+  id: number;
+  documentId: string;
+  label: string;
+  url: string | null;
+  page?: Pick<{ id: number; documentId: string; title: string; slug: string }, 'id' | 'documentId' | 'title' | 'slug'> | null;
+}
+
+/** A named column group in the footer. */
+export interface FooterLinkGroup extends StrapiEntity {
+  title: string;
+  links: FooterGroupLink[];
+}
+
 export interface Page extends StrapiEntity {
   title: string;
   slug: string;
@@ -176,6 +192,8 @@ export interface Club extends StrapiEntity {
   slogan: string | null;
   logo: StrapiMedia | null;
   socialLinks: components["schemas"]["SharedSocialLinkEntry"][];
+  footerLogo: StrapiMedia | null;
+  footerLinkGroups: FooterLinkGroup[] | null;
   grasrotandelenOrgNumber: string | null;
 }
 
@@ -233,53 +251,20 @@ export interface SideCount {
   away: number;
 }
 
-export interface TimelineGoal {
-  type: 'goal';
-  team: MatchSide;
-  scorer: string | null;
-  assists: string[];
-  /** "PP1", "Empty net", "Game Winning Goal", "Even strength" */
-  flags: string[];
-  period: number | null;
-  /** Wall-clock seconds within the period — ordering only, NOT a game clock. */
-  time: number | null;
-  score: SideCount;
-}
-
-export interface TimelinePenalty {
-  type: 'penalty';
-  team: MatchSide;
-  player: string | null;
-  minutes: number;
-  reason: string | null;
-  period: number | null;
-  time: number | null;
-  score: SideCount;
-}
-
-export type TimelineEvent = TimelineGoal | TimelinePenalty;
-
 export interface LiveMatch {
   active: boolean;
-  source: 'active' | 'explicit';
+  phase: 'pre-game' | 'live' | 'post-game' | 'none';
   arena: string;
   match: {
     id: number;
-    date: string | null;
-    time: string | null;
     homeTeam: string | null;
     awayTeam: string | null;
-    homeTeamId: number | null;
-    awayTeamId: number | null;
     venue: string | null;
     tournament: string | null;
+    date: string | null;
+    time: string | null;
   } | null;
-  score: SideCount | null;
-  shots: SideCount | null;
-  penalties: SideCount | null;
-  penaltyMinutes: SideCount | null;
-  faceoffs: (SideCount & { total: number; homePct: number | null }) | null;
-  periods: Array<{ period: number; goals: SideCount; shots: SideCount }>;
-  timeline: TimelineEvent[];
-  incidentCount: number;
+  score: { home: number; away: number } | null;
+  countdownSec: number | null;
+  hockeyLiveUrl: string | null;
 }
