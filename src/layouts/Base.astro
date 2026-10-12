@@ -7,6 +7,12 @@
  * in-process TTL cache around the Strapi calls.
  */
 import "../styles/main.css";
+import "@phosphor-icons/web/regular/style.css";
+import "@phosphor-icons/web/bold/style.css";
+import "@phosphor-icons/web/fill/style.css";
+import "@phosphor-icons/web/light/style.css";
+import "@phosphor-icons/web/thin/style.css";
+import "@phosphor-icons/web/duotone/style.css";
 import SiteHeader from "../components/SiteHeader.astro";
 import SiteFooter from "../components/SiteFooter.astro";
 import { getClub } from "../lib/strapi";
@@ -57,18 +63,26 @@ if (maxAge > 0) {
 <html lang="no">
     <head>
         <meta charset="utf-8" />
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=M+PLUS+2:wght@100..900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=M+PLUS+2:wght@100..900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap"
+            rel="stylesheet"
+        />
         <!-- Apply theme before any paint — no async/defer so it runs sync -->
         <script>
             try {
-                var s = localStorage.getItem('theme');
-                if (s === 'dark' || (!s && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                    document.documentElement.classList.add('dark');
-                    document.documentElement.setAttribute('data-theme', 'dark');
+                var s = localStorage.getItem("theme");
+                if (
+                    s === "dark" ||
+                    (!s &&
+                        window.matchMedia("(prefers-color-scheme: dark)")
+                            .matches)
+                ) {
+                    document.documentElement.classList.add("dark");
+                    document.documentElement.setAttribute("data-theme", "dark");
                 }
-            } catch(e) {}
+            } catch (e) {}
         </script>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>{fullTitle}</title>
@@ -101,7 +115,11 @@ if (maxAge > 0) {
         </a>
 
         <slot name="header">
-            <SiteHeader logo={club.logo} clubName={siteName} clubSlogan={clubSlogan ?? undefined} />
+            <SiteHeader
+                logo={club.logo}
+                clubName={siteName}
+                clubSlogan={clubSlogan ?? undefined}
+            />
         </slot>
 
         <main id="innhold">
@@ -109,7 +127,14 @@ if (maxAge > 0) {
         </main>
 
         <slot name="footer">
-            <SiteFooter orgNumber={club.grasrotandelenOrgNumber} clubName={siteName} clubSlogan={clubSlogan ?? undefined} />
+            <SiteFooter
+                orgNumber={club.grasrotandelenOrgNumber}
+                clubName={siteName}
+                clubSlogan={clubSlogan ?? undefined}
+                footerLogo={club.footerLogo}
+                socialLinks={club.socialLinks}
+                footerLinkGroups={club.footerLinkGroups}
+            />
         </slot>
     </body>
 </html>

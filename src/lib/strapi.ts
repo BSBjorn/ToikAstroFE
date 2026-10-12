@@ -251,7 +251,7 @@ export async function getClub(): Promise<StrapiResponse<Club> | null> {
     '/api/club',
     {
       'populate[]': ['logo', 'socialLinks', 'footerLogo', 'footerLinkGroups'],
-      'populate[footerLinkGroups][populate]': 'links',
+      'populate': 'footerLinkGroups.links',
     }
   );
 }
