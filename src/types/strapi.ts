@@ -93,6 +93,8 @@ export interface Team extends StrapiEntity {
   /** Federation IDs — the board maintains these in the admin each season. */
   tournamentId: string | null;
   teamId: string | null;
+  /** Strapi team ID used by /api/matches to fetch fixtures for this team. */
+  fixtureTeamId: string | null;
   category?: TeamCategory;
   birthYear?: number | null;
   active?: boolean;

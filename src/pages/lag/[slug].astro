@@ -1,11 +1,34 @@
 ---
 import Base from '../../layouts/Base.astro';
 import RichText from '../../components/RichText.astro';
-import { getTeam, mediaUrl, mediaAlt } from '../../lib/strapi';
+import FixtureList from '../../components/FixtureList.astro';
+import LiveMatch from '../../components/LiveMatch.vue';
+import {
+  getTeam,
+  getFixtures,
+  enrichFixturesWithStats,
+  mediaUrl,
+  mediaAlt,
+  publicStrapiUrl,
+} from '../../lib/strapi';
 
 const { slug } = Astro.params;
 const team = await getTeam(slug).catch(() => null);
 const photo = team ? mediaUrl(team.photo, 'large') : null;
+
+let upcoming: Fixture[] = [];
+let recent: Array<Fixture & { stats: any }> = [];
+if (team?.fixtureTeamId) {
+  [upcoming, recent] = await Promise.all([
+    getFixtures(team.fixtureTeamId, 'upcoming', 4).then(
+      (r) => r.data ?? [],
+      () => [],
+    ),
+    enrichFixturesWithStats(
+      (await getFixtures(team.fixtureTeamId, 'completed', 3)).data ?? [],
+    ),
+  ]);
+}
 ---
 
 {team ? (
@@ -25,6 +48,51 @@ const photo = team ? mediaUrl(team.photo, 'large') : null;
       {team.description && <div class="prose-toik mt-8">
                 <RichText nodes={team.description} />
             </div>}
+
+      {(team?.teamId || upcoming.length > 0 || recent.length > 0) && (
+        <section class="mt-12" aria-labelledby="kamper">
+          <span class="section-label">KAMPER</span>
+
+          <div class="mt-4 overflow-hidden rounded-card border-l-4 border-accent-500 bg-surface-raised shadow-card">
+            {team?.teamId && (
+              <LiveMatch
+                client:load
+                strapiUrl={publicStrapiUrl()}
+                team={team.teamId}
+              />
+            )}
+
+            {(upcoming.length > 0 || recent.length > 0) && (
+              <div class="grid gap-8 border-t border-line px-6 py-8 md:grid-cols-2">
+                <div>
+                  <div class="mb-3 flex items-baseline justify-between">
+                    <h3 class="text-xl">Neste kamper</h3>
+                    <a
+                      href="/kamper"
+                      class="text-sm text-ink-muted hover:underline"
+                    >
+                      Hele terminlisten
+                    </a>
+                  </div>
+                  <FixtureList fixtures={upcoming} type="upcoming" />
+                </div>
+                <div>
+                  <div class="mb-3 flex items-baseline justify-between">
+                    <h3 class="text-xl">Siste resultater</h3>
+                    <a
+                      href="/kamper?type=spilte"
+                      class="text-sm text-ink-muted hover:underline"
+                    >
+                      Alle resultater
+                    </a>
+                  </div>
+                  <FixtureList fixtures={recent} type="completed" />
+                </div>
+              </div>
+            )}
+          </div>
+        </section>
+      )}
 
       {team.players && team.players.length > 0 && (
         <div class="mt-12">
