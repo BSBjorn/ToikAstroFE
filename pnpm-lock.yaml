@@ -17,6 +17,9 @@ importers:
       '@astrojs/vue':
         specifier: ^7.0.3
         version: 7.0.3(@types/node@24.13.6)(astro@7.3.5(@types/node@24.13.6)(jiti@2.7.0))(esbuild@0.28.2)(jiti@2.7.0)(supports-color@10.2.2)(vue@3.5.43(typescript@5.9.3))
+      '@phosphor-icons/web':
+        specifier: ^2.1.2
+        version: 2.1.2
       astro:
         specifier: ^7.3.5
         version: 7.3.5(@types/node@24.13.6)(jiti@2.7.0)
@@ -701,6 +704,9 @@ packages:
 
   '@oxc-project/types@0.151.0':
     resolution: {integrity: sha512-J1yXrIlNDZVzE3ada310xeAw7nH8yCAyLPuUIsjKatFPmfn5bS1oW+cM+QsGOtVWd5nhSpbwZWx/rue+r5Z+PA==}
+
+  '@phosphor-icons/web@2.1.2':
+    resolution: {integrity: sha512-rPAR9o/bEcp4Cw4DEeZHXf+nlGCMNGkNDRizYHM47NLxz9vvEHp/Tt6FMK1NcWadzw/pFDPnRBGi/ofRya958A==}
 
   '@polka/url@1.0.0-next.29':
     resolution: {integrity: sha512-wwQAWhWSuHaag8c4q/KN/vCoeOJYshAIvMQwD4GpSb3OiZklFfvAgmj0VCBBImRpuF/aFgIRzllXlVX93Jevww==}
@@ -2840,6 +2846,8 @@ snapshots:
   '@oslojs/encoding@1.1.0': {}
 
   '@oxc-project/types@0.151.0': {}
+
+  '@phosphor-icons/web@2.1.2': {}
 
   '@polka/url@1.0.0-next.29': {}
 
