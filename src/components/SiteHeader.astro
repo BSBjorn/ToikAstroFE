@@ -129,18 +129,7 @@ const logoSrc = logo ? mediaUrl(logo, "thumbnail") : null;
                                         aria-controls={`dropdown-${group.parent.href.replace(/\//g, '-')}`}
                                         class="nav-chevron -mr-1 p-0.5 text-ink-muted transition hover:text-ink"
                                     >
-                                        <svg
-                                            class="size-3.5 transition-transform duration-200"
-                                            viewBox="0 0 24 24"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            stroke-width="2.5"
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
-                                            aria-hidden="true"
-                                        >
-                                            <path d="M6 9l6 6 6-6" />
-                                        </svg>
+                                        <i class="ph ph-caret-down w-3.5 transition-transform duration-200" aria-hidden="true"></i>
                                     </button>
                                 </span>
                                 <!-- Dropdown panel -->
@@ -194,13 +183,8 @@ const logoSrc = logo ? mediaUrl(logo, "thumbnail") : null;
             aria-label="Bytt mellom lys og mørk modus"
             class="grid size-10 shrink-0 place-items-center rounded-pill text-ink-muted transition hover:bg-surface-sunken hover:text-ink"
         >
-            <svg id="theme-icon-sun" class="size-5 hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                <circle cx="12" cy="12" r="4" />
-                <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" stroke-linecap="round" />
-            </svg>
-            <svg id="theme-icon-moon" class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" stroke-linecap="round" stroke-linejoin="round" />
-            </svg>
+            <i id="theme-icon-sun" class="ph ph-sun w-5 h-5 hidden"></i>
+            <i id="theme-icon-moon" class="ph ph-moon w-5 h-5"></i>
         </button>
 
         <!-- Mobile menu button -->
@@ -212,28 +196,14 @@ const logoSrc = logo ? mediaUrl(logo, "thumbnail") : null;
             aria-label="Åpne meny"
             class="grid size-10 shrink-0 place-items-center rounded-pill text-ink-muted transition hover:bg-surface-sunken hover:text-ink md:hidden"
         >
-            <svg
+            <i
                 id="mobile-menu-icon-open"
-                class="size-5"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                aria-hidden="true"
-            >
-                <path d="M4 6h16M4 12h16M4 18h16" stroke-linecap="round" />
-            </svg>
-            <svg
+                class="ph ph-list w-5 h-5"
+            ></i>
+            <i
                 id="mobile-menu-icon-close"
-                class="size-5 hidden"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                aria-hidden="true"
-            >
-                <path d="M6 6l12 12M18 6L6 18" stroke-linecap="round" />
-            </svg>
+                class="ph ph-x w-5 h-5 hidden"
+            ></i>
         </button>
     </div>
 
@@ -283,18 +253,7 @@ const logoSrc = logo ? mediaUrl(logo, "thumbnail") : null;
                                         aria-controls={`mobile-dropdown-${group.parent.href.replace(/\//g, '-')}`}
                                         class="mobile-dropdown-chevron-toggle -mr-1 p-0.5 text-ink-muted transition hover:text-ink"
                                     >
-                                        <svg
-                                            class="size-4 transition-transform duration-200"
-                                            viewBox="0 0 24 24"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            stroke-width="2.5"
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
-                                            aria-hidden="true"
-                                        >
-                                            <path d="M6 9l6 6 6-6" />
-                                        </svg>
+                                        <i class="ph ph-caret-down w-4 transition-transform duration-200" aria-hidden="true"></i>
                                     </button>
                                 </div>
                                 <!-- Mobile dropdown children -->
@@ -328,7 +287,7 @@ const logoSrc = logo ? mediaUrl(logo, "thumbnail") : null;
 
     function setOpenState(chevron: Element, panel: Element, state: boolean) {
         chevron.setAttribute('aria-expanded', String(state));
-        (chevron.querySelector('svg') as SVGElement)?.style.setProperty('transform', state ? 'rotate(180deg)' : '');
+        (chevron.querySelector('.ph-caret-down') as HTMLElement)?.style.setProperty('transform', state ? 'rotate(180deg)' : '');
         panel.classList.toggle('opacity-0', !state);
         panel.classList.toggle('invisible', !state);
         panel.classList.toggle('pointer-events-none', !state);
@@ -391,7 +350,7 @@ const logoSrc = logo ? mediaUrl(logo, "thumbnail") : null;
             state.open = !state.open;
             chevron.setAttribute('aria-expanded', String(state.open));
             panel.classList.toggle('hidden', !state.open);
-            (chevron.querySelector('svg') as SVGElement)?.style.setProperty('transform', state.open ? 'rotate(180deg)' : '');
+            (chevron.querySelector('.ph-caret-down') as HTMLElement)?.style.setProperty('transform', state.open ? 'rotate(180deg)' : '');
         });
     });
 
