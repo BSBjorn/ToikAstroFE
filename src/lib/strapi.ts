@@ -312,7 +312,7 @@ export async function getFixtures(
   try {
     return await get<FixtureResponse>('fixtures', TTL.fixtures, '/api/matches', { team, type, limit });
   } catch (err: any) {
-    if (err?.message?.includes('-> 404') || err?.status === 404) return { data: [] };
+    if (err?.message?.includes('-> 404') || err?.status === 404 || err?.message?.includes('-> 400')) return { data: [] };
     throw err;
   }
 }
