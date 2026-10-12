@@ -18,14 +18,14 @@ const photo = team ? mediaUrl(team.photo, 'large') : null;
 
 let upcoming: Fixture[] = [];
 let recent: Array<Fixture & { stats: any }> = [];
-if (team?.fixtureTeamId) {
+if (slug) {
   [upcoming, recent] = await Promise.all([
-    getFixtures(team.fixtureTeamId, 'upcoming', 4).then(
+    getFixtures(slug, 'upcoming', 4).then(
       (r) => r.data ?? [],
       () => [],
     ),
     enrichFixturesWithStats(
-      (await getFixtures(team.fixtureTeamId, 'completed', 3)).data ?? [],
+      (await getFixtures(slug, 'completed', 3)).data ?? [],
     ),
   ]);
 }
