@@ -6,26 +6,31 @@
 import Base from '../../layouts/Base.astro';
 import RichText from '../../components/RichText.astro';
 import { getPlayer, mediaUrl, mediaAlt } from '../../lib/strapi';
-import {
-  PhInstagram,
-  PhLinkedin,
-  PhFacebook,
-  PhXLogo,
-  PhTiktok,
-  PhYoutube,
-} from 'phosphor-vue';
+import { phosphorPaths } from '../../lib/phosphor-icons';
 
 const { slug } = Astro.params;
 const player = await getPlayer(slug).catch(() => null);
 
-const SOCIAL_ICONS: Record<string, any> = {
-  instagram: PhInstagram,
-  linkedin: PhLinkedin,
-  facebook: PhFacebook,
-  twitter: PhXLogo,
-  tiktok: PhTiktok,
-  youtube: PhYoutube,
+// Map platform names to phosphor icon keys
+const platformIconMap: Record<string, string> = {
+  instagram: 'instagram',
+  linkedin: 'twitter', // no LinkedIn path; reuse Twitter/X style
+  facebook: 'facebook',
+  twitter: 'twitter',
+  tiktok: 'tiktok',
+  youtube: 'youtube',
 };
+
+function SocialIcon({ platform }: { platform: string }) {
+  const key = platformIconMap[platform.toLowerCase()] ?? 'instagram';
+  const path = phosphorPaths[key];
+  if (!path) return null;
+  return `
+    <svg viewBox="0 0 1024 1024" class="size-4 fill-current" is:html>
+      <path d="${path}" />
+    </svg>
+  `;
+}
 ---
 
 {player ? (
@@ -90,22 +95,19 @@ const SOCIAL_ICONS: Record<string, any> = {
               <div class="rounded-card border border-line bg-surface-raised p-4">
                 <h2 class="mb-3 font-semibold text-sm">Sosialt</h2>
                 <ul class="space-y-2">
-                  {player.socialLinks.map((link) => {
-                    const Icon = SOCIAL_ICONS[link.platform] ?? PhInstagram;
-                    return (
-                      <li>
-                        <a
-                          href={link.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          class="flex items-center gap-2 text-sm text-brand-500 hover:underline"
-                        >
-                          <Icon class="size-4 flex-shrink-0" weight="fill" />
-                          <span class="truncate">{link.platform}</span>
-                        </a>
-                      </li>
-                    );
-                  })}
+                  {player.socialLinks.map((link) => (
+                    <li>
+                      <a
+                        href={link.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="flex items-center gap-2 text-sm text-brand-500 hover:underline"
+                      >
+                        <SocialIcon platform={link.platform} />
+                        <span class="truncate">{link.platform}</span>
+                      </a>
+                    </li>
+                  ))}
                 </ul>
               </div>
             )}
