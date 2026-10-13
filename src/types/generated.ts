@@ -125,7 +125,7 @@ export interface paths {
         };
         get: operations["page/get/pages"];
         put?: never;
-        post?: never;
+        post: operations["page/post/pages"];
         delete?: never;
         options?: never;
         head?: never;
@@ -140,9 +140,9 @@ export interface paths {
             cookie?: never;
         };
         get: operations["page/get/pages_by_id"];
-        put?: never;
+        put: operations["page/put/pages_by_id"];
         post?: never;
-        delete?: never;
+        delete: operations["page/delete/pages_by_id"];
         options?: never;
         head?: never;
         patch?: never;
@@ -803,7 +803,7 @@ export interface components {
             updatedAt?: string;
             /**
              * @description A datetime field
-             * @default 2026-10-02T06:40:54.125Z
+             * @default 2026-10-13T09:07:18.078Z
              */
             publishedAt: string;
             related: unknown;
@@ -842,13 +842,24 @@ export interface components {
             updatedAt?: string;
             /**
              * @description A datetime field
-             * @default 2026-10-02T06:40:54.129Z
+             * @default 2026-10-13T09:07:18.082Z
              */
             publishedAt: string;
             /** @description A media field */
             cover?: components["schemas"]["PluginUploadFileDocument"];
             /** @description A relational field */
             team?: components["schemas"]["ApiTeamTeamDocument"];
+        };
+        SharedSocialLinkEntry: {
+            /**
+             * @description An enum field
+             * @enum {string}
+             */
+            platform: "facebook" | "instagram" | "twitter" | "youtube" | "tiktok";
+            /** @description A string field */
+            url: string;
+            /** @description A media field */
+            icon?: components["schemas"]["PluginUploadFileDocument"];
         };
         ApiPlayerPlayerDocument: {
             /**
@@ -859,6 +870,8 @@ export interface components {
             id: string | number;
             /** @description A string field */
             name: string;
+            /** @description A UID field */
+            slug: string;
             /** @description An integer field */
             number?: number;
             /**
@@ -877,6 +890,8 @@ export interface components {
             bio?: string;
             /** @description A string field */
             note?: string;
+            /** @description A blocks field */
+            careerHighlights: unknown[];
             /**
              * @description A boolean field
              * @default true
@@ -893,11 +908,13 @@ export interface components {
             updatedAt?: string;
             /**
              * @description A datetime field
-             * @default 2026-10-02T06:40:54.133Z
+             * @default 2026-10-13T09:07:18.086Z
              */
             publishedAt: string;
             /** @description A media field */
             photo?: components["schemas"]["PluginUploadFileDocument"];
+            /** @description A component field */
+            socialLinks?: components["schemas"]["SharedSocialLinkEntry"][];
             /** @description A relational field */
             team?: components["schemas"]["ApiTeamTeamDocument"];
         };
@@ -943,7 +960,7 @@ export interface components {
             updatedAt?: string;
             /**
              * @description A datetime field
-             * @default 2026-10-02T06:40:54.127Z
+             * @default 2026-10-13T09:07:18.080Z
              */
             publishedAt: string;
             /** @description A media field */
@@ -953,16 +970,56 @@ export interface components {
             /** @description A relational field */
             players?: components["schemas"]["ApiPlayerPlayerDocument"][];
         };
-        SharedSocialLinkEntry: {
-            /**
-             * @description An enum field
-             * @enum {string}
-             */
-            platform: "facebook" | "instagram" | "twitter" | "youtube" | "tiktok";
+        SharedFooterLinkGroupEntry: {
             /** @description A string field */
-            url: string;
-            /** @description A media field */
-            icon?: components["schemas"]["PluginUploadFileDocument"];
+            title: string;
+            /** @description A component field */
+            links: components["schemas"]["SharedFooterGroupLinkEntry"][];
+        };
+        SharedFooterGroupLinkEntry: {
+            /** @description A string field */
+            label: string;
+            /** @description A string field */
+            url?: string;
+            /** @description A relational field */
+            page?: components["schemas"]["ApiPagePageDocument"];
+        };
+        ApiPagePageDocument: {
+            /**
+             * Format: uuid
+             * @description The document ID, represented by a UUID
+             */
+            documentId: string;
+            id: string | number;
+            /** @description A string field */
+            title: string;
+            /** @description A UID field */
+            slug: string;
+            /** @description A blocks field */
+            content: unknown[];
+            /**
+             * @description An integer field
+             * @default 0
+             */
+            sortOrder: number;
+            /**
+             * @description A boolean field
+             * @default true
+             */
+            showInMenu: boolean | null;
+            /** @description A datetime field */
+            createdAt?: string;
+            /** @description A datetime field */
+            updatedAt?: string;
+            /**
+             * @description A datetime field
+             * @default 2026-10-13T09:07:18.104Z
+             */
+            publishedAt: string;
+            /** @description A relational field */
+            parent?: components["schemas"]["ApiPagePageDocument"];
+            /** @description A relational field */
+            children?: components["schemas"]["ApiPagePageDocument"][];
         };
         SharedMapCoordinatesEntry: {
             /** @description A float field */
@@ -1078,7 +1135,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-02T06:40:54.120Z
+                             * @default 2026-10-13T09:07:18.075Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -1166,7 +1223,7 @@ export interface operations {
                         category: "nyhet" | "kampreferat" | "informasjon";
                         /**
                          * @description A datetime field
-                         * @default 2026-10-02T06:45:42.999Z
+                         * @default 2026-10-13T09:07:54.301Z
                          */
                         publishedAt: string;
                         /** @description A media field */
@@ -1222,7 +1279,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-02T06:40:54.139Z
+                             * @default 2026-10-13T09:07:18.094Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -1336,7 +1393,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-02T06:40:54.136Z
+                             * @default 2026-10-13T09:07:18.090Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -1426,7 +1483,7 @@ export interface operations {
                         category?: "nyhet" | "kampreferat" | "informasjon";
                         /**
                          * @description A datetime field
-                         * @default 2026-10-02T06:45:43.041Z
+                         * @default 2026-10-13T09:07:54.362Z
                          */
                         publishedAt?: string;
                         /** @description A media field */
@@ -1482,7 +1539,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-02T06:40:54.141Z
+                             * @default 2026-10-13T09:07:18.096Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -1591,7 +1648,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-02T06:40:54.143Z
+                             * @default 2026-10-13T09:07:18.098Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -1642,8 +1699,8 @@ export interface operations {
     "club/get/club": {
         parameters: {
             query?: {
-                fields?: ("createdAt" | "updatedAt" | "publishedAt")[];
-                populate?: "*" | ("logo" | "socialLinks") | ("logo" | "socialLinks")[];
+                fields?: ("name" | "slogan" | "createdAt" | "updatedAt" | "publishedAt")[];
+                populate?: "*" | ("logo" | "socialLinks" | "footerLinkGroups" | "footerLogo") | ("logo" | "socialLinks" | "footerLinkGroups" | "footerLogo")[];
                 filters?: {
                     [key: string]: unknown;
                 };
@@ -1671,19 +1728,27 @@ export interface operations {
                              */
                             documentId: string;
                             id: string | number;
+                            /** @description A string field */
+                            name: string;
+                            /** @description A string field */
+                            slogan?: string;
                             /** @description A datetime field */
                             createdAt?: string;
                             /** @description A datetime field */
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-02T06:40:54.147Z
+                             * @default 2026-10-13T09:07:18.102Z
                              */
                             publishedAt: string;
                             /** @description A media field */
                             logo: components["schemas"]["PluginUploadFileDocument"];
                             /** @description A component field */
                             socialLinks?: components["schemas"]["SharedSocialLinkEntry"][];
+                            /** @description A component field */
+                            footerLinkGroups?: components["schemas"]["SharedFooterLinkGroupEntry"][];
+                            /** @description A media field */
+                            footerLogo?: components["schemas"]["PluginUploadFileDocument"];
                         };
                     };
                 };
@@ -1728,8 +1793,8 @@ export interface operations {
     "club/put/club": {
         parameters: {
             query?: {
-                fields?: ("createdAt" | "updatedAt" | "publishedAt")[];
-                populate?: "*" | ("logo" | "socialLinks") | ("logo" | "socialLinks")[];
+                fields?: ("name" | "slogan" | "createdAt" | "updatedAt" | "publishedAt")[];
+                populate?: "*" | ("logo" | "socialLinks" | "footerLinkGroups" | "footerLogo") | ("logo" | "socialLinks" | "footerLinkGroups" | "footerLogo")[];
                 status?: "draft" | "published";
                 publicationFilter?: "never-published" | "has-published-version" | "modified" | "unmodified" | "never-published-document" | "has-published-version-document" | "published-without-draft" | "published-with-draft";
                 hasPublishedVersion?: boolean | ("true" | "false");
@@ -1742,15 +1807,23 @@ export interface operations {
             content: {
                 "application/json": {
                     data: {
+                        /** @description A string field */
+                        name?: string;
+                        /** @description A string field */
+                        slogan?: string;
                         /**
                          * @description A datetime field
-                         * @default 2026-10-02T06:45:43.082Z
+                         * @default 2026-10-13T09:07:54.431Z
                          */
                         publishedAt?: string;
                         /** @description A media field */
                         logo?: unknown;
                         /** @description A component field */
                         socialLinks?: unknown[];
+                        /** @description A component field */
+                        footerLinkGroups?: unknown[];
+                        /** @description A media field */
+                        footerLogo?: unknown;
                     };
                 };
             };
@@ -1770,19 +1843,27 @@ export interface operations {
                              */
                             documentId: string;
                             id: string | number;
+                            /** @description A string field */
+                            name: string;
+                            /** @description A string field */
+                            slogan?: string;
                             /** @description A datetime field */
                             createdAt?: string;
                             /** @description A datetime field */
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-02T06:40:54.149Z
+                             * @default 2026-10-13T09:07:18.106Z
                              */
                             publishedAt: string;
                             /** @description A media field */
                             logo: components["schemas"]["PluginUploadFileDocument"];
                             /** @description A component field */
                             socialLinks?: components["schemas"]["SharedSocialLinkEntry"][];
+                            /** @description A component field */
+                            footerLinkGroups?: components["schemas"]["SharedFooterLinkGroupEntry"][];
+                            /** @description A media field */
+                            footerLogo?: components["schemas"]["PluginUploadFileDocument"];
                         };
                     };
                 };
@@ -1827,8 +1908,8 @@ export interface operations {
     "club/delete/club": {
         parameters: {
             query?: {
-                fields?: ("createdAt" | "updatedAt" | "publishedAt")[];
-                populate?: "*" | ("logo" | "socialLinks") | ("logo" | "socialLinks")[];
+                fields?: ("name" | "slogan" | "createdAt" | "updatedAt" | "publishedAt")[];
+                populate?: "*" | ("logo" | "socialLinks" | "footerLinkGroups" | "footerLogo") | ("logo" | "socialLinks" | "footerLinkGroups" | "footerLogo")[];
                 status?: "draft" | "published";
                 publicationFilter?: "never-published" | "has-published-version" | "modified" | "unmodified" | "never-published-document" | "has-published-version-document" | "published-without-draft" | "published-with-draft";
                 hasPublishedVersion?: boolean | ("true" | "false");
@@ -1853,19 +1934,27 @@ export interface operations {
                              */
                             documentId: string;
                             id: string | number;
+                            /** @description A string field */
+                            name: string;
+                            /** @description A string field */
+                            slogan?: string;
                             /** @description A datetime field */
                             createdAt?: string;
                             /** @description A datetime field */
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-02T06:40:54.150Z
+                             * @default 2026-10-13T09:07:18.107Z
                              */
                             publishedAt: string;
                             /** @description A media field */
                             logo: components["schemas"]["PluginUploadFileDocument"];
                             /** @description A component field */
                             socialLinks?: components["schemas"]["SharedSocialLinkEntry"][];
+                            /** @description A component field */
+                            footerLinkGroups?: components["schemas"]["SharedFooterLinkGroupEntry"][];
+                            /** @description A media field */
+                            footerLogo?: components["schemas"]["PluginUploadFileDocument"];
                         };
                     };
                 };
@@ -1958,7 +2047,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-02T06:40:54.153Z
+                             * @default 2026-10-13T09:07:18.110Z
                              */
                             publishedAt: string;
                             /** @description A component field */
@@ -2036,7 +2125,7 @@ export interface operations {
                         phone?: string;
                         /**
                          * @description A datetime field
-                         * @default 2026-10-02T06:45:43.119Z
+                         * @default 2026-10-13T09:07:54.494Z
                          */
                         publishedAt?: string;
                         /** @description A component field */
@@ -2079,7 +2168,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-02T06:40:54.155Z
+                             * @default 2026-10-13T09:07:18.113Z
                              */
                             publishedAt: string;
                             /** @description A component field */
@@ -2173,7 +2262,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-02T06:40:54.156Z
+                             * @default 2026-10-13T09:07:18.114Z
                              */
                             publishedAt: string;
                             /** @description A component field */
@@ -2264,7 +2353,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-02T06:40:54.159Z
+                             * @default 2026-10-13T09:07:18.119Z
                              */
                             publishedAt: string;
                             /** @description A component field */
@@ -2340,7 +2429,7 @@ export interface operations {
                         featuredSponsorTier?: "hoved" | "partner" | "stotte";
                         /**
                          * @description A datetime field
-                         * @default 2026-10-02T06:45:43.156Z
+                         * @default 2026-10-13T09:07:54.555Z
                          */
                         publishedAt?: string;
                         /** @description A component field */
@@ -2384,7 +2473,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-02T06:40:54.164Z
+                             * @default 2026-10-13T09:07:18.122Z
                              */
                             publishedAt: string;
                             /** @description A component field */
@@ -2476,7 +2565,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-02T06:40:54.166Z
+                             * @default 2026-10-13T09:07:18.123Z
                              */
                             publishedAt: string;
                             /** @description A component field */
@@ -2620,13 +2709,214 @@ export interface operations {
     };
     "page/get/pages": {
         parameters: {
-            query?: never;
+            query?: {
+                fields?: ("title" | "slug" | "content" | "sortOrder" | "showInMenu" | "createdAt" | "updatedAt" | "publishedAt")[];
+                filters?: {
+                    [key: string]: unknown;
+                };
+                _q?: string;
+                "pagination[withCount]"?: boolean;
+                "pagination[page]"?: number;
+                "pagination[pageSize]"?: number;
+                "pagination[start]"?: number;
+                "pagination[limit]"?: number;
+                sort?: ("title" | "slug" | "content" | "sortOrder" | "showInMenu" | "createdAt" | "updatedAt" | "publishedAt") | ("title" | "slug" | "content" | "sortOrder" | "showInMenu" | "createdAt" | "updatedAt" | "publishedAt")[] | {
+                    [key: string]: "asc" | "desc";
+                } | {
+                    [key: string]: "asc" | "desc";
+                }[];
+                populate?: "*" | ("parent" | "children") | ("parent" | "children")[];
+                status?: "draft" | "published";
+                publicationFilter?: "never-published" | "has-published-version" | "modified" | "unmodified" | "never-published-document" | "has-published-version-document" | "published-without-draft" | "published-with-draft";
+                hasPublishedVersion?: boolean | ("true" | "false");
+            };
             header?: never;
             path?: never;
             cookie?: never;
         };
         requestBody?: never;
         responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            /**
+                             * Format: uuid
+                             * @description The document ID, represented by a UUID
+                             */
+                            documentId: string;
+                            id: string | number;
+                            /** @description A string field */
+                            title: string;
+                            /** @description A UID field */
+                            slug: string;
+                            /** @description A blocks field */
+                            content: unknown[];
+                            /**
+                             * @description An integer field
+                             * @default 0
+                             */
+                            sortOrder: number;
+                            /**
+                             * @description A boolean field
+                             * @default true
+                             */
+                            showInMenu: boolean | null;
+                            /** @description A datetime field */
+                            createdAt?: string;
+                            /** @description A datetime field */
+                            updatedAt?: string;
+                            /**
+                             * @description A datetime field
+                             * @default 2026-10-13T09:07:18.127Z
+                             */
+                            publishedAt: string;
+                            /** @description A relational field */
+                            parent?: components["schemas"]["ApiPagePageDocument"];
+                            /** @description A relational field */
+                            children?: components["schemas"]["ApiPagePageDocument"][];
+                        }[];
+                    };
+                };
+            };
+            /** @description Bad request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    "page/post/pages": {
+        parameters: {
+            query?: {
+                fields?: ("title" | "slug" | "content" | "sortOrder" | "showInMenu" | "createdAt" | "updatedAt" | "publishedAt")[];
+                populate?: "*" | ("parent" | "children") | ("parent" | "children")[];
+                status?: "draft" | "published";
+                publicationFilter?: "never-published" | "has-published-version" | "modified" | "unmodified" | "never-published-document" | "has-published-version-document" | "published-without-draft" | "published-with-draft";
+                hasPublishedVersion?: boolean | ("true" | "false");
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    data: {
+                        /** @description A string field */
+                        title: string;
+                        /** @description A UID field */
+                        slug: string;
+                        /** @description A blocks field */
+                        content: unknown[];
+                        /**
+                         * @description A float field
+                         * @default 0
+                         */
+                        sortOrder: number;
+                        /**
+                         * @description A boolean field
+                         * @default true
+                         */
+                        showInMenu: ("0" | "1" | "t" | "true" | "f" | "false") | null;
+                        /**
+                         * @description A datetime field
+                         * @default 2026-10-13T09:07:54.626Z
+                         */
+                        publishedAt: string;
+                        /**
+                         * Format: uuid
+                         * @description A relational field
+                         */
+                        parent?: string;
+                        /** @description A relational field */
+                        children?: string[];
+                    };
+                };
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            /**
+                             * Format: uuid
+                             * @description The document ID, represented by a UUID
+                             */
+                            documentId: string;
+                            id: string | number;
+                            /** @description A string field */
+                            title: string;
+                            /** @description A UID field */
+                            slug: string;
+                            /** @description A blocks field */
+                            content: unknown[];
+                            /**
+                             * @description An integer field
+                             * @default 0
+                             */
+                            sortOrder: number;
+                            /**
+                             * @description A boolean field
+                             * @default true
+                             */
+                            showInMenu: boolean | null;
+                            /** @description A datetime field */
+                            createdAt?: string;
+                            /** @description A datetime field */
+                            updatedAt?: string;
+                            /**
+                             * @description A datetime field
+                             * @default 2026-10-13T09:07:18.130Z
+                             */
+                            publishedAt: string;
+                            /** @description A relational field */
+                            parent?: components["schemas"]["ApiPagePageDocument"];
+                            /** @description A relational field */
+                            children?: components["schemas"]["ApiPagePageDocument"][];
+                        };
+                    };
+                };
+            };
             /** @description Bad request */
             400: {
                 headers: {
@@ -2666,13 +2956,316 @@ export interface operations {
     };
     "page/get/pages_by_id": {
         parameters: {
-            query?: never;
+            query?: {
+                fields?: ("title" | "slug" | "content" | "sortOrder" | "showInMenu" | "createdAt" | "updatedAt" | "publishedAt")[];
+                populate?: "*" | ("parent" | "children") | ("parent" | "children")[];
+                filters?: {
+                    [key: string]: unknown;
+                };
+                sort?: ("title" | "slug" | "content" | "sortOrder" | "showInMenu" | "createdAt" | "updatedAt" | "publishedAt") | ("title" | "slug" | "content" | "sortOrder" | "showInMenu" | "createdAt" | "updatedAt" | "publishedAt")[] | {
+                    [key: string]: "asc" | "desc";
+                } | {
+                    [key: string]: "asc" | "desc";
+                }[];
+                status?: "draft" | "published";
+                publicationFilter?: "never-published" | "has-published-version" | "modified" | "unmodified" | "never-published-document" | "has-published-version-document" | "published-without-draft" | "published-with-draft";
+                hasPublishedVersion?: boolean | ("true" | "false");
+            };
             header?: never;
-            path?: never;
+            path: {
+                id: string;
+            };
             cookie?: never;
         };
         requestBody?: never;
         responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            /**
+                             * Format: uuid
+                             * @description The document ID, represented by a UUID
+                             */
+                            documentId: string;
+                            id: string | number;
+                            /** @description A string field */
+                            title: string;
+                            /** @description A UID field */
+                            slug: string;
+                            /** @description A blocks field */
+                            content: unknown[];
+                            /**
+                             * @description An integer field
+                             * @default 0
+                             */
+                            sortOrder: number;
+                            /**
+                             * @description A boolean field
+                             * @default true
+                             */
+                            showInMenu: boolean | null;
+                            /** @description A datetime field */
+                            createdAt?: string;
+                            /** @description A datetime field */
+                            updatedAt?: string;
+                            /**
+                             * @description A datetime field
+                             * @default 2026-10-13T09:07:18.128Z
+                             */
+                            publishedAt: string;
+                            /** @description A relational field */
+                            parent?: components["schemas"]["ApiPagePageDocument"];
+                            /** @description A relational field */
+                            children?: components["schemas"]["ApiPagePageDocument"][];
+                        };
+                    };
+                };
+            };
+            /** @description Bad request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    "page/put/pages_by_id": {
+        parameters: {
+            query?: {
+                fields?: ("title" | "slug" | "content" | "sortOrder" | "showInMenu" | "createdAt" | "updatedAt" | "publishedAt")[];
+                populate?: "*" | ("parent" | "children") | ("parent" | "children")[];
+                status?: "draft" | "published";
+                publicationFilter?: "never-published" | "has-published-version" | "modified" | "unmodified" | "never-published-document" | "has-published-version-document" | "published-without-draft" | "published-with-draft";
+                hasPublishedVersion?: boolean | ("true" | "false");
+            };
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    data: {
+                        /** @description A string field */
+                        title?: string;
+                        /** @description A UID field */
+                        slug?: string;
+                        /** @description A blocks field */
+                        content?: unknown[];
+                        /**
+                         * @description A float field
+                         * @default 0
+                         */
+                        sortOrder?: number;
+                        /**
+                         * @description A boolean field
+                         * @default true
+                         */
+                        showInMenu?: ("0" | "1" | "t" | "true" | "f" | "false") | null;
+                        /**
+                         * @description A datetime field
+                         * @default 2026-10-13T09:07:54.679Z
+                         */
+                        publishedAt?: string;
+                        /**
+                         * Format: uuid
+                         * @description A relational field
+                         */
+                        parent?: string;
+                        /** @description A relational field */
+                        children?: string[];
+                    };
+                };
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            /**
+                             * Format: uuid
+                             * @description The document ID, represented by a UUID
+                             */
+                            documentId: string;
+                            id: string | number;
+                            /** @description A string field */
+                            title: string;
+                            /** @description A UID field */
+                            slug: string;
+                            /** @description A blocks field */
+                            content: unknown[];
+                            /**
+                             * @description An integer field
+                             * @default 0
+                             */
+                            sortOrder: number;
+                            /**
+                             * @description A boolean field
+                             * @default true
+                             */
+                            showInMenu: boolean | null;
+                            /** @description A datetime field */
+                            createdAt?: string;
+                            /** @description A datetime field */
+                            updatedAt?: string;
+                            /**
+                             * @description A datetime field
+                             * @default 2026-10-13T09:07:18.132Z
+                             */
+                            publishedAt: string;
+                            /** @description A relational field */
+                            parent?: components["schemas"]["ApiPagePageDocument"];
+                            /** @description A relational field */
+                            children?: components["schemas"]["ApiPagePageDocument"][];
+                        };
+                    };
+                };
+            };
+            /** @description Bad request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    "page/delete/pages_by_id": {
+        parameters: {
+            query?: {
+                fields?: ("title" | "slug" | "content" | "sortOrder" | "showInMenu" | "createdAt" | "updatedAt" | "publishedAt")[];
+                populate?: "*" | ("parent" | "children") | ("parent" | "children")[];
+                filters?: {
+                    [key: string]: unknown;
+                };
+                status?: "draft" | "published";
+                publicationFilter?: "never-published" | "has-published-version" | "modified" | "unmodified" | "never-published-document" | "has-published-version-document" | "published-without-draft" | "published-with-draft";
+                hasPublishedVersion?: boolean | ("true" | "false");
+            };
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            /**
+                             * Format: uuid
+                             * @description The document ID, represented by a UUID
+                             */
+                            documentId: string;
+                            id: string | number;
+                            /** @description A string field */
+                            title: string;
+                            /** @description A UID field */
+                            slug: string;
+                            /** @description A blocks field */
+                            content: unknown[];
+                            /**
+                             * @description An integer field
+                             * @default 0
+                             */
+                            sortOrder: number;
+                            /**
+                             * @description A boolean field
+                             * @default true
+                             */
+                            showInMenu: boolean | null;
+                            /** @description A datetime field */
+                            createdAt?: string;
+                            /** @description A datetime field */
+                            updatedAt?: string;
+                            /**
+                             * @description A datetime field
+                             * @default 2026-10-13T09:07:18.134Z
+                             */
+                            publishedAt: string;
+                            /** @description A relational field */
+                            parent?: components["schemas"]["ApiPagePageDocument"];
+                            /** @description A relational field */
+                            children?: components["schemas"]["ApiPagePageDocument"][];
+                        };
+                    };
+                };
+            };
             /** @description Bad request */
             400: {
                 headers: {
@@ -2772,7 +3365,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-02T06:40:54.169Z
+                             * @default 2026-10-13T09:07:18.138Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -2850,7 +3443,7 @@ export interface operations {
                         bio?: string;
                         /**
                          * @description A datetime field
-                         * @default 2026-10-02T06:45:43.204Z
+                         * @default 2026-10-13T09:07:54.751Z
                          */
                         publishedAt: string;
                         /** @description A media field */
@@ -2893,7 +3486,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-02T06:40:54.172Z
+                             * @default 2026-10-13T09:07:18.146Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -2997,7 +3590,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-02T06:40:54.171Z
+                             * @default 2026-10-13T09:07:18.140Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -3077,7 +3670,7 @@ export interface operations {
                         bio?: string;
                         /**
                          * @description A datetime field
-                         * @default 2026-10-02T06:45:43.234Z
+                         * @default 2026-10-13T09:07:54.800Z
                          */
                         publishedAt?: string;
                         /** @description A media field */
@@ -3120,7 +3713,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-02T06:40:54.174Z
+                             * @default 2026-10-13T09:07:18.148Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -3219,7 +3812,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-02T06:40:54.175Z
+                             * @default 2026-10-13T09:07:18.149Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -3333,7 +3926,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-02T06:40:54.178Z
+                             * @default 2026-10-13T09:07:18.152Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -3417,7 +4010,7 @@ export interface operations {
                         sortOrder: number;
                         /**
                          * @description A datetime field
-                         * @default 2026-10-02T06:45:43.280Z
+                         * @default 2026-10-13T09:07:54.876Z
                          */
                         publishedAt: string;
                         /** @description A media field */
@@ -3466,7 +4059,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-02T06:40:54.182Z
+                             * @default 2026-10-13T09:07:18.157Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -3576,7 +4169,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-02T06:40:54.180Z
+                             * @default 2026-10-13T09:07:18.154Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -3662,7 +4255,7 @@ export interface operations {
                         sortOrder?: number;
                         /**
                          * @description A datetime field
-                         * @default 2026-10-02T06:45:43.310Z
+                         * @default 2026-10-13T09:07:54.923Z
                          */
                         publishedAt?: string;
                         /** @description A media field */
@@ -3711,7 +4304,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-02T06:40:54.184Z
+                             * @default 2026-10-13T09:07:18.158Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -3816,7 +4409,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-02T06:40:54.189Z
+                             * @default 2026-10-13T09:07:18.160Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -3940,7 +4533,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-02T06:40:54.192Z
+                             * @default 2026-10-13T09:07:18.164Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -4038,7 +4631,7 @@ export interface operations {
                         sortOrder: number;
                         /**
                          * @description A datetime field
-                         * @default 2026-10-02T06:45:43.356Z
+                         * @default 2026-10-13T09:07:55.003Z
                          */
                         publishedAt: string;
                         /** @description A media field */
@@ -4101,7 +4694,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-02T06:40:54.197Z
+                             * @default 2026-10-13T09:07:18.174Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -4225,7 +4818,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-02T06:40:54.194Z
+                             * @default 2026-10-13T09:07:18.166Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -4325,7 +4918,7 @@ export interface operations {
                         sortOrder?: number;
                         /**
                          * @description A datetime field
-                         * @default 2026-10-02T06:45:43.389Z
+                         * @default 2026-10-13T09:07:55.060Z
                          */
                         publishedAt?: string;
                         /** @description A media field */
@@ -4388,7 +4981,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-02T06:40:54.199Z
+                             * @default 2026-10-13T09:07:18.177Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -4507,7 +5100,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-02T06:40:54.201Z
+                             * @default 2026-10-13T09:07:18.179Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -4609,7 +5202,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-02T06:40:54.204Z
+                             * @default 2026-10-13T09:07:18.182Z
                              */
                             publishedAt: string;
                         };
@@ -4686,7 +5279,7 @@ export interface operations {
                         isActive?: ("0" | "1" | "t" | "true" | "f" | "false") | null;
                         /**
                          * @description A datetime field
-                         * @default 2026-10-02T06:45:43.430Z
+                         * @default 2026-10-13T09:07:55.126Z
                          */
                         publishedAt?: string;
                     };
@@ -4728,7 +5321,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-02T06:40:54.206Z
+                             * @default 2026-10-13T09:07:18.184Z
                              */
                             publishedAt: string;
                         };
@@ -4821,7 +5414,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-02T06:40:54.207Z
+                             * @default 2026-10-13T09:07:18.185Z
                              */
                             publishedAt: string;
                         };
@@ -5584,7 +6177,7 @@ export interface operations {
     "upload/post/upload": {
         parameters: {
             query?: {
-                id?: number;
+                id?: number | string;
             };
             header?: never;
             path?: never;
@@ -5920,7 +6513,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                id: number;
+                id: number | string;
             };
             cookie?: never;
         };
@@ -6005,7 +6598,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                id: number;
+                id: number | string;
             };
             cookie?: never;
         };

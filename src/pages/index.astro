@@ -13,7 +13,6 @@ import Base from "../layouts/Base.astro";
 import ArticleCard from "../components/ArticleCard.astro";
 import FixtureList from "../components/FixtureList.astro";
 import SponsorGrid from "../components/SponsorGrid.astro";
-import Grasrot from "../components/Grasrot.astro";
 import RichText from "../components/RichText.astro";
 import LiveMatch from "../components/LiveMatch.vue";
 import {
@@ -122,8 +121,11 @@ sectionMap.sponsors = sectionMap.sponsors ?? true;
                 />
             )}
             <div class="container-content py-16 sm:py-24 text-ice-50 pl-20">
-                <h1 class="relative text-hero text-6xl font-plus leading-16 md:text-[9rem] md:leading-28 font-black -ml-15 text-shadow-lg">
-                    TØNSBERG VIKINGS
+                <h1 class="relative text-hero text-6xl font-style leading-16 md:text-[9rem] md:leading-28 font-black -ml-15 text-shadow-lg group">
+                    <span>TØNSBERG </span>
+                    <span class="font-dc -z-10 -rotate-6 block size-48 text-accent-500 relative left-20 font-medium top-10 group-hover:animate-vibrate">
+                        VIKINGS
+                    </span>
                 </h1>
                 <h2 class="text-3xl font-bold font-sans mt-12 block">
                     Tønsberg og Omegn ishockeyklubb
