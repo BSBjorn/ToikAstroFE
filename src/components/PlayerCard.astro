@@ -1,7 +1,7 @@
 ---
 /**
  * Clickable player card — used in roster lists.
- * Links to the player's profile page at `/p/[slug]`.
+ * Links to the player's profile page at `/spiller/[slug]`.
  */
 import type { Player } from '../types/strapi';
 import { mediaUrl, mediaAlt } from '../lib/strapi';
@@ -12,7 +12,7 @@ interface Props {
 }
 
 const { player, class: className = '' } = Astro.props;
-const href = `/p/${player.slug}`;
+const href = `/spiller/${player.slug}`;
 ---
 
 <a
