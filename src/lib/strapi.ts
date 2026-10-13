@@ -185,6 +185,21 @@ export async function getPlayers(teamSlug: string) {
   });
 }
 
+export async function getPlayer(slug: string): Promise<Player | null> {
+  const res = await get<StrapiResponse<Player[]>>(
+    'player',
+    TTL.person,
+    '/api/players',
+    {
+      'filters[slug][$eq]': slug,
+      'populate[photo]': 'true',
+      'populate[socialLinks][populate][icon]': 'true',
+      'pagination[pageSize]': 1,
+    }
+  );
+  return res.data[0] ?? null;
+}
+
 // --- Sponsors ----------------------------------------------------------
 
 /**
