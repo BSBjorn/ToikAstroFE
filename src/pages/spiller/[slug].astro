@@ -1,31 +1,31 @@
 ---
 /**
  * Player profile page — /spiller/[slug].
- * Hero image, career highlights, stats sidebar, social links.
+ * Hero image, about section, stats sidebar, social links.
  */
-import Base from '../../layouts/Base.astro';
-import RichText from '../../components/RichText.astro';
-import { getPlayer, mediaUrl, mediaAlt } from '../../lib/strapi';
-import { phosphorPaths } from '../../lib/phosphor-icons';
+import Base from "../../layouts/Base.astro";
+import RichText from "../../components/RichText.astro";
+import { getPlayer, mediaUrl, mediaAlt } from "../../lib/strapi";
+import { phosphorPaths } from "../../lib/phosphor-icons";
 
 const { slug } = Astro.params;
 const player = await getPlayer(slug).catch(() => null);
 
 // Map platform names to phosphor icon keys
 const platformIconMap: Record<string, string> = {
-  instagram: 'instagram',
-  linkedin: 'twitter', // no LinkedIn path; reuse Twitter/X style
-  facebook: 'facebook',
-  twitter: 'twitter',
-  tiktok: 'tiktok',
-  youtube: 'youtube',
+    instagram: "instagram",
+    linkedin: "twitter", // no LinkedIn path; reuse Twitter/X style
+    facebook: "facebook",
+    twitter: "twitter",
+    tiktok: "tiktok",
+    youtube: "youtube",
 };
 
 function SocialIcon({ platform }: { platform: string }) {
-  const key = platformIconMap[platform.toLowerCase()] ?? 'instagram';
-  const path = phosphorPaths[key];
-  if (!path) return null;
-  return `
+    const key = platformIconMap[platform.toLowerCase()] ?? "instagram";
+    const path = phosphorPaths[key];
+    if (!path) return null;
+    return `
     <svg viewBox="0 0 1024 1024" class="size-4 fill-current" is:html>
       <path d="${path}" />
     </svg>
@@ -34,106 +34,119 @@ function SocialIcon({ platform }: { platform: string }) {
 ---
 
 {player ? (
-  <Base title={player.name}>
-    <div class="container-content py-16 lg:py-20">
-      <!-- Hero image -->
-      {player.photo && (
-        <img
-          src={mediaUrl(player.photo, 'large')}
-          alt={mediaAlt(player.photo)}
-          class="w-full rounded-card"
-        />
-      )}
+    <Base title={player.name}>
+        <div class="container-content py-16 lg:py-20">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Hero image -->
+                {player.photo && (
+                    <img
+                        src={mediaUrl(player.photo, "large")}
+                        alt={mediaAlt(player.photo)}
+                        class="w-full aspect-3/4 object-cover rounded-card"
+                    />
+                )}
+                <!-- Main content -->
+                <div class="lg:col-span-2">
+                    <h1 class="mt-8 font-bold text-hero">{player.name}</h1>
 
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <!-- Main content -->
-        <div class="lg:col-span-2">
-          <h1 class="mt-8 font-bold text-hero">{player.name}</h1>
+                    {player.about?.length && (
+                        <div class="prose-toik prose-toik-prose mt-8">
+                            <RichText nodes={player.about} />
+                        </div>
+                    )}
+                </div>
 
-          {player.careerHighlights?.length && (
-            <div class="prose-toik prose-toik-prose mt-8">
-              <RichText nodes={player.careerHighlights} />
+                <!-- Sidebar — sticky on desktop -->
+                <div class="lg:col-span-1 pt-12">
+                    <div class="lg:sticky lg:top-8 space-y-6">
+                        <!-- Stats card -->
+                        <div class="rounded-card border border-line bg-surface-raised p-4">
+                            <dl class="grid grid-cols-2 gap-3 text-sm">
+                                {player.number && (
+                                    <>
+                                        <dt class="text-ink-muted">Nummer</dt>
+                                        <dd class="font-semibold">
+                                            #{player.number}
+                                        </dd>
+                                    </>
+                                )}
+                                {player.position && (
+                                    <>
+                                        <dt class="text-ink-muted">Posisjon</dt>
+                                        <dd class="font-semibold">
+                                            {player.position}
+                                        </dd>
+                                    </>
+                                )}
+                                {player.birthYear && (
+                                    <>
+                                        <dt class="text-ink-muted">Født</dt>
+                                        <dd class="font-semibold">
+                                            {player.birthYear}
+                                        </dd>
+                                    </>
+                                )}
+                                {player.shoots && (
+                                    <>
+                                        <dt class="text-ink-muted">Skyter</dt>
+                                        <dd class="font-semibold">
+                                            {player.shoots}
+                                        </dd>
+                                    </>
+                                )}
+                            </dl>
+                        </div>
+
+                        <!-- Social links -->
+                        {player.socialLinks?.length && (
+                            <div class="rounded-card border border-line bg-surface-raised p-4">
+                                <h2 class="mb-3 font-semibold text-sm">
+                                    Sosialt
+                                </h2>
+                                <ul class="space-y-2">
+                                    {player.socialLinks.map((link) => (
+                                        <li>
+                                            <a
+                                                href={link.url}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                class="flex items-center gap-2 text-sm text-brand-500 hover:underline"
+                                            >
+                                                <SocialIcon
+                                                    platform={link.platform}
+                                                />
+                                                <span class="truncate">
+                                                    {link.platform}
+                                                </span>
+                                            </a>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        )}
+
+                        <!-- Back to roster -->
+                        {player.team?.slug && (
+                            <a
+                                href={`/lag/${player.team.slug}`}
+                                class="inline-flex items-center gap-1 text-sm text-ink-muted transition-colors hover:text-brand-500"
+                            >
+                                ← Tilbake til troppen
+                            </a>
+                        )}
+                    </div>
+                </div>
             </div>
-          )}
         </div>
-
-        <!-- Sidebar — sticky on desktop -->
-        <div class="lg:col-span-1">
-          <div class="lg:sticky lg:top-8 space-y-6">
-            <!-- Stats card -->
-            <div class="rounded-card border border-line bg-surface-raised p-4">
-              <dl class="grid grid-cols-2 gap-3 text-sm">
-                {player.number && (
-                  <>
-                    <dt class="text-ink-muted">Nummer</dt>
-                    <dd class="font-semibold">#{player.number}</dd>
-                  </>
-                )}
-                {player.position && (
-                  <>
-                    <dt class="text-ink-muted">Posisjon</dt>
-                    <dd class="font-semibold">{player.position}</dd>
-                  </>
-                )}
-                {player.birthYear && (
-                  <>
-                    <dt class="text-ink-muted">Født</dt>
-                    <dd class="font-semibold">{player.birthYear}</dd>
-                  </>
-                )}
-                {player.shoots && (
-                  <>
-                    <dt class="text-ink-muted">Skyter</dt>
-                    <dd class="font-semibold">{player.shoots}</dd>
-                  </>
-                )}
-              </dl>
-            </div>
-
-            <!-- Social links -->
-            {player.socialLinks?.length && (
-              <div class="rounded-card border border-line bg-surface-raised p-4">
-                <h2 class="mb-3 font-semibold text-sm">Sosialt</h2>
-                <ul class="space-y-2">
-                  {player.socialLinks.map((link) => (
-                    <li>
-                      <a
-                        href={link.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        class="flex items-center gap-2 text-sm text-brand-500 hover:underline"
-                      >
-                        <SocialIcon platform={link.platform} />
-                        <span class="truncate">{link.platform}</span>
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-
-            <!-- Back to roster -->
-            {player.team?.slug && (
-              <a
-                href={`/lag/${player.team.slug}`}
-                class="inline-flex items-center gap-1 text-sm text-ink-muted transition-colors hover:text-brand-500"
-              >
-                ← Tilbake til troppen
-              </a>
-            )}
-          </div>
-        </div>
-      </div>
-    </div>
-  </Base>
+    </Base>
 ) : (
-  <Base title="Siden ble ikke funnet" maxAge={0}>
-    <div class="container-content flex min-h-[60vh] flex-col items-center justify-center py-20 text-center">
-      <p class="font-display text-8xl font-bold text-brand-900">404</p>
-      <h1 class="mt-4 text-display">Siden ble ikke funnet</h1>
-      <p class="mt-3 max-w-md text-lg text-ink-muted">
-        Denne spilleren finnes ikke.
-      </p>
-    </div>
-  </Base>
+    <Base title="Siden ble ikke funnet" maxAge={0}>
+        <div class="container-content flex min-h-[60vh] flex-col items-center justify-center py-20 text-center">
+            <p class="font-display text-8xl font-bold text-brand-900">404</p>
+            <h1 class="mt-4 text-display">Siden ble ikke funnet</h1>
+            <p class="mt-3 max-w-md text-lg text-ink-muted">
+                Denne spilleren finnes ikke.
+            </p>
+        </div>
+    </Base>
 )}
