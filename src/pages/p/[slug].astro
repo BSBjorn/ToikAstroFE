@@ -1,22 +1,127 @@
 ---
+/**
+ * Player profile page — /p/[slug].
+ * Hero image, career highlights, stats sidebar, social links.
+ */
 import Base from '../../layouts/Base.astro';
 import RichText from '../../components/RichText.astro';
-import { getPages } from '../../lib/strapi';
+import { getPlayer, mediaUrl, mediaAlt } from '../../lib/strapi';
+import {
+  PhInstagram,
+  PhLinkedin,
+  PhFacebook,
+  PhXLogo,
+  PhTiktok,
+  PhYoutube,
+} from 'phosphor-vue';
 
 const { slug } = Astro.params;
-const page = await getPages({ slug }).catch(() => null);
+const player = await getPlayer(slug).catch(() => null);
+
+const SOCIAL_ICONS: Record<string, any> = {
+  instagram: PhInstagram,
+  linkedin: PhLinkedin,
+  facebook: PhFacebook,
+  twitter: PhXLogo,
+  tiktok: PhTiktok,
+  youtube: PhYoutube,
+};
 ---
 
-{page ? (
-  <Base title={page.title}>
+{player ? (
+  <Base title={player.name}>
     <div class="container-content py-16 lg:py-20">
-      <h1 class="mt-8 font-bold text-hero">{page.title}</h1>
-
-      {page.content && (
-        <div class="mt-8 prose-toik prose-toik-prose">
-          <RichText nodes={page.content} />
-        </div>
+      <!-- Hero image -->
+      {player.photo && (
+        <img
+          src={mediaUrl(player.photo, 'large')}
+          alt={mediaAlt(player.photo)}
+          class="w-full rounded-card"
+        />
       )}
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Main content -->
+        <div class="lg:col-span-2">
+          <h1 class="mt-8 font-bold text-hero">{player.name}</h1>
+
+          {player.careerHighlights?.length && (
+            <div class="prose-toik prose-toik-prose mt-8">
+              <RichText nodes={player.careerHighlights} />
+            </div>
+          )}
+        </div>
+
+        <!-- Sidebar — sticky on desktop -->
+        <div class="lg:col-span-1">
+          <div class="lg:sticky lg:top-8 space-y-6">
+            <!-- Stats card -->
+            <div class="rounded-card border border-line bg-surface-raised p-4">
+              <dl class="grid grid-cols-2 gap-3 text-sm">
+                {player.number && (
+                  <>
+                    <dt class="text-ink-muted">Nummer</dt>
+                    <dd class="font-semibold">#{player.number}</dd>
+                  </>
+                )}
+                {player.position && (
+                  <>
+                    <dt class="text-ink-muted">Posisjon</dt>
+                    <dd class="font-semibold">{player.position}</dd>
+                  </>
+                )}
+                {player.birthYear && (
+                  <>
+                    <dt class="text-ink-muted">Født</dt>
+                    <dd class="font-semibold">{player.birthYear}</dd>
+                  </>
+                )}
+                {player.shoots && (
+                  <>
+                    <dt class="text-ink-muted">Skyter</dt>
+                    <dd class="font-semibold">{player.shoots}</dd>
+                  </>
+                )}
+              </dl>
+            </div>
+
+            <!-- Social links -->
+            {player.socialLinks?.length && (
+              <div class="rounded-card border border-line bg-surface-raised p-4">
+                <h2 class="mb-3 font-semibold text-sm">Sosialt</h2>
+                <ul class="space-y-2">
+                  {player.socialLinks.map((link) => {
+                    const Icon = SOCIAL_ICONS[link.platform] ?? PhInstagram;
+                    return (
+                      <li>
+                        <a
+                          href={link.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          class="flex items-center gap-2 text-sm text-brand-500 hover:underline"
+                        >
+                          <Icon class="size-4 flex-shrink-0" weight="fill" />
+                          <span class="truncate">{link.platform}</span>
+                        </a>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            )}
+
+            <!-- Back to roster -->
+            {player.team?.slug && (
+              <a
+                href={`/lag/${player.team.slug}`}
+                class="inline-flex items-center gap-1 text-sm text-ink-muted transition-colors hover:text-brand-500"
+              >
+                ← Tilbake til troppen
+              </a>
+            )}
+          </div>
+        </div>
+      </div>
     </div>
   </Base>
 ) : (
@@ -25,7 +130,7 @@ const page = await getPages({ slug }).catch(() => null);
       <p class="font-display text-8xl font-bold text-brand-900">404</p>
       <h1 class="mt-4 text-display">Siden ble ikke funnet</h1>
       <p class="mt-3 max-w-md text-lg text-ink-muted">
-        Denne siden finnes ikke.
+        Denne spilleren finnes ikke.
       </p>
     </div>
   </Base>
