@@ -117,6 +117,7 @@ export interface Sponsor extends StrapiEntity {
 
 export interface Player extends StrapiEntity {
   name: string;
+  slug: string;
   number: number | null;
   position: 'malvakt' | 'back' | 'center' | 'ving' | 'forward' | null;
   shoots: 'venstre' | 'hoyre' | null;
@@ -126,6 +127,14 @@ export interface Player extends StrapiEntity {
   team?: Team | null;
   active: boolean;
   sortOrder: number;
+  socialLinks?: Array<{
+    id: number;
+    documentId: string;
+    platform: 'facebook' | 'instagram' | 'twitter' | 'youtube' | 'tiktok';
+    url: string;
+    icon?: StrapiMedia | null;
+  }>;
+  careerHighlights?: BlockNode[];
 }
 
 export interface Person extends StrapiEntity {
