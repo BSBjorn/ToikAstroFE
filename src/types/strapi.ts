@@ -123,7 +123,6 @@ export interface Player extends StrapiEntity {
   shoots: 'venstre' | 'hoyre' | null;
   birthYear: number | null;
   photo: StrapiMedia | null;
-  bio: string | null;
   team?: Team | null;
   active: boolean;
   sortOrder: number;
@@ -134,7 +133,7 @@ export interface Player extends StrapiEntity {
     url: string;
     icon?: StrapiMedia | null;
   }>;
-  careerHighlights?: BlockNode[];
+  about?: BlockNode[];
 }
 
 export interface Person extends StrapiEntity {
