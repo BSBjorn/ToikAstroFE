@@ -3,6 +3,7 @@ import Base from '../../layouts/Base.astro';
 import RichText from '../../components/RichText.astro';
 import FixtureList from '../../components/FixtureList.astro';
 import LiveMatch from '../../components/LiveMatch.vue';
+import PlayerCard from '../../components/PlayerCard.astro';
 import {
   getTeam,
   getFixtures,
@@ -99,28 +100,13 @@ if (slug) {
           <span class="section-label">SPILLERE</span>
           <h2 class="text-xl">Spillere</h2>
           <ul class="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {team.players.map((player) => (
-              <li class="flex cursor-default items-center gap-3 rounded-card border border-line bg-surface-raised p-3 transition-colors hover:bg-brand-50 dark:hover:bg-brand-900">
-                {player.photo && (
-                  <img
-                    src={mediaUrl(player.photo, 'small') ?? ''}
-                    alt={mediaAlt(player.photo)}
-                    class="size-12 shrink-0 rounded-full object-cover"
-                  />
-                )}
-                <div>
-                  <p class="font-semibold">
-                    {player.number && (
-                      <span class="text-brand-500">#{player.number}</span>
-                    )}
-                    <span class="ml-1">{player.name}</span>
-                  </p>
-                  {player.position && (
-                    <p class="text-xs text-ink-muted">{player.position}</p>
-                  )}
-                </div>
-              </li>
-            ))}
+            {team.players
+              .sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0) || (a.number ?? 999) - (b.number ?? 999))
+              .map((player) => (
+                <li>
+                  <PlayerCard player={player} />
+                </li>
+              ))}
           </ul>
         </div>
       )}
