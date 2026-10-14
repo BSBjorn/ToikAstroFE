@@ -63,18 +63,23 @@ const buildGroups = (items: TreeNode[]) => {
             groups.push({
                 kind: "dropdown",
                 parent: { label: navItem.title, href: `/p/${navItem.slug}` },
-                children: navItem.children.filter((child) => {
-                    if (child.showInMenu === false) return false;
-                    if (seenSlugs.has(child.slug)) return false;
-                    seenSlugs.add(child.slug);
-                    return true;
-                }).map((child) => ({
-                    label: child.title,
-                    href: `/p/${child.slug}`,
-                })),
+                children: navItem.children
+                    .filter((child) => {
+                        if (child.showInMenu === false) return false;
+                        if (seenSlugs.has(child.slug)) return false;
+                        seenSlugs.add(child.slug);
+                        return true;
+                    })
+                    .map((child) => ({
+                        label: child.title,
+                        href: `/p/${child.slug}`,
+                    })),
             });
         } else {
-            groups.push({ kind: "flat", item: { label: navItem.title, href: `/p/${navItem.slug}` } });
+            groups.push({
+                kind: "flat",
+                item: { label: navItem.title, href: `/p/${navItem.slug}` },
+            });
         }
     });
 };
@@ -86,7 +91,6 @@ const logoSrc = logo ? mediaUrl(logo, "thumbnail") : null;
 
 <header class="sticky top-0 z-40 border-b border-line bg-surface/90 backdrop-blur">
     <div class="container-content flex h-16 items-center justify-between gap-6">
-
         <!-- Logo -->
         <a
             href="/"
@@ -112,7 +116,11 @@ const logoSrc = logo ? mediaUrl(logo, "thumbnail") : null;
                                     <!-- Parent page link -->
                                     <a
                                         href={group.parent.href}
-                                        aria-current={isActive(group.parent.href) ? "page" : undefined}
+                                        aria-current={
+                                            isActive(group.parent.href)
+                                                ? "page"
+                                                : undefined
+                                        }
                                         class:list={[
                                             "nav-link",
                                             isActive(group.parent.href)
@@ -126,15 +134,18 @@ const logoSrc = logo ? mediaUrl(logo, "thumbnail") : null;
                                     <button
                                         type="button"
                                         aria-expanded="false"
-                                        aria-controls={`dropdown-${group.parent.href.replace(/\//g, '-')}`}
+                                        aria-controls={`dropdown-${group.parent.href.replace(/\//g, "-")}`}
                                         class="nav-chevron -mr-1 p-0.5 text-ink-muted transition hover:text-ink"
                                     >
-                                        <i class="ph ph-caret-down w-3.5 transition-transform duration-200" aria-hidden="true"></i>
+                                        <i
+                                            class="ph ph-caret-down w-3.5 transition-transform duration-200"
+                                            aria-hidden="true"
+                                        ></i>
                                     </button>
                                 </span>
                                 <!-- Dropdown panel -->
                                 <ul
-                                    id={`dropdown-${group.parent.href.replace(/\//g, '-')}`}
+                                    id={`dropdown-${group.parent.href.replace(/\//g, "-")}`}
                                     role="menu"
                                     class="absolute left-1/2 top-full -translate-x-1/2 mt-2 w-48 rounded-lg border border-line bg-surface-raised shadow-card p-1 opacity-0 invisible transition-all duration-200 pointer-events-none"
                                 >
@@ -143,7 +154,11 @@ const logoSrc = logo ? mediaUrl(logo, "thumbnail") : null;
                                             <a
                                                 href={child.href}
                                                 role="menuitem"
-                                                aria-current={isActive(child.href) ? "page" : undefined}
+                                                aria-current={
+                                                    isActive(child.href)
+                                                        ? "page"
+                                                        : undefined
+                                                }
                                                 class:list={[
                                                     "block rounded-md px-3 py-2 text-sm font-medium transition",
                                                     isActive(child.href)
@@ -160,7 +175,11 @@ const logoSrc = logo ? mediaUrl(logo, "thumbnail") : null;
                         ) : (
                             <a
                                 href={group.item.href}
-                                aria-current={isActive(group.item.href) ? "page" : undefined}
+                                aria-current={
+                                    isActive(group.item.href)
+                                        ? "page"
+                                        : undefined
+                                }
                                 class:list={[
                                     "nav-link",
                                     isActive(group.item.href)
@@ -176,7 +195,7 @@ const logoSrc = logo ? mediaUrl(logo, "thumbnail") : null;
             </ul>
         </nav>
 
-        <!-- Dark mode toggle -->
+        <!-- Dark mode toggle
         <button
             type="button"
             id="theme-toggle"
@@ -186,6 +205,7 @@ const logoSrc = logo ? mediaUrl(logo, "thumbnail") : null;
             <i id="theme-icon-sun" class="ph ph-sun w-5 h-5 hidden"></i>
             <i id="theme-icon-moon" class="ph ph-moon w-5 h-5"></i>
         </button>
+        -->
 
         <!-- Mobile menu button -->
         <button
@@ -196,14 +216,8 @@ const logoSrc = logo ? mediaUrl(logo, "thumbnail") : null;
             aria-label="Åpne meny"
             class="grid size-10 shrink-0 place-items-center rounded-pill text-ink-muted transition hover:bg-surface-sunken hover:text-ink md:hidden"
         >
-            <i
-                id="mobile-menu-icon-open"
-                class="ph ph-list w-5 h-5"
-            ></i>
-            <i
-                id="mobile-menu-icon-close"
-                class="ph ph-x w-5 h-5 hidden"
-            ></i>
+            <i id="mobile-menu-icon-open" class="ph ph-list w-5 h-5"></i>
+            <i id="mobile-menu-icon-close" class="ph ph-x w-5 h-5 hidden"></i>
         </button>
     </div>
 
@@ -212,14 +226,21 @@ const logoSrc = logo ? mediaUrl(logo, "thumbnail") : null;
         id="mobile-menu"
         class="fixed inset-x-0 top-16 z-50 hidden border-b border-line bg-surface-raised shadow-card md:hidden"
     >
-        <nav aria-label="Mobilmeny" class="container-content flex flex-col py-2">
+        <nav
+            aria-label="Mobilmeny"
+            class="container-content flex flex-col py-2"
+        >
             <ul>
                 {groups.map((group) => (
                     <li>
                         {group.kind === "flat" ? (
                             <a
                                 href={group.item.href}
-                                aria-current={isActive(group.item.href) ? "page" : undefined}
+                                aria-current={
+                                    isActive(group.item.href)
+                                        ? "page"
+                                        : undefined
+                                }
                                 class:list={[
                                     "block border-b border-line py-3 px-3 font-semibold uppercase tracking-wide last:border-0",
                                     isActive(group.item.href)
@@ -236,7 +257,11 @@ const logoSrc = logo ? mediaUrl(logo, "thumbnail") : null;
                                     <!-- Parent page link -->
                                     <a
                                         href={group.parent.href}
-                                        aria-current={isActive(group.parent.href) ? "page" : undefined}
+                                        aria-current={
+                                            isActive(group.parent.href)
+                                                ? "page"
+                                                : undefined
+                                        }
                                         class:list={[
                                             "text-left text-sm font-bold uppercase tracking-wide",
                                             isActive(group.parent.href)
@@ -250,21 +275,28 @@ const logoSrc = logo ? mediaUrl(logo, "thumbnail") : null;
                                     <button
                                         type="button"
                                         aria-expanded="false"
-                                        aria-controls={`mobile-dropdown-${group.parent.href.replace(/\//g, '-')}`}
+                                        aria-controls={`mobile-dropdown-${group.parent.href.replace(/\//g, "-")}`}
                                         class="mobile-dropdown-chevron-toggle -mr-1 p-0.5 text-ink-muted transition hover:text-ink"
                                     >
-                                        <i class="ph ph-caret-down w-4 transition-transform duration-200" aria-hidden="true"></i>
+                                        <i
+                                            class="ph ph-caret-down w-4 transition-transform duration-200"
+                                            aria-hidden="true"
+                                        ></i>
                                     </button>
                                 </div>
                                 <!-- Mobile dropdown children -->
                                 <ul
-                                    id={`mobile-dropdown-${group.parent.href.replace(/\//g, '-')}`}
+                                    id={`mobile-dropdown-${group.parent.href.replace(/\//g, "-")}`}
                                     class="mobile-dropdown-panel hidden bg-surface-sunken/50"
                                 >
                                     {group.children.map((child) => (
                                         <a
                                             href={child.href}
-                                            aria-current={isActive(child.href) ? "page" : undefined}
+                                            aria-current={
+                                                isActive(child.href)
+                                                    ? "page"
+                                                    : undefined
+                                            }
                                             class="block border-b border-line py-2.5 pl-6 pr-3 text-sm font-medium last:border-0 hover:bg-surface-sunken"
                                         >
                                             {child.label}
@@ -282,28 +314,32 @@ const logoSrc = logo ? mediaUrl(logo, "thumbnail") : null;
 
 <script>
     // Desktop dropdown toggles — only the chevron toggles, the parent <a> navigates
-    const desktopDropdowns = document.querySelectorAll('[aria-controls^="dropdown-"]');
+    const desktopDropdowns = document.querySelectorAll(
+        '[aria-controls^="dropdown-"]',
+    );
     const dropdownStates = new Map<Element, { open: boolean }>();
 
     function setOpenState(chevron: Element, panel: Element, state: boolean) {
-        chevron.setAttribute('aria-expanded', String(state));
-        (chevron.querySelector('.ph-caret-down') as HTMLElement)?.style.setProperty('transform', state ? 'rotate(180deg)' : '');
-        panel.classList.toggle('opacity-0', !state);
-        panel.classList.toggle('invisible', !state);
-        panel.classList.toggle('pointer-events-none', !state);
-        panel.classList.toggle('opacity-100', state);
-        panel.classList.toggle('visible', state);
-        panel.classList.toggle('transition-opacity', state);
+        chevron.setAttribute("aria-expanded", String(state));
+        (
+            chevron.querySelector(".ph-caret-down") as HTMLElement
+        )?.style.setProperty("transform", state ? "rotate(180deg)" : "");
+        panel.classList.toggle("opacity-0", !state);
+        panel.classList.toggle("invisible", !state);
+        panel.classList.toggle("pointer-events-none", !state);
+        panel.classList.toggle("opacity-100", state);
+        panel.classList.toggle("visible", state);
+        panel.classList.toggle("transition-opacity", state);
     }
 
     desktopDropdowns.forEach((chevron) => {
-        const panelId = chevron.getAttribute('aria-controls');
+        const panelId = chevron.getAttribute("aria-controls");
         const panel = panelId ? document.getElementById(panelId) : null;
         if (!panel) return;
         dropdownStates.set(chevron, { open: false });
 
-        chevron.addEventListener('click', (e) => {
-            e.stopPropagation();  // prevent parent <a> from navigating
+        chevron.addEventListener("click", (e) => {
+            e.stopPropagation(); // prevent parent <a> from navigating
             const state = dropdownStates.get(chevron)!;
             setOpenState(chevron, panel, !state.open);
             state.open = !state.open;
@@ -311,11 +347,16 @@ const logoSrc = logo ? mediaUrl(logo, "thumbnail") : null;
     });
 
     // Close any dropdown on outside click
-    document.addEventListener('click', (e) => {
+    document.addEventListener("click", (e) => {
         dropdownStates.forEach((state, chevron) => {
-            const panelId = chevron.getAttribute('aria-controls');
+            const panelId = chevron.getAttribute("aria-controls");
             const panel = panelId ? document.getElementById(panelId) : null;
-            if (state.open && panel && !chevron.contains(e.target as Node) && !panel.contains(e.target as Node)) {
+            if (
+                state.open &&
+                panel &&
+                !chevron.contains(e.target as Node) &&
+                !panel.contains(e.target as Node)
+            ) {
                 setOpenState(chevron, panel, false);
                 state.open = false;
             }
@@ -323,11 +364,11 @@ const logoSrc = logo ? mediaUrl(logo, "thumbnail") : null;
     });
 
     // Close any dropdown on Escape
-    document.addEventListener('keydown', (e) => {
-        if (e.key !== 'Escape') return;
+    document.addEventListener("keydown", (e) => {
+        if (e.key !== "Escape") return;
         dropdownStates.forEach((state, chevron) => {
             if (!state.open) return;
-            const panelId = chevron.getAttribute('aria-controls');
+            const panelId = chevron.getAttribute("aria-controls");
             const panel = panelId ? document.getElementById(panelId) : null;
             setOpenState(chevron, panel ?? chevron, false);
             state.open = false;
@@ -335,71 +376,81 @@ const logoSrc = logo ? mediaUrl(logo, "thumbnail") : null;
     });
 
     // Mobile dropdown toggles — only the chevron toggles, the parent <a> navigates
-    const mobileDropdownChevrons = document.querySelectorAll('.mobile-dropdown-chevron-toggle');
+    const mobileDropdownChevrons = document.querySelectorAll(
+        ".mobile-dropdown-chevron-toggle",
+    );
     const mobileDropdownStates = new Map<Element, { open: boolean }>();
 
     mobileDropdownChevrons.forEach((chevron) => {
-        const panelId = chevron.getAttribute('aria-controls');
+        const panelId = chevron.getAttribute("aria-controls");
         const panel = panelId ? document.getElementById(panelId) : null;
         if (!panel) return;
         mobileDropdownStates.set(chevron, { open: false });
 
-        chevron.addEventListener('click', (e) => {
-            e.stopPropagation();  // prevent parent <a> from navigating
+        chevron.addEventListener("click", (e) => {
+            e.stopPropagation(); // prevent parent <a> from navigating
             const state = mobileDropdownStates.get(chevron)!;
             state.open = !state.open;
-            chevron.setAttribute('aria-expanded', String(state.open));
-            panel.classList.toggle('hidden', !state.open);
-            (chevron.querySelector('.ph-caret-down') as HTMLElement)?.style.setProperty('transform', state.open ? 'rotate(180deg)' : '');
+            chevron.setAttribute("aria-expanded", String(state.open));
+            panel.classList.toggle("hidden", !state.open);
+            (
+                chevron.querySelector(".ph-caret-down") as HTMLElement
+            )?.style.setProperty(
+                "transform",
+                state.open ? "rotate(180deg)" : "",
+            );
         });
     });
 
     // Mobile menu toggle
-    const mobileToggle = document.getElementById('mobile-menu-toggle');
-    const mobileMenu = document.getElementById('mobile-menu');
-    const iconOpen = document.getElementById('mobile-menu-icon-open');
-    const iconClose = document.getElementById('mobile-menu-icon-close');
+    const mobileToggle = document.getElementById("mobile-menu-toggle");
+    const mobileMenu = document.getElementById("mobile-menu");
+    const iconOpen = document.getElementById("mobile-menu-icon-open");
+    const iconClose = document.getElementById("mobile-menu-icon-close");
 
     if (mobileToggle && mobileMenu) {
         let menuOpen = false;
 
-        mobileToggle.addEventListener('click', () => {
+        mobileToggle.addEventListener("click", () => {
             menuOpen = !menuOpen;
-            mobileToggle.setAttribute('aria-expanded', String(menuOpen));
-            mobileMenu.classList.toggle('hidden', !menuOpen);
-            mobileToggle.setAttribute('aria-label', menuOpen ? 'Lukk meny' : 'Åpne meny');
+            mobileToggle.setAttribute("aria-expanded", String(menuOpen));
+            mobileMenu.classList.toggle("hidden", !menuOpen);
+            mobileToggle.setAttribute(
+                "aria-label",
+                menuOpen ? "Lukk meny" : "Åpne meny",
+            );
 
             if (iconOpen && iconClose) {
-                iconOpen.classList.toggle('hidden', menuOpen);
-                iconClose.classList.toggle('hidden', !menuOpen);
+                iconOpen.classList.toggle("hidden", menuOpen);
+                iconClose.classList.toggle("hidden", !menuOpen);
             }
         });
 
         // Close mobile menu on link click — single delegated listener
-        mobileMenu.addEventListener('click', (e) => {
-            const link = (e.target as Element).closest('a');
+        mobileMenu.addEventListener("click", (e) => {
+            const link = (e.target as Element).closest("a");
             if (!link) return;
             e.stopPropagation();
             menuOpen = false;
-            mobileToggle.setAttribute('aria-expanded', 'false');
-            mobileMenu.classList.add('hidden');
-            mobileToggle.setAttribute('aria-label', 'Åpne meny');
+            mobileToggle.setAttribute("aria-expanded", "false");
+            mobileMenu.classList.add("hidden");
+            mobileToggle.setAttribute("aria-label", "Åpne meny");
             if (iconOpen && iconClose) {
-                iconOpen.classList.remove('hidden');
-                iconClose.classList.add('hidden');
+                iconOpen.classList.remove("hidden");
+                iconClose.classList.add("hidden");
             }
         });
 
         // Close on Escape
-        document.addEventListener('keydown', (e) => {
-            if (menuOpen && e.key === 'Escape') {
+        document.addEventListener("keydown", (e) => {
+            if (menuOpen && e.key === "Escape") {
                 menuOpen = false;
-                mobileToggle.setAttribute('aria-expanded', 'false');
-                mobileMenu.classList.add('hidden');
-                mobileToggle.setAttribute('aria-label', 'Åpne meny');
+                mobileToggle.setAttribute("aria-expanded", "false");
+                mobileMenu.classList.add("hidden");
+                mobileToggle.setAttribute("aria-label", "Åpne meny");
                 if (iconOpen && iconClose) {
-                    iconOpen.classList.remove('hidden');
-                    iconClose.classList.add('hidden');
+                    iconOpen.classList.remove("hidden");
+                    iconClose.classList.add("hidden");
                 }
                 mobileToggle.focus();
             }
@@ -407,35 +458,46 @@ const logoSrc = logo ? mediaUrl(logo, "thumbnail") : null;
     }
 
     // Dark mode toggle
-    const themeToggle = document.getElementById('theme-toggle');
-    const iconSun = document.getElementById('theme-icon-sun');
-    const iconMoon = document.getElementById('theme-icon-moon');
+    const themeToggle = document.getElementById("theme-toggle");
+    const iconSun = document.getElementById("theme-icon-sun");
+    const iconMoon = document.getElementById("theme-icon-moon");
 
-    function applyTheme(mode: 'dark' | 'light') {
-        if (mode === 'dark') {
-            document.documentElement.classList.add('dark');
-            document.documentElement.setAttribute('data-theme', 'dark');
-            iconSun?.classList.remove('hidden');
-            iconMoon?.classList.add('hidden');
+    function applyTheme(mode: "dark" | "light") {
+        if (mode === "dark") {
+            document.documentElement.classList.add("dark");
+            document.documentElement.setAttribute("data-theme", "dark");
+            iconSun?.classList.remove("hidden");
+            iconMoon?.classList.add("hidden");
         } else {
-            document.documentElement.classList.remove('dark');
-            document.documentElement.setAttribute('data-theme', 'light');
-            iconSun?.classList.add('hidden');
-            iconMoon?.classList.remove('hidden');
+            document.documentElement.classList.remove("dark");
+            document.documentElement.setAttribute("data-theme", "light");
+            iconSun?.classList.add("hidden");
+            iconMoon?.classList.remove("hidden");
         }
         // Persist preference
-        try { localStorage.setItem('theme', mode); } catch { /* noop */ }
+        try {
+            localStorage.setItem("theme", mode);
+        } catch {
+            /* noop */
+        }
     }
 
     // Restore saved preference or respect system
     var saved = null;
-    try { saved = localStorage.getItem('theme'); } catch { /* noop */ }
-    if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-        applyTheme('dark');
+    try {
+        saved = localStorage.getItem("theme");
+    } catch {
+        /* noop */
+    }
+    if (
+        saved === "dark" ||
+        (!saved && window.matchMedia("(prefers-color-scheme: dark)").matches)
+    ) {
+        applyTheme("dark");
     }
 
-    themeToggle?.addEventListener('click', () => {
-        const isDark = document.documentElement.classList.contains('dark');
-        applyTheme(isDark ? 'light' : 'dark');
+    themeToggle?.addEventListener("click", () => {
+        const isDark = document.documentElement.classList.contains("dark");
+        applyTheme(isDark ? "light" : "dark");
     });
 </script>

@@ -93,7 +93,7 @@ const isPostGame = computed(() => state.value?.phase === 'post-game');
 
 <template>
   <section
-    class="rounded-card border border-line bg-surface-raised shadow-card"
+    class="rounded-card border-t border-line bg-surface-raised shadow-card"
     aria-live="polite"
   >
     <!-- Loading -->
@@ -105,7 +105,6 @@ const isPostGame = computed(() => state.value?.phase === 'post-game');
     <!-- Nothing on -->
     <div v-else-if="!match" class="p-6 text-ink-muted">
       <p class="font-medium text-ink">Ingen kamp akkurat nå</p>
-      <p class="mt-1 text-sm">Live-resultater vises her når det spilles i {{ state?.arena }}.</p>
     </div>
 
     <!-- Match -->

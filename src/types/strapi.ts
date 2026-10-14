@@ -118,10 +118,10 @@ export interface Sponsor extends StrapiEntity {
 export interface Player extends StrapiEntity {
   name: string;
   slug: string;
-  number: number | null;
-  position: 'malvakt' | 'back' | 'center' | 'ving' | 'forward' | null;
-  shoots: 'venstre' | 'hoyre' | null;
-  birthYear: number | null;
+  number: string | null;
+  position: 'Målvakt' | 'Back' | 'Center' | 'Ving' | 'Forward' | 'Ukjent' | null;
+  shoots: 'Venstre' | 'Høyre' | null;
+  birthYear: string | null;
   photo: StrapiMedia | null;
   team?: Team | null;
   active: boolean;
@@ -131,7 +131,7 @@ export interface Player extends StrapiEntity {
     documentId: string;
     platform: 'facebook' | 'instagram' | 'twitter' | 'youtube' | 'tiktok';
     url: string;
-    icon?: StrapiMedia | null;
+    icon?: string | null;
   }>;
   about?: BlockNode[];
 }

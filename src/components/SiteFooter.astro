@@ -11,7 +11,7 @@ interface Props {
     socialLinks?: Array<{
         platform: string;
         url: string;
-        icon?: unknown;
+        icon?: string | null;
     }> | null;
 }
 
@@ -24,10 +24,6 @@ const {
     socialLinks = [],
 } = Astro.props;
 const year = new Date().getFullYear();
-
-// Phosphor Icons social brand paths — used in <svg> elements below
-const getIconPath = (platform: string): string =>
-    phosphorPaths[platform.toLowerCase()] ?? phosphorPaths.facebook;
 
 const footerLogoSrc = footerLogo ? mediaUrl(footerLogo, "thumbnail") : null;
 ---
@@ -94,25 +90,29 @@ const footerLogoSrc = footerLogo ? mediaUrl(footerLogo, "thumbnail") : null;
                         Følg oss
                     </p>
                     <div class="flex gap-3">
-                        {socialLinks.map((link) => (
-                            <a
-                                href={link.url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                aria-label={link.platform}
-                                class="flex size-9 items-center justify-center rounded-full bg-surface-raised text-ink-muted shadow-sm transition hover:bg-brand-600 hover:text-white dark:bg-surface dark:hover:bg-brand-600 dark:hover:text-white"
-                            >
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="20"
-                                    height="20"
-                                    viewBox="0 0 1024 1024"
-                                    fill="currentColor"
+                        {socialLinks.map((link) => {
+                            const iconKey = link.icon ?? link.platform.toLowerCase();
+                            const svgPath = phosphorPaths[iconKey] ?? phosphorPaths.facebook;
+                            return (
+                                <a
+                                    href={link.url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    aria-label={link.platform}
+                                    class="flex size-9 items-center justify-center rounded-full bg-surface-raised text-ink-muted shadow-sm transition hover:bg-brand-600 hover:text-white dark:bg-surface dark:hover:bg-brand-600 dark:hover:text-white"
                                 >
-                                    <path d={getIconPath(link.platform)} />
-                                </svg>
-                            </a>
-                        ))}
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="20"
+                                        height="20"
+                                        viewBox="0 0 1024 1024"
+                                        fill="currentColor"
+                                    >
+                                        <path d={svgPath} />
+                                    </svg>
+                                </a>
+                            );
+                        })}
                     </div>
                 </div>
             )}

@@ -180,6 +180,38 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/players": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["player/get/players"];
+        put?: never;
+        post: operations["player/post/players"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/players/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["player/get/players_by_id"];
+        put: operations["player/put/players_by_id"];
+        post?: never;
+        delete: operations["player/delete/players_by_id"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/sponsors": {
         parameters: {
             query?: never;
@@ -803,7 +835,7 @@ export interface components {
             updatedAt?: string;
             /**
              * @description A datetime field
-             * @default 2026-10-13T09:07:18.078Z
+             * @default 2026-10-14T12:51:55.443Z
              */
             publishedAt: string;
             related: unknown;
@@ -842,7 +874,7 @@ export interface components {
             updatedAt?: string;
             /**
              * @description A datetime field
-             * @default 2026-10-13T09:07:18.082Z
+             * @default 2026-10-14T12:51:55.450Z
              */
             publishedAt: string;
             /** @description A media field */
@@ -858,8 +890,8 @@ export interface components {
             platform: "facebook" | "instagram" | "twitter" | "youtube" | "tiktok";
             /** @description A string field */
             url: string;
-            /** @description A media field */
-            icon?: components["schemas"]["PluginUploadFileDocument"];
+            /** @description A string field */
+            icon?: string;
         };
         ApiPlayerPlayerDocument: {
             /**
@@ -871,7 +903,7 @@ export interface components {
             /** @description A string field */
             name: string;
             /** @description A UID field */
-            slug: string;
+            slug?: string;
             /** @description An integer field */
             number?: number;
             /**
@@ -886,12 +918,8 @@ export interface components {
             shoots: "venstre" | "hoyre";
             /** @description An integer field */
             birthYear: number;
-            /** @description A text field */
-            bio?: string;
-            /** @description A string field */
-            note?: string;
             /** @description A blocks field */
-            careerHighlights: unknown[];
+            about: unknown[];
             /**
              * @description A boolean field
              * @default true
@@ -908,7 +936,7 @@ export interface components {
             updatedAt?: string;
             /**
              * @description A datetime field
-             * @default 2026-10-13T09:07:18.086Z
+             * @default 2026-10-14T12:51:55.453Z
              */
             publishedAt: string;
             /** @description A media field */
@@ -960,7 +988,7 @@ export interface components {
             updatedAt?: string;
             /**
              * @description A datetime field
-             * @default 2026-10-13T09:07:18.080Z
+             * @default 2026-10-14T12:51:55.447Z
              */
             publishedAt: string;
             /** @description A media field */
@@ -1013,7 +1041,7 @@ export interface components {
             updatedAt?: string;
             /**
              * @description A datetime field
-             * @default 2026-10-13T09:07:18.104Z
+             * @default 2026-10-14T12:51:55.485Z
              */
             publishedAt: string;
             /** @description A relational field */
@@ -1135,7 +1163,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-13T09:07:18.075Z
+                             * @default 2026-10-14T12:51:55.436Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -1223,7 +1251,7 @@ export interface operations {
                         category: "nyhet" | "kampreferat" | "informasjon";
                         /**
                          * @description A datetime field
-                         * @default 2026-10-13T09:07:54.301Z
+                         * @default 2026-10-14T12:53:43.324Z
                          */
                         publishedAt: string;
                         /** @description A media field */
@@ -1279,7 +1307,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-13T09:07:18.094Z
+                             * @default 2026-10-14T12:51:55.465Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -1393,7 +1421,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-13T09:07:18.090Z
+                             * @default 2026-10-14T12:51:55.460Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -1483,7 +1511,7 @@ export interface operations {
                         category?: "nyhet" | "kampreferat" | "informasjon";
                         /**
                          * @description A datetime field
-                         * @default 2026-10-13T09:07:54.362Z
+                         * @default 2026-10-14T12:53:43.391Z
                          */
                         publishedAt?: string;
                         /** @description A media field */
@@ -1539,7 +1567,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-13T09:07:18.096Z
+                             * @default 2026-10-14T12:51:55.473Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -1648,7 +1676,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-13T09:07:18.098Z
+                             * @default 2026-10-14T12:51:55.476Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -1738,7 +1766,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-13T09:07:18.102Z
+                             * @default 2026-10-14T12:51:55.482Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -1813,7 +1841,7 @@ export interface operations {
                         slogan?: string;
                         /**
                          * @description A datetime field
-                         * @default 2026-10-13T09:07:54.431Z
+                         * @default 2026-10-14T12:53:43.466Z
                          */
                         publishedAt?: string;
                         /** @description A media field */
@@ -1853,7 +1881,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-13T09:07:18.106Z
+                             * @default 2026-10-14T12:51:55.488Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -1944,7 +1972,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-13T09:07:18.107Z
+                             * @default 2026-10-14T12:51:55.490Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -2047,7 +2075,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-13T09:07:18.110Z
+                             * @default 2026-10-14T12:51:55.493Z
                              */
                             publishedAt: string;
                             /** @description A component field */
@@ -2125,7 +2153,7 @@ export interface operations {
                         phone?: string;
                         /**
                          * @description A datetime field
-                         * @default 2026-10-13T09:07:54.494Z
+                         * @default 2026-10-14T12:53:43.532Z
                          */
                         publishedAt?: string;
                         /** @description A component field */
@@ -2168,7 +2196,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-13T09:07:18.113Z
+                             * @default 2026-10-14T12:51:55.503Z
                              */
                             publishedAt: string;
                             /** @description A component field */
@@ -2262,7 +2290,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-13T09:07:18.114Z
+                             * @default 2026-10-14T12:51:55.505Z
                              */
                             publishedAt: string;
                             /** @description A component field */
@@ -2353,7 +2381,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-13T09:07:18.119Z
+                             * @default 2026-10-14T12:51:55.508Z
                              */
                             publishedAt: string;
                             /** @description A component field */
@@ -2429,7 +2457,7 @@ export interface operations {
                         featuredSponsorTier?: "hoved" | "partner" | "stotte";
                         /**
                          * @description A datetime field
-                         * @default 2026-10-13T09:07:54.555Z
+                         * @default 2026-10-14T12:53:43.595Z
                          */
                         publishedAt?: string;
                         /** @description A component field */
@@ -2473,7 +2501,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-13T09:07:18.122Z
+                             * @default 2026-10-14T12:51:55.511Z
                              */
                             publishedAt: string;
                             /** @description A component field */
@@ -2565,7 +2593,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-13T09:07:18.123Z
+                             * @default 2026-10-14T12:51:55.513Z
                              */
                             publishedAt: string;
                             /** @description A component field */
@@ -2772,7 +2800,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-13T09:07:18.127Z
+                             * @default 2026-10-14T12:51:55.519Z
                              */
                             publishedAt: string;
                             /** @description A relational field */
@@ -2855,7 +2883,7 @@ export interface operations {
                         showInMenu: ("0" | "1" | "t" | "true" | "f" | "false") | null;
                         /**
                          * @description A datetime field
-                         * @default 2026-10-13T09:07:54.626Z
+                         * @default 2026-10-14T12:53:43.669Z
                          */
                         publishedAt: string;
                         /**
@@ -2906,7 +2934,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-13T09:07:18.130Z
+                             * @default 2026-10-14T12:51:55.523Z
                              */
                             publishedAt: string;
                             /** @description A relational field */
@@ -3015,7 +3043,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-13T09:07:18.128Z
+                             * @default 2026-10-14T12:51:55.521Z
                              */
                             publishedAt: string;
                             /** @description A relational field */
@@ -3100,7 +3128,7 @@ export interface operations {
                         showInMenu?: ("0" | "1" | "t" | "true" | "f" | "false") | null;
                         /**
                          * @description A datetime field
-                         * @default 2026-10-13T09:07:54.679Z
+                         * @default 2026-10-14T12:53:43.721Z
                          */
                         publishedAt?: string;
                         /**
@@ -3151,7 +3179,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-13T09:07:18.132Z
+                             * @default 2026-10-14T12:51:55.526Z
                              */
                             publishedAt: string;
                             /** @description A relational field */
@@ -3255,7 +3283,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-13T09:07:18.134Z
+                             * @default 2026-10-14T12:51:55.527Z
                              */
                             publishedAt: string;
                             /** @description A relational field */
@@ -3365,7 +3393,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-13T09:07:18.138Z
+                             * @default 2026-10-14T12:51:55.536Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -3443,7 +3471,7 @@ export interface operations {
                         bio?: string;
                         /**
                          * @description A datetime field
-                         * @default 2026-10-13T09:07:54.751Z
+                         * @default 2026-10-14T12:53:43.796Z
                          */
                         publishedAt: string;
                         /** @description A media field */
@@ -3486,7 +3514,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-13T09:07:18.146Z
+                             * @default 2026-10-14T12:51:55.540Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -3590,7 +3618,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-13T09:07:18.140Z
+                             * @default 2026-10-14T12:51:55.538Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -3670,7 +3698,7 @@ export interface operations {
                         bio?: string;
                         /**
                          * @description A datetime field
-                         * @default 2026-10-13T09:07:54.800Z
+                         * @default 2026-10-14T12:53:43.846Z
                          */
                         publishedAt?: string;
                         /** @description A media field */
@@ -3713,7 +3741,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-13T09:07:18.148Z
+                             * @default 2026-10-14T12:51:55.542Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -3812,11 +3840,719 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-13T09:07:18.149Z
+                             * @default 2026-10-14T12:51:55.544Z
                              */
                             publishedAt: string;
                             /** @description A media field */
                             photo?: components["schemas"]["PluginUploadFileDocument"];
+                        };
+                    };
+                };
+            };
+            /** @description Bad request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    "player/get/players": {
+        parameters: {
+            query?: {
+                fields?: ("name" | "slug" | "number" | "position" | "shoots" | "birthYear" | "about" | "active" | "sortOrder" | "createdAt" | "updatedAt" | "publishedAt")[];
+                filters?: {
+                    [key: string]: unknown;
+                };
+                _q?: string;
+                "pagination[withCount]"?: boolean;
+                "pagination[page]"?: number;
+                "pagination[pageSize]"?: number;
+                "pagination[start]"?: number;
+                "pagination[limit]"?: number;
+                sort?: ("name" | "slug" | "number" | "position" | "shoots" | "birthYear" | "about" | "active" | "sortOrder" | "createdAt" | "updatedAt" | "publishedAt") | ("name" | "slug" | "number" | "position" | "shoots" | "birthYear" | "about" | "active" | "sortOrder" | "createdAt" | "updatedAt" | "publishedAt")[] | {
+                    [key: string]: "asc" | "desc";
+                } | {
+                    [key: string]: "asc" | "desc";
+                }[];
+                populate?: "*" | ("photo" | "socialLinks" | "team") | ("photo" | "socialLinks" | "team")[];
+                status?: "draft" | "published";
+                publicationFilter?: "never-published" | "has-published-version" | "modified" | "unmodified" | "never-published-document" | "has-published-version-document" | "published-without-draft" | "published-with-draft";
+                hasPublishedVersion?: boolean | ("true" | "false");
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            /**
+                             * Format: uuid
+                             * @description The document ID, represented by a UUID
+                             */
+                            documentId: string;
+                            id: string | number;
+                            /** @description A string field */
+                            name: string;
+                            /** @description A UID field */
+                            slug?: string;
+                            /** @description An integer field */
+                            number?: number;
+                            /**
+                             * @description An enum field
+                             * @enum {string}
+                             */
+                            position: "malvakt" | "back" | "center" | "ving" | "forward";
+                            /**
+                             * @description An enum field
+                             * @enum {string}
+                             */
+                            shoots: "venstre" | "hoyre";
+                            /** @description An integer field */
+                            birthYear: number;
+                            /** @description A blocks field */
+                            about: unknown[];
+                            /**
+                             * @description A boolean field
+                             * @default true
+                             */
+                            active: boolean | null;
+                            /**
+                             * @description An integer field
+                             * @default 0
+                             */
+                            sortOrder: number;
+                            /** @description A datetime field */
+                            createdAt?: string;
+                            /** @description A datetime field */
+                            updatedAt?: string;
+                            /**
+                             * @description A datetime field
+                             * @default 2026-10-14T12:51:55.549Z
+                             */
+                            publishedAt: string;
+                            /** @description A media field */
+                            photo?: components["schemas"]["PluginUploadFileDocument"];
+                            /** @description A component field */
+                            socialLinks?: components["schemas"]["SharedSocialLinkEntry"][];
+                            /** @description A relational field */
+                            team?: components["schemas"]["ApiTeamTeamDocument"];
+                        }[];
+                    };
+                };
+            };
+            /** @description Bad request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    "player/post/players": {
+        parameters: {
+            query?: {
+                fields?: ("name" | "slug" | "number" | "position" | "shoots" | "birthYear" | "about" | "active" | "sortOrder" | "createdAt" | "updatedAt" | "publishedAt")[];
+                populate?: "*" | ("photo" | "socialLinks" | "team") | ("photo" | "socialLinks" | "team")[];
+                status?: "draft" | "published";
+                publicationFilter?: "never-published" | "has-published-version" | "modified" | "unmodified" | "never-published-document" | "has-published-version-document" | "published-without-draft" | "published-with-draft";
+                hasPublishedVersion?: boolean | ("true" | "false");
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    data: {
+                        /** @description A string field */
+                        name: string;
+                        /** @description A UID field */
+                        slug?: string;
+                        /** @description A float field */
+                        number?: number;
+                        /**
+                         * @description An enum field
+                         * @enum {string}
+                         */
+                        position: "malvakt" | "back" | "center" | "ving" | "forward";
+                        /**
+                         * @description An enum field
+                         * @enum {string}
+                         */
+                        shoots: "venstre" | "hoyre";
+                        /** @description A float field */
+                        birthYear: number;
+                        /** @description A blocks field */
+                        about: unknown[];
+                        /**
+                         * @description A boolean field
+                         * @default true
+                         */
+                        active: ("0" | "1" | "t" | "true" | "f" | "false") | null;
+                        /**
+                         * @description A float field
+                         * @default 0
+                         */
+                        sortOrder: number;
+                        /**
+                         * @description A datetime field
+                         * @default 2026-10-14T12:53:43.928Z
+                         */
+                        publishedAt: string;
+                        /** @description A media field */
+                        photo?: unknown;
+                        /** @description A component field */
+                        socialLinks?: unknown[];
+                        /**
+                         * Format: uuid
+                         * @description A relational field
+                         */
+                        team?: string;
+                    };
+                };
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            /**
+                             * Format: uuid
+                             * @description The document ID, represented by a UUID
+                             */
+                            documentId: string;
+                            id: string | number;
+                            /** @description A string field */
+                            name: string;
+                            /** @description A UID field */
+                            slug?: string;
+                            /** @description An integer field */
+                            number?: number;
+                            /**
+                             * @description An enum field
+                             * @enum {string}
+                             */
+                            position: "malvakt" | "back" | "center" | "ving" | "forward";
+                            /**
+                             * @description An enum field
+                             * @enum {string}
+                             */
+                            shoots: "venstre" | "hoyre";
+                            /** @description An integer field */
+                            birthYear: number;
+                            /** @description A blocks field */
+                            about: unknown[];
+                            /**
+                             * @description A boolean field
+                             * @default true
+                             */
+                            active: boolean | null;
+                            /**
+                             * @description An integer field
+                             * @default 0
+                             */
+                            sortOrder: number;
+                            /** @description A datetime field */
+                            createdAt?: string;
+                            /** @description A datetime field */
+                            updatedAt?: string;
+                            /**
+                             * @description A datetime field
+                             * @default 2026-10-14T12:51:55.557Z
+                             */
+                            publishedAt: string;
+                            /** @description A media field */
+                            photo?: components["schemas"]["PluginUploadFileDocument"];
+                            /** @description A component field */
+                            socialLinks?: components["schemas"]["SharedSocialLinkEntry"][];
+                            /** @description A relational field */
+                            team?: components["schemas"]["ApiTeamTeamDocument"];
+                        };
+                    };
+                };
+            };
+            /** @description Bad request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    "player/get/players_by_id": {
+        parameters: {
+            query?: {
+                fields?: ("name" | "slug" | "number" | "position" | "shoots" | "birthYear" | "about" | "active" | "sortOrder" | "createdAt" | "updatedAt" | "publishedAt")[];
+                populate?: "*" | ("photo" | "socialLinks" | "team") | ("photo" | "socialLinks" | "team")[];
+                filters?: {
+                    [key: string]: unknown;
+                };
+                sort?: ("name" | "slug" | "number" | "position" | "shoots" | "birthYear" | "about" | "active" | "sortOrder" | "createdAt" | "updatedAt" | "publishedAt") | ("name" | "slug" | "number" | "position" | "shoots" | "birthYear" | "about" | "active" | "sortOrder" | "createdAt" | "updatedAt" | "publishedAt")[] | {
+                    [key: string]: "asc" | "desc";
+                } | {
+                    [key: string]: "asc" | "desc";
+                }[];
+                status?: "draft" | "published";
+                publicationFilter?: "never-published" | "has-published-version" | "modified" | "unmodified" | "never-published-document" | "has-published-version-document" | "published-without-draft" | "published-with-draft";
+                hasPublishedVersion?: boolean | ("true" | "false");
+            };
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            /**
+                             * Format: uuid
+                             * @description The document ID, represented by a UUID
+                             */
+                            documentId: string;
+                            id: string | number;
+                            /** @description A string field */
+                            name: string;
+                            /** @description A UID field */
+                            slug?: string;
+                            /** @description An integer field */
+                            number?: number;
+                            /**
+                             * @description An enum field
+                             * @enum {string}
+                             */
+                            position: "malvakt" | "back" | "center" | "ving" | "forward";
+                            /**
+                             * @description An enum field
+                             * @enum {string}
+                             */
+                            shoots: "venstre" | "hoyre";
+                            /** @description An integer field */
+                            birthYear: number;
+                            /** @description A blocks field */
+                            about: unknown[];
+                            /**
+                             * @description A boolean field
+                             * @default true
+                             */
+                            active: boolean | null;
+                            /**
+                             * @description An integer field
+                             * @default 0
+                             */
+                            sortOrder: number;
+                            /** @description A datetime field */
+                            createdAt?: string;
+                            /** @description A datetime field */
+                            updatedAt?: string;
+                            /**
+                             * @description A datetime field
+                             * @default 2026-10-14T12:51:55.552Z
+                             */
+                            publishedAt: string;
+                            /** @description A media field */
+                            photo?: components["schemas"]["PluginUploadFileDocument"];
+                            /** @description A component field */
+                            socialLinks?: components["schemas"]["SharedSocialLinkEntry"][];
+                            /** @description A relational field */
+                            team?: components["schemas"]["ApiTeamTeamDocument"];
+                        };
+                    };
+                };
+            };
+            /** @description Bad request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    "player/put/players_by_id": {
+        parameters: {
+            query?: {
+                fields?: ("name" | "slug" | "number" | "position" | "shoots" | "birthYear" | "about" | "active" | "sortOrder" | "createdAt" | "updatedAt" | "publishedAt")[];
+                populate?: "*" | ("photo" | "socialLinks" | "team") | ("photo" | "socialLinks" | "team")[];
+                status?: "draft" | "published";
+                publicationFilter?: "never-published" | "has-published-version" | "modified" | "unmodified" | "never-published-document" | "has-published-version-document" | "published-without-draft" | "published-with-draft";
+                hasPublishedVersion?: boolean | ("true" | "false");
+            };
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    data: {
+                        /** @description A string field */
+                        name?: string;
+                        /** @description A UID field */
+                        slug?: string;
+                        /** @description A float field */
+                        number?: number;
+                        /**
+                         * @description An enum field
+                         * @enum {string}
+                         */
+                        position?: "malvakt" | "back" | "center" | "ving" | "forward";
+                        /**
+                         * @description An enum field
+                         * @enum {string}
+                         */
+                        shoots?: "venstre" | "hoyre";
+                        /** @description A float field */
+                        birthYear?: number;
+                        /** @description A blocks field */
+                        about?: unknown[];
+                        /**
+                         * @description A boolean field
+                         * @default true
+                         */
+                        active?: ("0" | "1" | "t" | "true" | "f" | "false") | null;
+                        /**
+                         * @description A float field
+                         * @default 0
+                         */
+                        sortOrder?: number;
+                        /**
+                         * @description A datetime field
+                         * @default 2026-10-14T12:53:43.980Z
+                         */
+                        publishedAt?: string;
+                        /** @description A media field */
+                        photo?: unknown;
+                        /** @description A component field */
+                        socialLinks?: unknown[];
+                        /**
+                         * Format: uuid
+                         * @description A relational field
+                         */
+                        team?: string;
+                    };
+                };
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            /**
+                             * Format: uuid
+                             * @description The document ID, represented by a UUID
+                             */
+                            documentId: string;
+                            id: string | number;
+                            /** @description A string field */
+                            name: string;
+                            /** @description A UID field */
+                            slug?: string;
+                            /** @description An integer field */
+                            number?: number;
+                            /**
+                             * @description An enum field
+                             * @enum {string}
+                             */
+                            position: "malvakt" | "back" | "center" | "ving" | "forward";
+                            /**
+                             * @description An enum field
+                             * @enum {string}
+                             */
+                            shoots: "venstre" | "hoyre";
+                            /** @description An integer field */
+                            birthYear: number;
+                            /** @description A blocks field */
+                            about: unknown[];
+                            /**
+                             * @description A boolean field
+                             * @default true
+                             */
+                            active: boolean | null;
+                            /**
+                             * @description An integer field
+                             * @default 0
+                             */
+                            sortOrder: number;
+                            /** @description A datetime field */
+                            createdAt?: string;
+                            /** @description A datetime field */
+                            updatedAt?: string;
+                            /**
+                             * @description A datetime field
+                             * @default 2026-10-14T12:51:55.560Z
+                             */
+                            publishedAt: string;
+                            /** @description A media field */
+                            photo?: components["schemas"]["PluginUploadFileDocument"];
+                            /** @description A component field */
+                            socialLinks?: components["schemas"]["SharedSocialLinkEntry"][];
+                            /** @description A relational field */
+                            team?: components["schemas"]["ApiTeamTeamDocument"];
+                        };
+                    };
+                };
+            };
+            /** @description Bad request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    "player/delete/players_by_id": {
+        parameters: {
+            query?: {
+                fields?: ("name" | "slug" | "number" | "position" | "shoots" | "birthYear" | "about" | "active" | "sortOrder" | "createdAt" | "updatedAt" | "publishedAt")[];
+                populate?: "*" | ("photo" | "socialLinks" | "team") | ("photo" | "socialLinks" | "team")[];
+                filters?: {
+                    [key: string]: unknown;
+                };
+                status?: "draft" | "published";
+                publicationFilter?: "never-published" | "has-published-version" | "modified" | "unmodified" | "never-published-document" | "has-published-version-document" | "published-without-draft" | "published-with-draft";
+                hasPublishedVersion?: boolean | ("true" | "false");
+            };
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            /**
+                             * Format: uuid
+                             * @description The document ID, represented by a UUID
+                             */
+                            documentId: string;
+                            id: string | number;
+                            /** @description A string field */
+                            name: string;
+                            /** @description A UID field */
+                            slug?: string;
+                            /** @description An integer field */
+                            number?: number;
+                            /**
+                             * @description An enum field
+                             * @enum {string}
+                             */
+                            position: "malvakt" | "back" | "center" | "ving" | "forward";
+                            /**
+                             * @description An enum field
+                             * @enum {string}
+                             */
+                            shoots: "venstre" | "hoyre";
+                            /** @description An integer field */
+                            birthYear: number;
+                            /** @description A blocks field */
+                            about: unknown[];
+                            /**
+                             * @description A boolean field
+                             * @default true
+                             */
+                            active: boolean | null;
+                            /**
+                             * @description An integer field
+                             * @default 0
+                             */
+                            sortOrder: number;
+                            /** @description A datetime field */
+                            createdAt?: string;
+                            /** @description A datetime field */
+                            updatedAt?: string;
+                            /**
+                             * @description A datetime field
+                             * @default 2026-10-14T12:51:55.567Z
+                             */
+                            publishedAt: string;
+                            /** @description A media field */
+                            photo?: components["schemas"]["PluginUploadFileDocument"];
+                            /** @description A component field */
+                            socialLinks?: components["schemas"]["SharedSocialLinkEntry"][];
+                            /** @description A relational field */
+                            team?: components["schemas"]["ApiTeamTeamDocument"];
                         };
                     };
                 };
@@ -3926,7 +4662,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-13T09:07:18.152Z
+                             * @default 2026-10-14T12:51:55.572Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -4010,7 +4746,7 @@ export interface operations {
                         sortOrder: number;
                         /**
                          * @description A datetime field
-                         * @default 2026-10-13T09:07:54.876Z
+                         * @default 2026-10-14T12:53:44.057Z
                          */
                         publishedAt: string;
                         /** @description A media field */
@@ -4059,7 +4795,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-13T09:07:18.157Z
+                             * @default 2026-10-14T12:51:55.578Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -4169,7 +4905,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-13T09:07:18.154Z
+                             * @default 2026-10-14T12:51:55.575Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -4255,7 +4991,7 @@ export interface operations {
                         sortOrder?: number;
                         /**
                          * @description A datetime field
-                         * @default 2026-10-13T09:07:54.923Z
+                         * @default 2026-10-14T12:53:44.107Z
                          */
                         publishedAt?: string;
                         /** @description A media field */
@@ -4304,7 +5040,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-13T09:07:18.158Z
+                             * @default 2026-10-14T12:51:55.580Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -4409,7 +5145,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-13T09:07:18.160Z
+                             * @default 2026-10-14T12:51:55.582Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -4533,7 +5269,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-13T09:07:18.164Z
+                             * @default 2026-10-14T12:51:55.587Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -4631,7 +5367,7 @@ export interface operations {
                         sortOrder: number;
                         /**
                          * @description A datetime field
-                         * @default 2026-10-13T09:07:55.003Z
+                         * @default 2026-10-14T12:53:44.183Z
                          */
                         publishedAt: string;
                         /** @description A media field */
@@ -4694,7 +5430,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-13T09:07:18.174Z
+                             * @default 2026-10-14T12:51:55.593Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -4818,7 +5554,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-13T09:07:18.166Z
+                             * @default 2026-10-14T12:51:55.590Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -4918,7 +5654,7 @@ export interface operations {
                         sortOrder?: number;
                         /**
                          * @description A datetime field
-                         * @default 2026-10-13T09:07:55.060Z
+                         * @default 2026-10-14T12:53:44.235Z
                          */
                         publishedAt?: string;
                         /** @description A media field */
@@ -4981,7 +5717,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-13T09:07:18.177Z
+                             * @default 2026-10-14T12:51:55.599Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -5100,7 +5836,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-13T09:07:18.179Z
+                             * @default 2026-10-14T12:51:55.602Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -5202,7 +5938,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-13T09:07:18.182Z
+                             * @default 2026-10-14T12:51:55.605Z
                              */
                             publishedAt: string;
                         };
@@ -5279,7 +6015,7 @@ export interface operations {
                         isActive?: ("0" | "1" | "t" | "true" | "f" | "false") | null;
                         /**
                          * @description A datetime field
-                         * @default 2026-10-13T09:07:55.126Z
+                         * @default 2026-10-14T12:53:44.299Z
                          */
                         publishedAt?: string;
                     };
@@ -5321,7 +6057,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-13T09:07:18.184Z
+                             * @default 2026-10-14T12:51:55.607Z
                              */
                             publishedAt: string;
                         };
@@ -5414,7 +6150,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-13T09:07:18.185Z
+                             * @default 2026-10-14T12:51:55.608Z
                              */
                             publishedAt: string;
                         };
