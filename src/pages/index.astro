@@ -75,6 +75,10 @@ const club: Club = clubRaw?.data ?? {};
 const heroTitle: string = frontpage.hero?.title ?? frontpage.title ?? "TITLE";
 const heroText: string = frontpage.hero?.subtitle ?? "SUBTITLE";
 const heroImage: StrapiMedia | null = frontpage.hero?.image ?? null;
+const teamTitlePart1: string = frontpage.teamTitlePart1 ?? "Tønsberg ";
+const teamTitlePart2: string = frontpage.teamTitlePart2 ?? "Vikings";
+const fullClubName: string = frontpage.fullClubName ?? "Tønsberg og Omegn ishockeyklubb";
+const fixturesTeamLabel: string = frontpage.fixturesTeamLabel ?? "tønsberg viking";
 const orgNumber: string | null = club.grasrotandelenOrgNumber ?? null;
 const pinnedArticle: Article | null = frontpage.pinnedArticle ?? null;
 const [lead, ...rest] = articles;
@@ -122,13 +126,13 @@ sectionMap.sponsors = sectionMap.sponsors ?? true;
             )}
             <div class="container-content py-16 sm:py-24 text-ice-50 md:pl-20 relative z-0 block">
                 <h1 class="relative text-hero text-5xl sm:text-6xl md:text-[8rem] font-bold md:-ml-15 text-shadow-lg group">
-                    <span>Tønsberg </span>
+                    <span>{teamTitlePart1}</span>
                     <span class="font-dc -z-10 -rotate-6 block md:w-48 h-20 text-accent-500 relative left-10 md:left-20 font-medium md:top-10 group-hover:animate-vibrate md:first-letter:text-[12rem]">
-                        Vikings
+                        {teamTitlePart2}
                     </span>
                 </h1>
                 <h2 class="text-2xl md:text-3xl font-bold font-sans mt-15 md:mt-32 block">
-                    Tønsberg og Omegn ishockeyklubb
+                    {fullClubName}
                 </h2>
                 <h3 class="mt-2 text-xl md:text-2xl font-medium font-sans">
                     {heroTitle}
@@ -183,7 +187,7 @@ sectionMap.sponsors = sectionMap.sponsors ?? true;
     <!-- Live match + fixtures — prominent red-accent card -->
     {(upcoming.length > 0 || recent.length > 0) && (
         <section class="container-content mt-12 mb-16" aria-labelledby="kamper">
-            <span class="section-label">TØNSBERG VIKINGS</span>
+            <span class="section-label">{fixturesTeamLabel}</span>
 
             <div class="mt-4 overflow-hidden rounded-card border-l-4 border-accent-500 bg-surface-raised shadow-card">
                 <LiveMatch
