@@ -195,17 +195,21 @@ const logoSrc = logo ? mediaUrl(logo, "thumbnail") : null;
             </ul>
         </nav>
 
-        <!-- Dark mode toggle
         <button
             type="button"
             id="theme-toggle"
             aria-label="Bytt mellom lys og mørk modus"
-            class="grid size-10 shrink-0 place-items-center rounded-pill text-ink-muted transition hover:bg-surface-sunken hover:text-ink"
+            class="grid size-10 shrink-0 place-items-center rounded-pill text-ink-muted transition hover:bg-surface-sunken bg-surface-raised hover:text-ink cursor-pointer border border-ink-muted/20"
         >
-            <i id="theme-icon-sun" class="ph ph-sun w-5 h-5 hidden"></i>
-            <i id="theme-icon-moon" class="ph ph-moon w-5 h-5"></i>
+            <i
+                id="theme-icon-sun"
+                class="ph ph-sun text-xl hidden grid place-content-center"
+            ></i>
+            <i
+                id="theme-icon-moon"
+                class="ph ph-moon text-xl grid place-content-center"
+            ></i>
         </button>
-        -->
 
         <!-- Mobile menu button -->
         <button

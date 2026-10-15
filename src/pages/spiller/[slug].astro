@@ -111,7 +111,8 @@ const player = await getPlayer(slug).catch(() => null);
                                                         <path d={svgPath} />
                                                     </svg>
                                                     <span class="truncate">
-                                                        {link.platform}
+                                                        {link.label ??
+                                                            link.platform}
                                                     </span>
                                                 </a>
                                             </li>
@@ -129,7 +130,8 @@ const player = await getPlayer(slug).catch(() => null);
                                                     class={`ph ph-${key} w-4 h-4`}
                                                 />
                                                 <span class="truncate">
-                                                    {link.platform}
+                                                    {link.label ??
+                                                        link.platform}
                                                 </span>
                                             </a>
                                         </li>

@@ -93,7 +93,7 @@ const isPostGame = computed(() => state.value?.phase === 'post-game');
 
 <template>
   <section
-    class="rounded-card border-t border-line bg-surface-raised shadow-card"
+    class="rounded-card border border-line bg-surface-raised shadow-card"
     aria-live="polite"
   >
     <!-- Loading -->

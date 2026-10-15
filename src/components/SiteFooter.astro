@@ -92,7 +92,28 @@ const footerLogoSrc = footerLogo ? mediaUrl(footerLogo, "thumbnail") : null;
                     <div class="flex gap-3">
                         {socialLinks.map((link) => {
                             const iconKey = link.icon ?? link.platform.toLowerCase();
-                            const svgPath = phosphorPaths[iconKey] ?? phosphorPaths.facebook;
+                            const svgPath = phosphorPaths[iconKey];
+                            if (svgPath) {
+                                return (
+                                    <a
+                                        href={link.url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        aria-label={link.platform}
+                                        class="flex size-9 items-center justify-center rounded-full bg-surface-raised text-ink-muted shadow-sm transition hover:bg-brand-600 hover:text-white dark:bg-surface dark:hover:bg-brand-600 dark:hover:text-white"
+                                    >
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            width="16"
+                                            height="16"
+                                            viewBox="0 0 1024 1024"
+                                            fill="currentColor"
+                                        >
+                                            <path d={svgPath} />
+                                        </svg>
+                                    </a>
+                                );
+                            }
                             return (
                                 <a
                                     href={link.url}
@@ -101,15 +122,7 @@ const footerLogoSrc = footerLogo ? mediaUrl(footerLogo, "thumbnail") : null;
                                     aria-label={link.platform}
                                     class="flex size-9 items-center justify-center rounded-full bg-surface-raised text-ink-muted shadow-sm transition hover:bg-brand-600 hover:text-white dark:bg-surface dark:hover:bg-brand-600 dark:hover:text-white"
                                 >
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        width="20"
-                                        height="20"
-                                        viewBox="0 0 1024 1024"
-                                        fill="currentColor"
-                                    >
-                                        <path d={svgPath} />
-                                    </svg>
+                                    <i class={`ph ph-${iconKey} w-4 h-4`} />
                                 </a>
                             );
                         })}

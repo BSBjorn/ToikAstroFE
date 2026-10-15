@@ -77,8 +77,10 @@ const heroText: string = frontpage.hero?.subtitle ?? "SUBTITLE";
 const heroImage: StrapiMedia | null = frontpage.hero?.image ?? null;
 const teamTitlePart1: string = frontpage.hero?.teamTitlePart1 ?? "Tønsberg ";
 const teamTitlePart2: string = frontpage.hero?.teamTitlePart2 ?? "Vikings";
-const fullClubName: string = frontpage.hero?.fullClubName ?? "Tønsberg og Omegn ishockeyklubb";
-const fixturesTeamLabel: string = frontpage.hero?.fixturesTeamLabel ?? "tønsberg viking";
+const fullClubName: string =
+    frontpage.hero?.fullClubName ?? "Tønsberg og Omegn ishockeyklubb";
+const fixturesTeamLabel: string =
+    frontpage.hero?.fixturesTeamLabel ?? "tønsberg viking";
 const orgNumber: string | null = club.grasrotandelenOrgNumber ?? null;
 const pinnedArticle: Article | null = frontpage.pinnedArticle ?? null;
 const [lead, ...rest] = articles;
@@ -196,7 +198,7 @@ sectionMap.sponsors = sectionMap.sponsors ?? true;
                     team={FEATURED_TEAM}
                 />
 
-                <div class="grid gap-8 border-t border-line px-6 py-8 md:grid-cols-2">
+                <div class="grid gap-8 px-6 py-8 md:grid-cols-2">
                     <div>
                         <div class="mb-3 flex items-baseline justify-between">
                             <h3 class="text-xl">Neste kamper</h3>
@@ -297,7 +299,7 @@ sectionMap.sponsors = sectionMap.sponsors ?? true;
                     <div>
                         <h2
                             id={`section-${id}`}
-                            class="text-display font-black"
+                            class="text-display font-black text-center"
                         >
                             {section.title}
                         </h2>
