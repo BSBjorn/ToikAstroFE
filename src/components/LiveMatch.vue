@@ -5,9 +5,14 @@
  * Mounted as an Astro island with client:load. It calls Strapi directly from
  * the browser, so the score is never baked into a cached page, and it pauses
  * polling on a hidden tab so a forgotten tab doesn't poll all night.
+ *
+ * Three phases:
+ *  - pre-game: 2h before kickoff → countdown to start
+ *  - live:     kickoff → slutt   → minimal data + link to hockey.no
+ *  - post-game: slutt → +2h     → result + boxscore link
  */
 import { computed, onMounted, onUnmounted, ref } from 'vue';
-import type { LiveMatch, TimelineEvent } from '../types/strapi';
+import type { LiveMatch } from '../types/strapi';
 
 const props = withDefaults(
   defineProps<{
@@ -74,29 +79,16 @@ onUnmounted(() => {
 });
 
 const match = computed(() => state.value?.match ?? null);
-const score = computed(() => state.value?.score ?? { home: 0, away: 0 });
-
-/** Group the timeline by period so each gets its own heading. */
-const byPeriod = computed(() => {
-  const groups = new Map<number | null, TimelineEvent[]>();
-  for (const event of state.value?.timeline ?? []) {
-    const bucket = groups.get(event.period);
-    if (bucket) bucket.push(event);
-    else groups.set(event.period, [event]);
-  }
-  return [...groups.entries()];
+const score = computed(() => state.value?.score ?? null);
+const countdownMin = computed(() => {
+  const sec = state.value?.countdownSec;
+  if (!sec || sec <= 0) return null;
+  return Math.ceil(sec / 60);
 });
 
-/**
- * `time` is wall-clock seconds within the period, not a game clock, so it is
- * never rendered as a minute marker — only used for ordering, done server-side.
- */
-const flagLabel = (flag: string) =>
-  ({
-    PP1: 'Overtall',
-    'Empty net': 'Tomt bur',
-    'Game Winning Goal': 'Seiersmål',
-  })[flag] ?? null;
+const isLive = computed(() => state.value?.phase === 'live');
+const isPreGame = computed(() => state.value?.phase === 'pre-game');
+const isPostGame = computed(() => state.value?.phase === 'post-game');
 </script>
 
 <template>
@@ -113,99 +105,61 @@ const flagLabel = (flag: string) =>
     <!-- Nothing on -->
     <div v-else-if="!match" class="p-6 text-ink-muted">
       <p class="font-medium text-ink">Ingen kamp akkurat nå</p>
-      <p class="mt-1 text-sm">Live-resultater vises her når det spilles i {{ state?.arena }}.</p>
     </div>
 
     <!-- Match -->
     <div v-else>
       <header class="flex items-center justify-between gap-4 border-b border-line px-6 py-3">
-        <p class="text-sm text-ink-muted">
-          {{ match.tournament ?? 'Kamp' }} · {{ match.venue }}
-        </p>
+        <div class="min-w-0 flex-1">
+          <p class="truncate text-sm text-ink-muted">
+            {{ match.tournament ?? 'Kamp' }} · {{ match.venue }}
+          </p>
+        </div>
+
+        <!-- Phase badge -->
         <span
-          v-if="state?.active"
-          class="inline-flex items-center gap-2 rounded-pill bg-accent-500 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-white"
+          v-if="isPreGame || isLive"
+          class="inline-flex shrink-0 items-center gap-2 rounded-pill bg-accent-500 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-white"
         >
-          <span class="relative flex size-2">
+          <span v-if="isLive" class="relative flex size-2">
             <span class="absolute inline-flex size-full animate-ping rounded-full bg-white/70" />
             <span class="relative inline-flex size-2 rounded-full bg-white" />
           </span>
           Direkte
         </span>
-        <span v-else class="text-xs uppercase tracking-wide text-ink-muted">Ferdig</span>
+        <span v-else-if="isPostGame" class="text-xs uppercase tracking-wide text-ink-muted">
+          Ferdig
+        </span>
       </header>
 
       <!-- Scoreline -->
       <div class="grid grid-cols-[1fr_auto_1fr] items-center gap-4 px-6 py-6">
         <p class="text-right text-lg font-semibold">{{ match.homeTeam }}</p>
-        <p class="font-display text-5xl tabular-nums">
-          {{ score.home }}<span class="mx-2 text-ink-muted">–</span>{{ score.away }}
-        </p>
+        <div class="text-center">
+          <span v-if="isPreGame" class="font-display text-5xl tabular-nums">
+            {{ countdownMin }}<span class="ml-1 text-sm text-ink-muted">min</span>
+          </span>
+          <span v-else class="font-display text-5xl tabular-nums">
+            {{ score?.home ?? '–' }}<span class="mx-2 text-ink-muted">–</span>{{ score?.away ?? '–' }}
+          </span>
+        </div>
         <p class="text-lg font-semibold">{{ match.awayTeam }}</p>
       </div>
 
-      <!-- Stats -->
-      <dl
-        v-if="state?.shots"
-        class="grid grid-cols-3 gap-px border-y border-line bg-line text-center"
-      >
-        <div class="bg-surface-raised px-3 py-3">
-          <dt class="text-xs uppercase tracking-wide text-ink-muted">Skudd</dt>
-          <dd class="mt-1 font-semibold tabular-nums">
-            {{ state.shots.home }}–{{ state.shots.away }}
-          </dd>
-        </div>
-        <div class="bg-surface-raised px-3 py-3">
-          <dt class="text-xs uppercase tracking-wide text-ink-muted">Utvisninger</dt>
-          <dd class="mt-1 font-semibold tabular-nums">
-            {{ state.penalties?.home }}–{{ state.penalties?.away }}
-          </dd>
-        </div>
-        <div class="bg-surface-raised px-3 py-3">
-          <dt class="text-xs uppercase tracking-wide text-ink-muted">Tekninger</dt>
-          <dd class="mt-1 font-semibold tabular-nums">
-            {{ state.faceoffs?.homePct ?? '–' }}%
-          </dd>
-        </div>
-      </dl>
-
-      <!-- Timeline -->
-      <div v-if="byPeriod.length" class="px-6 py-5">
-        <div v-for="[period, events] in byPeriod" :key="period ?? 'x'" class="mb-5 last:mb-0">
-          <h3 class="mb-2 text-xs uppercase tracking-wide text-ink-muted">
-            {{ period ? `${period}. periode` : 'Øvrig' }}
-          </h3>
-          <ul class="space-y-2">
-            <li
-              v-for="(event, i) in events"
-              :key="i"
-              class="flex items-baseline gap-3 text-sm"
-              :class="event.team === 'home' ? '' : 'flex-row-reverse text-right'"
-            >
-              <span
-                class="shrink-0 font-display tabular-nums"
-                :class="event.type === 'goal' ? 'text-accent-500' : 'text-ink-muted'"
-              >
-                {{ event.type === 'goal' ? `${event.score.home}–${event.score.away}` : '2 min' }}
-              </span>
-              <span v-if="event.type === 'goal'">
-                <strong>{{ event.scorer }}</strong>
-                <span v-if="event.assists.length" class="text-ink-muted">
-                  ({{ event.assists.join(', ') }})
-                </span>
-                <template v-for="flag in event.flags" :key="flag">
-                  <span
-                    v-if="flagLabel(flag)"
-                    class="ml-2 rounded-pill bg-surface-sunken px-2 py-0.5 text-xs"
-                  >{{ flagLabel(flag) }}</span>
-                </template>
-              </span>
-              <span v-else class="text-ink-muted">
-                {{ event.player }} — {{ event.reason }}
-              </span>
-            </li>
-          </ul>
-        </div>
+      <!-- HockeyLIVE link -->
+      <div v-if="state?.hockeyLiveUrl" class="border-t border-line px-6 py-3">
+        <a
+          :href="state.hockeyLiveUrl"
+          target="_blank"
+          rel="noopener"
+          class="inline-flex items-center gap-2 text-sm font-medium text-accent-500 hover:text-accent-600"
+        >
+          <i class="ph ph-broadcast text-lg" />
+          <span v-if="isLive">Følg kampen på hockey.no</span>
+          <span v-else-if="isPostGame">Bokstat på hockey.no</span>
+          <span v-else>Kampdetaljer på hockey.no</span>
+          <i class="ph ph-arrow-square-out text-base" />
+        </a>
       </div>
 
       <p v-if="failed" class="border-t border-line px-6 py-2 text-xs text-ink-muted">

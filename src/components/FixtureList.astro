@@ -123,8 +123,8 @@ function fmtTime(totalSeconds: number): string {
                     )}
                 </div>
 
-                {/* Expanded stats for completed matches */}
-                {type === "completed" && fixture?.stats.timeline.length > 0 && (
+                {/* Expanded stats for completed matches — stats no longer served from Strapi */}
+                {type === "completed" && fixture?.stats !== null && fixture?.stats.timeline?.length > 0 && (
                     <details class="w-full mt-1">
                         <summary class="cursor-pointer text-xs text-ink-muted hover:text-ink group/open:-translate-y-px">
                             {fixture.stats.timeline.length} mål · Skudd{" "}

@@ -23,7 +23,6 @@ import type {
   StrapiMedia,
   StrapiResponse,
   Team,
-  TimelineEvent,
   Whistleblow,
 } from '../types/strapi';
 
@@ -186,6 +185,21 @@ export async function getPlayers(teamSlug: string) {
   });
 }
 
+export async function getPlayer(slug: string): Promise<Player | null> {
+  const res = await get<StrapiResponse<Player[]>>(
+    'player',
+    TTL.person,
+    '/api/players',
+    {
+      'filters[slug][$eq]': slug,
+      'populate[photo]': 'true',
+      'populate[socialLinks]': 'true',
+      'pagination[pageSize]': 1,
+    }
+  );
+  return res.data[0] ?? null;
+}
+
 // --- Sponsors ----------------------------------------------------------
 
 /**
@@ -251,8 +265,8 @@ export async function getClub(): Promise<StrapiResponse<Club> | null> {
     TTL.club,
     '/api/club',
     {
-      'populate[0]': 'logo',
-      'populate[1]': 'socialLinks',
+      'populate[]': ['logo', 'socialLinks', 'footerLogo', 'footerLinkGroups'],
+      'populate': 'footerLinkGroups.links',
     }
   );
 }
@@ -313,52 +327,24 @@ export async function getFixtures(
   try {
     return await get<FixtureResponse>('fixtures', TTL.fixtures, '/api/matches', { team, type, limit });
   } catch (err: any) {
-    if (err?.message?.includes('-> 404') || err?.status === 404) return { data: [] };
+    if (err?.message?.includes('-> 404') || err?.status === 404 || err?.message?.includes('-> 400')) return { data: [] };
     throw err;
   }
 }
 
-export async function getMatchStats(matchId: number) {
-  try {
-    const res = await fetch(`${INTERNAL_URL}/api/matches/live?matchId=${matchId}`, {
-      headers: { Accept: 'application/json' },
-      signal: AbortSignal.timeout(8_000),
-    });
-    if (!res.ok) return null;
-    const body = (await res.json()) as { data: LiveMatch | null };
-    if (!body?.data) return null;
-    const d = body.data;
-    return {
-      shots: d.shots ?? undefined,
-      penalties: d.penalties ?? undefined,
-      penaltyMinutes: d.penaltyMinutes ?? undefined,
-      faceoffs: d.faceoffs ?? undefined,
-      timeline: d.timeline
-        .filter((e): e is TimelineEvent => (e as { type?: string }).type === 'goal')
-        .map((e) => ({
-          period: e.period,
-          time: e.time ?? 0,
-          team: e.team,
-          scorer: e.scorer ?? null,
-          assists: e.assists ?? [],
-          flags: e.flags ?? [],
-          score: { ...e.score },
-        })),
-    };
-  } catch {
-    return null;
-  }
+/** Enrich completed fixtures with match stats (goals, shots, penalties, faceoffs). */
+export async function getMatchStats(_matchId: number): Promise<null> {
+  // Stats no longer served by the simplified live endpoint.
+  // Boxscore data is available via hockey.no/match/[id] instead.
+  return null;
 }
-
-/** Return type of `getMatchStats`. */
-export type MatchStats = ReturnType<typeof getMatchStats>;
 
 /** Enrich completed fixtures with match stats (goals, shots, penalties, faceoffs). */
 export async function enrichFixturesWithStats(fixtures: Fixture[]) {
   return Promise.all(
     fixtures.map(async (f) => ({
       ...f,
-      stats: f.id ? (await getMatchStats(f.id)) ?? null : null,
+      stats: f.id ? await getMatchStats(f.id) : null,
     }))
   );
 }

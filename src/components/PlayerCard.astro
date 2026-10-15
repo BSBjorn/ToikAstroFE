@@ -1,0 +1,40 @@
+---
+/**
+ * Clickable player card — used in roster lists.
+ * Links to the player's profile page at `/spiller/[slug]`.
+ */
+import type { Player } from "../types/strapi";
+import { mediaUrl, mediaAlt } from "../lib/strapi";
+
+interface Props {
+    player: Player;
+    class?: string;
+}
+
+const { player, class: className = "" } = Astro.props;
+const href = `/spiller/${player.slug}`;
+---
+
+<a
+    href={href}
+    class={`flex h-full cursor-pointer items-center justify-start gap-3 rounded-card border border-line bg-surface-sunken hover:bg-surface-raised text-ink p-3 transition-colors  ${className}`}
+>
+    {player.photo && (
+        <img
+            src={mediaUrl(player.photo, "small") ?? ""}
+            alt={mediaAlt(player.photo)}
+            class="size-16 shrink-0 rounded-full object-cover"
+        />
+    )}
+    <div class="flex gap-8 justify-between items-center w-full">
+        <div>
+            <p class="text-lg">{player.name}</p>
+            {player.position && (
+                <p class="text-xs text-ink-muted">{player.position}</p>
+            )}
+        </div>
+        <p class="font-medium text-accent-600 font-dc text-3xl">
+            {player.number && <span class="">#{player.number}</span>}
+        </p>
+    </div>
+</a>

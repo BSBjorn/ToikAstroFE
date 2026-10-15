@@ -124,9 +124,16 @@ const CHECKS = [
     path: '/api/matches/live',
     query: {},
     at: (body) => body?.data,
-    required: ['active', 'arena', 'timeline'],
-    assert: (state) =>
-      Array.isArray(state.timeline) ? null : 'timeline is not an array',
+    required: ['active', 'phase', 'match', 'score', 'countdownSec', 'hockeyLiveUrl'],
+    assert: (state) => {
+      if (!['pre-game', 'live', 'post-game', 'none'].includes(state.phase)) {
+        return `phase is "${state.phase}", expected one of: pre-game, live, post-game, none`;
+      }
+      if (state.match !== null && !state.match.id) {
+        return 'match is present but missing id';
+      }
+      return null;
+    },
   },
 ];
 

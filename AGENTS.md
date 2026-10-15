@@ -13,6 +13,7 @@ This is the public website for **Tønsberg og Omegn Ishockeyklubb (TOIK)**, a cl
 | Styling | Tailwind CSS 4 via Vite plugin, custom design tokens in `src/styles/main.css` |
 | CMS | Strapi (content fetched via REST at build/request time) |
 | Cache | In-process TTL cache with tag-based purge via Strapi webhook (`src/lib/cache.ts`) |
+| Icons           | Phosphor Icons (`@phosphor-icons/web`, CSS + custom element) |
 | Package manager | pnpm (Node >= 22.12.0) |
 
 ## Project Structure
@@ -89,6 +90,34 @@ All colors are defined in `src/styles/main.css` as CSS custom properties:
 - Semantic tokens (`--color-surface`, `--color-ink`, `--color-line`) derive from the ramps
 
 Dark mode is supported via `prefers-color-scheme: dark` and `data-theme="dark"`.
+
+### Icons
+
+All icons use [Phosphor Icons](https://phosphoricons.com/) via `@phosphor-icons/web` (`v2.x`). The package ships per-weight CSS files that register `<i class="ph ph-...">` elements — no JS components needed, works in `.astro` and `.vue` files alike. All weight stylesheets are imported once in `Base.astro`.
+
+**Usage (`.astro` or `.vue`):**
+
+```astro
+<i class="ph ph-home w-5 h-5" />
+<i class="ph ph-list w-6 h-6" />           <!-- burger menu -->
+<i class="ph ph-moon w-5 h-5 dark:hidden" />
+<i class="ph ph-sun w-5 h-5 hidden dark:block" />
+```
+
+For filled icons: `<i class="ph-fill ph-home w-5 h-5" />`.
+
+**Weight variants:** `thin`, `light`, `regular` (default), `bold`, `duotone`, `fill`. Use `weight="fill"` for filled/rounded glyphs. CSS classes follow the weight naming convention (`ph-thin`, `ph-bold`, etc.).
+
+**Size:** Control via Tailwind utility classes (`w-5 h-5`, `size-6`, etc.) — icons are SVGs that fill their container.
+
+**Color:** Inherit from `currentColor` by default; override with Tailwind color utilities (e.g., `text-accent-500`, `text-brand-300`). Icons adapt to dark mode automatically since they inherit current color.
+
+**Social brand icons** (`@phosphor-icons/web` does not include these) remain hand-crafted as raw SVG path data in `src/lib/phosphor-icons.ts`, used by `SiteFooter.astro`. Do **not** add new social brands there — use the CSS approach for all standard Phosphor icons.
+
+**Rules:**
+- Use Phosphor Icons for all new icons. No inline SVGs or other icon libraries.
+- Prefer `weight="regular"` for navigation/interface, `weight="bold"` or `weight="fill"` for highlighted states.
+- Keep icon sizes consistent: 16–24px (`size-4` to `size-6`) in navs/buttons, up to 32px (`size-8`) in hero/empty states.
 
 ### Content Models (Strapi)
 

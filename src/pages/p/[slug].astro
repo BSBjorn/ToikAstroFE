@@ -5,32 +5,18 @@ import { getPages } from '../../lib/strapi';
 
 const { slug } = Astro.params;
 const page = await getPages({ slug }).catch(() => null);
-const children = page ? await getPages({ parent: slug }).catch(() => []) : [];
 ---
 
 {page ? (
   <Base title={page.title}>
-    <div class="container-content py-12">
-      <h1 class="text-display">{page.title}</h1>
+    <div class="container-content py-16 lg:py-20">
+      <h1 class="mt-8 font-bold text-hero">{page.title}</h1>
 
-      {children.length > 0 && (
-        <nav class="mt-6 border-b border-line" aria-label="Undersider">
-          <ul class="flex gap-4 text-sm">
-            {children.map((child) => (
-              <li>
-                <a
-                  href={`/p/${child.slug}`}
-                  class="pb-2 hover:underline underline-offset-4"
-                >
-                  {child.title}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </nav>
+      {page.content && (
+        <div class="mt-8 prose-toik prose-toik-prose">
+          <RichText nodes={page.content} />
+        </div>
       )}
-
-      {page.content && <RichText nodes={page.content} class="mt-8" />}
     </div>
   </Base>
 ) : (

@@ -1,0 +1,41 @@
+---
+import type { Team } from "../types/strapi";
+import { mediaUrl, mediaAlt } from "../lib/strapi";
+
+interface Props {
+    team: Team;
+}
+
+const { team } = Astro.props;
+
+const photo = mediaUrl(team.photo, "medium");
+---
+
+<a
+    href={`/lag/${team.slug}`}
+    class="group relative flex flex-col overflow-hidden rounded-card border border-line bg-surface-raised shadow-card transition-shadow hover:shadow-lift"
+>
+    {photo && (
+        <div class="overflow-hidden bg-surface-sunken">
+            <img
+                src={photo}
+                alt={mediaAlt(team.photo)}
+                width={team.photo?.width ?? undefined}
+                height={team.photo?.height ?? undefined}
+                loading="lazy"
+                decoding="async"
+                class="w-full aspect-[16/9] object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+            />
+        </div>
+    )}
+
+    <div class="flex flex-1 flex-col p-5">
+        <h2 class="mt-2 leading-tight text-display font-plus font-bold">
+            {team.name}
+        </h2>
+
+        {team.category && (
+            <p class="mt-1 text-sm capitalize text-ink-muted">{team.category}</p>
+        )}
+    </div>
+</a>
