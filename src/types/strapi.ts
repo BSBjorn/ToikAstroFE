@@ -182,19 +182,19 @@ export interface SectionToggle {
 }
 
 export interface HeroBanner {
+  teamTitlePart1?: string | null;
+  teamTitlePart2?: string | null;
+  fullClubName?: string | null;
   title: string;
   subtitle: string | null;
   image: StrapiMedia | null;
   ctaText: string | null;
   ctaLink: string | null;
+  fixturesTeamLabel?: string | null;
 }
 
 export interface Frontpage extends StrapiEntity {
   title: string;
-  teamTitlePart1?: string | null;
-  teamTitlePart2?: string | null;
-  fullClubName?: string | null;
-  fixturesTeamLabel?: string | null;
   hero: HeroBanner | null;
   pinnedArticle: Article | null;
   featuredSponsorTier: SponsorTier | null;
