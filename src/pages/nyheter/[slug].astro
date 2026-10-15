@@ -1,7 +1,7 @@
 ---
 import Base from "../../layouts/Base.astro";
 import RichText from "../../components/RichText.astro";
-import { getArticle, mediaUrl, mediaAlt } from "../../lib/strapi";
+import { getArticle, mediaUrl, mediaAlt, formatDate } from "../../lib/strapi";
 
 const { slug } = Astro.params;
 const article = await getArticle(slug).catch(() => null);
@@ -22,9 +22,9 @@ const article = await getArticle(slug).catch(() => null);
             <h1 class="mt-8 text-hero font-bold">{article.title}</h1>
             <div class="mt-2 flex items-center gap-3 text-sm text-ink-muted">
                 <time datetime={article.publishDate}>
-                    {article.publishDate}
+                    {formatDate(article.publishDate)}
                 </time>
-                {article.team && <span>{article.team.name}</span>}
+                {article.team && <span class="badge">{article.team.name}</span>}
             </div>
             <div class="prose-toik mt-8">
                 <RichText nodes={article.body} />

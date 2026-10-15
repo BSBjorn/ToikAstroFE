@@ -52,8 +52,7 @@ function isText(node: BlockNode): boolean {
         }
 
         case 'list': {
-          const isOrdered = (node.bulletListMarker ?? 'disc') === 'order';
-          const ListTag = isOrdered ? 'ol' : 'ul';
+          const ListTag = node.format === 'ordered' ? 'ol' : 'ul';
           return (
             <ListTag class="list-disc pl-6">
               <Self nodes={node.children} />
@@ -61,28 +60,28 @@ function isText(node: BlockNode): boolean {
           );
         }
 
-        case 'listItem':
+        case 'list-item':
           return <li><Self nodes={node.children} /></li>;
 
         case 'divider':
           return <hr class="my-6" />;
 
-        case 'media': {
-          const src = mediaUrl(node.media);
+        case 'image': {
+          const img = node.image;
           return (
             <figure class="my-6">
               <img
-                src={src}
-                alt={mediaAlt(node.image)}
-                width={node.image?.width ?? undefined}
-                height={node.image?.height ?? undefined}
+                src={mediaUrl(img)}
+                alt={mediaAlt(img)}
+                width={img?.width ?? undefined}
+                height={img?.height ?? undefined}
                 loading="lazy"
                 decoding="async"
                 class="w-full"
               />
-              {node.image?.caption &&
-                <figcaption class="mt-2 text-sm text-ink-muted">{node.image.caption}</figcaption>
-              }
+              {img?.caption && (
+                <figcaption class="mt-2 text-sm text-ink-muted">{img.caption}</figcaption>
+              )}
             </figure>
           );
         }
