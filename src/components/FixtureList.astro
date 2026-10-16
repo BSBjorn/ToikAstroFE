@@ -62,16 +62,16 @@ function fmtTime(totalSeconds: number): string {
         {fixtures.map((fixture) => (
             <li
                 class:list={[
-                    "group flex items-start gap-x-4 px-4 py-3 flex-wrap",
+                    "group flex items-start gap-x-3 px-3 py-2.5 flex-wrap sm:gap-x-4 sm:px-4 sm:py-3",
                     fixture.isHome && "border-l-4 border-l-brand-300",
                 ]}
             >
-                <div class="w-20 shrink-0">
-                    <p class="text-sm font-semibold tabular-nums">
+                <div class="w-16 shrink-0 text-xs sm:text-sm">
+                    <p class="font-semibold tabular-nums">
                         {formatDateShort(fixture.date)}
                     </p>
                     {fixture.time && type !== "completed" && (
-                        <p class="text-m text-ink-muted tabular-nums">
+                        <p class="text-xs text-ink-muted tabular-nums sm:text-sm">
                             {fixture.time}
                         </p>
                     )}
@@ -102,20 +102,20 @@ function fmtTime(totalSeconds: number): string {
                 </div>
 
                 <div class="min-w-0 flex-1">
-                    <p class="truncate text-sm flex flex-wrap">
+                    <p class="truncate text-xs sm:text-sm flex flex-wrap">
                         <span class:list={[fixture.isHome && "font-semibold"]}>
                             {fixture.homeTeam}
                         </span>
-                        <span class="mx-1.5 text-ink-muted">–</span>
+                        <span class="mx-1 text-ink-muted sm:mx-1.5">–</span>
                         <span class:list={[!fixture.isHome && "font-semibold"]}>
                             {fixture.awayTeam}
                         </span>
                     </p>
                     {fixture.venue && (
-                        <p class="truncate text-xs text-ink-muted">
+                        <p class="truncate text-xs sm:text-sm text-ink-muted">
                             {fixture.venue}
                             {fixture.isHome && (
-                                <span class="ml-1 text-brand-500">
+                                <span class="ml-0.5 sm:ml-1 text-brand-500">
                                     · Hjemmekamp
                                 </span>
                             )}
