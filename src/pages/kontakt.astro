@@ -12,7 +12,7 @@ const contact = await getContact().catch(() => null);
 
       <div class="mt-8 grid gap-8 md:grid-cols-2">
         <div>
-          <h2 class="text-xl">Kontaktinformasjon</h2>
+          <h2 class="font-display text-h3">Kontaktinformasjon</h2>
           <dl class="mt-4 space-y-3">
             {contact.address && (
               <>
@@ -47,7 +47,7 @@ const contact = await getContact().catch(() => null);
 
         {contact.mapCoordinates && (
           <div>
-            <h2 class="text-xl">Kart</h2>
+            <h2 class="font-display text-h3">Kart</h2>
             <div class="mt-4 aspect-video w-full overflow-hidden rounded-card bg-surface-sunken">
               <iframe
                 src={`https://www.google.com/maps?q=${contact.mapCoordinates.latitude},${contact.mapCoordinates.longitude}&z=15&output=embed`}
@@ -65,7 +65,7 @@ const contact = await getContact().catch(() => null);
 
       {contact.contactPersons && contact.contactPersons.length > 0 && (
         <div class="mt-12">
-          <h2 class="text-xl">Kontaktpersoner</h2>
+          <h2 class="font-display text-h3">Kontaktpersoner</h2>
           <ul class="mt-4 grid gap-4 sm:grid-cols-2">
             {contact.contactPersons.map((person) => (
               <li class="rounded-card border border-line bg-surface-raised p-4">
