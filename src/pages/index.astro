@@ -115,7 +115,7 @@ sectionMap.sponsors = sectionMap.sponsors ?? true;
 >
     <!-- Hero -->
     {frontpage.hero || frontpage.title ? (
-        <section class="relative isolate overflow-hidden bg-brand-900 text-ink-invert">
+        <section class="relative isolate overflow-hidden bg-brand-900 text-ink-invert min-h-[50vh]">
             <div class="pointer-events-none absolute inset-0 after:pointer-events-none after:absolute after:bottom-0 after:left-0 after:right-0 after:h-1/4 after:bg-linear-to-t after:from-ice-900/50 -z-10" />
             {heroSrc && (
                 <img
@@ -127,20 +127,16 @@ sectionMap.sponsors = sectionMap.sponsors ?? true;
                 />
             )}
             <div class="container-content py-10 sm:py-16 md:py-24 text-ice-50 md:pl-20 relative z-0 block">
-                <h1 class="relative font-display text-hero md:-ml-15 text-shadow-lg group">
-                    <span>{teamTitlePart1}</span>
-                    <span class="font-dc -z-10 -rotate-6 block w-[7rem] sm:w-48 h-12 sm:h-20 text-accent-500 relative left-2 sm:left-10 md:left-20 font-medium md:top-10 group-hover:animate-vibrate">
-                        {teamTitlePart2}
-                    </span>
-                </h1>
-                <h2 class="font-display text-h2 mt-5 sm:mt-10 md:mt-16 block font-bold">
+                <h1 class="font-display text-h1 mt-5 sm:mt-10 md:mt-16 block font-bold">
                     {fullClubName}
-                </h2>
-                <h3 class="font-display text-h3 mt-1.5 font-medium">
+                </h1>
+                <h2 class="font-display text-h2 mt-1.5 font-medium">
                     {heroTitle}
-                </h3>
-                <p class="mt-2 max-w-2xl text-sm sm:mt-4 md:text-xl leading-relaxed">{heroText}</p>
-                <div class="mt-5 flex flex-wrap gap-3 sm:mt-8">
+                </h2>
+                <p class="mt-2 max-w-2xl text-sm sm:mt-4 md:text-xl">
+                    {heroText}
+                </p>
+                <div class="mt-5 flex flex-wrap gap-3 sm:my-8">
                     {frontpage.hero?.ctaText && frontpage.hero?.ctaLink ? (
                         <a
                             href={frontpage.hero.ctaLink}
@@ -163,6 +159,12 @@ sectionMap.sponsors = sectionMap.sponsors ?? true;
                         Bli med i klubben
                     </a>
                 </div>
+                <h2 class="relative font-display font-extrabold text-hero md:ml-15 mt-8 text-shadow-lg group">
+                    {teamTitlePart1}
+                    <span class="font-dc text-intro -z-10 -rotate-6 block text-accent-500 relative left-2 sm:left-10 md:left-20 font-medium md:-top-10 group-hover:animate-vibrate">
+                        {teamTitlePart2}
+                    </span>
+                </h2>
             </div>
         </section>
     ) : (
@@ -213,7 +215,9 @@ sectionMap.sponsors = sectionMap.sponsors ?? true;
                     </div>
                     <div>
                         <div class="mb-3 flex items-baseline justify-between">
-                            <h3 class="font-display text-h3">Siste resultater</h3>
+                            <h3 class="font-display text-h3">
+                                Siste resultater
+                            </h3>
                             <a
                                 href="/kamper?type=spilte"
                                 class="text-sm text-ink-muted hover:underline"
