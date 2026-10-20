@@ -193,6 +193,8 @@ export async function getPlayer(slug: string): Promise<Player | null> {
     {
       'filters[slug][$eq]': slug,
       'populate[photo]': 'true',
+      'populate[team][fields][0]': 'name',
+      'populate[team][fields][1]': 'slug',
       'populate[socialLinks]': 'true',
       'pagination[pageSize]': 1,
     }

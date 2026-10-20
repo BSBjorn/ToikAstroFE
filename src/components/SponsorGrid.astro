@@ -38,7 +38,7 @@ const tiers = [
             {tiers.map((tier) => (
                 <ul
                     class:list={[
-                        "mt-8 grid items-center gap-x-8 gap-y-10",
+                        "mt-8 grid items-center gap-x-4 gap-y-6 sm:gap-x-8 sm:gap-y-10",
                         tier.cols,
                     ]}
                 >
@@ -62,7 +62,7 @@ const tiers = [
                         );
 
                         return (
-                            <li class="card aspect-square grid place-content-center p-8 group cursor-pointer bg-white dark:bg-white">
+                            <li class="card aspect-square grid place-content-center p-4 sm:p-8 group cursor-pointer bg-white dark:bg-white">
                                 {sponsor.url ? (
                                     <a
                                         href={sponsor.url}
