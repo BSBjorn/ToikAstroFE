@@ -265,6 +265,22 @@ export interface SideCount {
   away: number;
 }
 
+export interface MatchStats {
+  shots: SideCount;
+  penalties: SideCount;
+  penaltyMinutes: SideCount;
+  faceoffs: SideCount & { total: number; homePct: number | null };
+  timeline: Array<{
+    period: number | null;
+    time: number;
+    team: MatchSide;
+    scorer: string | null;
+    assists: string[];
+    flags: string[];
+    score: SideCount;
+  }>;
+}
+
 export interface LiveMatch {
   active: boolean;
   phase: 'pre-game' | 'live' | 'post-game' | 'none';
@@ -280,5 +296,6 @@ export interface LiveMatch {
   } | null;
   score: { home: number; away: number } | null;
   countdownSec: number | null;
+  stats: MatchStats | null;
   hockeyLiveUrl: string | null;
 }

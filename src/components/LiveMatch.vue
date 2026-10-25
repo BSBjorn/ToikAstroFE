@@ -45,6 +45,7 @@ async function refresh() {
     if (!res.ok) throw new Error(String(res.status));
     state.value = (await res.json()).data as LiveMatch;
     failed.value = false;
+    restartIfPhaseChanged();
   } catch {
     // Keep showing the last good state rather than blanking mid-match
     failed.value = true;
@@ -53,10 +54,23 @@ async function refresh() {
   }
 }
 
+let timer: ReturnType<typeof setInterval> | null = null;
+let currentIntervalMs: number | null = null;
+
 function start() {
   if (timer) return;
   refresh();
   timer = setInterval(refresh, props.intervalMs);
+  currentIntervalMs = props.intervalMs;
+}
+
+function restartIfPhaseChanged() {
+  const targetInterval = state.value?.phase === 'live' ? 5_000 : props.intervalMs;
+  if (currentIntervalMs !== targetInterval && timer) {
+    clearInterval(timer);
+    timer = setInterval(refresh, targetInterval);
+    currentIntervalMs = targetInterval;
+  }
 }
 
 function stop() {
@@ -89,6 +103,7 @@ const countdownMin = computed(() => {
 const isLive = computed(() => state.value?.phase === 'live');
 const isPreGame = computed(() => state.value?.phase === 'pre-game');
 const isPostGame = computed(() => state.value?.phase === 'post-game');
+const stats = computed(() => state.value?.stats ?? null);
 </script>
 
 <template>
@@ -160,6 +175,36 @@ const isPostGame = computed(() => state.value?.phase === 'post-game');
           <span v-else>Kampdetaljer på hockey.no</span>
           <i class="ph ph-arrow-square-out text-base" />
         </a>
+      </div>
+
+      <!-- Stats summary + goal timeline -->
+      <div
+        v-if="(isLive || isPostGame) && stats"
+        class="border-t border-line px-6 py-3"
+      >
+        <p class="text-xs text-ink-muted">
+          Skudd {{ stats.shots.home }}–{{ stats.shots.away }} ·
+          Utvisninger {{ stats.penalties.home }}–{{ stats.penalties.away }}
+        </p>
+        <ol v-if="stats.timeline.length > 0" class="mt-2 space-y-1 text-xs">
+          <li
+            v-for="(goal, i) in stats.timeline"
+            :key="i"
+            class="flex items-center gap-2"
+          >
+            <span class="tabular-nums text-ink-muted">{{ goal.period ?? '–' }}:{{ String(goal.time).padStart(2, '0') }}"
+            <span
+              class="font-medium"
+              :class="goal.team === 'home' ? 'text-brand-500' : 'text-accent-500'"
+            >{{ goal.scorer ?? 'Ukjent' }}</span>
+            <template v-if="goal.assists.length > 0">
+              <span class="text-ink-muted">(+{{ goal.assists.join(', ') }})</span>
+            </template>
+            <span class="ml-auto tabular-nums text-ink-muted">
+              {{ goal.score.home }}–{{ goal.score.away }}
+            </span>
+          </li>
+        </ol>
       </div>
 
       <p v-if="failed" class="border-t border-line px-6 py-2 text-xs text-ink-muted">
