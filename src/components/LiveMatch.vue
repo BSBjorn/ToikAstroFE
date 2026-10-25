@@ -54,7 +54,6 @@ async function refresh() {
   }
 }
 
-let timer: ReturnType<typeof setInterval> | null = null;
 let currentIntervalMs: number | null = null;
 
 function start() {
@@ -192,7 +191,7 @@ const stats = computed(() => state.value?.stats ?? null);
             :key="i"
             class="flex items-center gap-2"
           >
-            <span class="tabular-nums text-ink-muted">{{ goal.period ?? '–' }}:{{ String(goal.time).padStart(2, '0') }}"
+            <span class="tabular-nums text-ink-muted">{{ goal.period ?? '–' }}:{{ String(goal.time).padStart(2, '0') }}</span>
             <span
               class="font-medium"
               :class="goal.team === 'home' ? 'text-brand-500' : 'text-accent-500'"
