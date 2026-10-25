@@ -191,7 +191,7 @@ const stats = computed(() => state.value?.stats ?? null);
         </p>
         <ol v-if="stats.timeline.length > 0" class="mt-2 space-y-1 text-xs">
           <li
-            v-for="(goal, i) in stats.timeline"
+            v-for="(goal, i) in stats.timeline.toReversed()"
             :key="i"
             class="flex items-center gap-2"
           >
