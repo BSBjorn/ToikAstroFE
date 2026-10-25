@@ -1,43 +1,46 @@
-# Astro Starter Kit: Minimal
+# TOIK Web
 
-```sh
-pnpm create astro@latest -- --template minimal
+Public website for Tønsberg og Omegn Ishockeyklubb, built with Astro 7, Vue 3, and Tailwind CSS 4. Content and match data come from `toik-strapi`.
+
+## Development
+
+```bash
+pnpm install
+cp env.example .env
+pnpm dev
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+The site runs at `http://localhost:4321`. Start the Strapi CMS at `http://localhost:1337` as well.
 
-## 🚀 Project Structure
+Important environment variables:
 
-Inside of your Astro project, you'll see the following folders and files:
+| Variable | Purpose |
+|----------|---------|
+| `PUBLIC_STRAPI_URL` | Public Strapi URL used by the browser and media links |
+| `STRAPI_INTERNAL_URL` | Server-side Strapi URL |
+| `PUBLIC_SITE_URL` | Canonical public site URL |
+| `REVALIDATE_SECRET` | Shared secret for the cache-revalidation webhook |
+| `PUBLIC_FEATURED_TEAM_SLUG` | Team used for front-page fixtures (default `a-lag`) |
 
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+## Commands
+
+```bash
+pnpm dev                 # Development server
+pnpm build               # Production build
+pnpm preview             # Preview the production build
+pnpm run types:gen       # Regenerate types from Strapi OpenAPI
+pnpm run check:contract  # Verify real CMS and match API queries
+pnpm test                # Run unit and data-layer regression tests
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+## Match data
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+The site uses three custom Strapi endpoints:
 
-Any static assets, like images, can be placed in the `public/` directory.
+- `/api/matches` for upcoming and completed fixtures.
+- `/api/matches/live` for the LiveMatch Vue island's phase, score, and statistics.
+- `/api/matches/:matchId/stats` for completed-fixture statistics.
 
-## 🧞 Commands
+The LiveMatch island polls every 5 seconds during live play and every 15 seconds otherwise. All other Strapi requests run server-side through Astro's cached data layer.
 
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `pnpm install`             | Installs dependencies                            |
-| `pnpm dev`             | Starts local dev server at `localhost:4321`      |
-| `pnpm build`           | Build your production site to `./dist/`          |
-| `pnpm preview`         | Preview your build locally, before deploying     |
-| `pnpm astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `pnpm astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+See [`../docs/match-api.md`](../docs/match-api.md) for the complete API contract and upstream data flow, and [`AGENTS.md`](AGENTS.md) for architecture and coding conventions.

@@ -116,6 +116,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/matches/{matchId}/stats": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["match/get/matches_by_matchId_stats"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/pages": {
         parameters: {
             query?: never;
@@ -835,7 +851,7 @@ export interface components {
             updatedAt?: string;
             /**
              * @description A datetime field
-             * @default 2026-10-14T12:51:55.443Z
+             * @default 2026-10-25T17:03:24.419Z
              */
             publishedAt: string;
             related: unknown;
@@ -874,7 +890,7 @@ export interface components {
             updatedAt?: string;
             /**
              * @description A datetime field
-             * @default 2026-10-14T12:51:55.450Z
+             * @default 2026-10-25T17:03:24.423Z
              */
             publishedAt: string;
             /** @description A media field */
@@ -887,11 +903,13 @@ export interface components {
              * @description An enum field
              * @enum {string}
              */
-            platform: "facebook" | "instagram" | "twitter" | "youtube" | "tiktok";
+            platform: "facebook" | "instagram" | "twitter" | "youtube" | "tiktok" | "email" | "website" | "other";
             /** @description A string field */
             url: string;
             /** @description A string field */
             icon?: string;
+            /** @description A string field */
+            label?: string;
         };
         ApiPlayerPlayerDocument: {
             /**
@@ -904,20 +922,22 @@ export interface components {
             name: string;
             /** @description A UID field */
             slug?: string;
-            /** @description An integer field */
-            number?: number;
+            /** @description A biginteger field */
+            number?: string;
             /**
              * @description An enum field
+             * @default Ukjent
              * @enum {string}
              */
-            position: "malvakt" | "back" | "center" | "ving" | "forward";
+            position: "Målvakt" | "Back" | "Center" | "Ving" | "Forward" | "Ukjent";
             /**
              * @description An enum field
+             * @default Venstre
              * @enum {string}
              */
-            shoots: "venstre" | "hoyre";
-            /** @description An integer field */
-            birthYear: number;
+            shoots: "Venstre" | "Høyre";
+            /** @description A biginteger field */
+            birthYear?: string;
             /** @description A blocks field */
             about: unknown[];
             /**
@@ -936,7 +956,7 @@ export interface components {
             updatedAt?: string;
             /**
              * @description A datetime field
-             * @default 2026-10-14T12:51:55.453Z
+             * @default 2026-10-25T17:03:24.425Z
              */
             publishedAt: string;
             /** @description A media field */
@@ -988,7 +1008,7 @@ export interface components {
             updatedAt?: string;
             /**
              * @description A datetime field
-             * @default 2026-10-14T12:51:55.447Z
+             * @default 2026-10-25T17:03:24.421Z
              */
             publishedAt: string;
             /** @description A media field */
@@ -1041,7 +1061,7 @@ export interface components {
             updatedAt?: string;
             /**
              * @description A datetime field
-             * @default 2026-10-14T12:51:55.485Z
+             * @default 2026-10-25T17:03:24.446Z
              */
             publishedAt: string;
             /** @description A relational field */
@@ -1059,6 +1079,12 @@ export interface components {
         };
         SharedHeroBannerEntry: {
             /** @description A string field */
+            teamTitlePart1?: string;
+            /** @description A string field */
+            teamTitlePart2?: string;
+            /** @description A string field */
+            fullClubName?: string;
+            /** @description A string field */
             title: string;
             /** @description A string field */
             subtitle?: string;
@@ -1066,6 +1092,8 @@ export interface components {
             ctaText?: string;
             /** @description A string field */
             ctaLink?: string;
+            /** @description A string field */
+            fixturesTeamLabel?: string;
             /** @description A media field */
             image: components["schemas"]["PluginUploadFileDocument"];
         };
@@ -1163,7 +1191,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-14T12:51:55.436Z
+                             * @default 2026-10-25T17:03:24.412Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -1251,7 +1279,7 @@ export interface operations {
                         category: "nyhet" | "kampreferat" | "informasjon";
                         /**
                          * @description A datetime field
-                         * @default 2026-10-14T12:53:43.324Z
+                         * @default 2026-10-25T17:06:27.986Z
                          */
                         publishedAt: string;
                         /** @description A media field */
@@ -1307,7 +1335,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-14T12:51:55.465Z
+                             * @default 2026-10-25T17:03:24.433Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -1421,7 +1449,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-14T12:51:55.460Z
+                             * @default 2026-10-25T17:03:24.429Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -1511,7 +1539,7 @@ export interface operations {
                         category?: "nyhet" | "kampreferat" | "informasjon";
                         /**
                          * @description A datetime field
-                         * @default 2026-10-14T12:53:43.391Z
+                         * @default 2026-10-25T17:06:28.062Z
                          */
                         publishedAt?: string;
                         /** @description A media field */
@@ -1567,7 +1595,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-14T12:51:55.473Z
+                             * @default 2026-10-25T17:03:24.435Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -1676,7 +1704,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-14T12:51:55.476Z
+                             * @default 2026-10-25T17:03:24.437Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -1766,7 +1794,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-14T12:51:55.482Z
+                             * @default 2026-10-25T17:03:24.441Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -1841,7 +1869,7 @@ export interface operations {
                         slogan?: string;
                         /**
                          * @description A datetime field
-                         * @default 2026-10-14T12:53:43.466Z
+                         * @default 2026-10-25T17:06:28.147Z
                          */
                         publishedAt?: string;
                         /** @description A media field */
@@ -1881,7 +1909,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-14T12:51:55.488Z
+                             * @default 2026-10-25T17:03:24.448Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -1972,7 +2000,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-14T12:51:55.490Z
+                             * @default 2026-10-25T17:03:24.449Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -2075,7 +2103,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-14T12:51:55.493Z
+                             * @default 2026-10-25T17:03:24.452Z
                              */
                             publishedAt: string;
                             /** @description A component field */
@@ -2153,7 +2181,7 @@ export interface operations {
                         phone?: string;
                         /**
                          * @description A datetime field
-                         * @default 2026-10-14T12:53:43.532Z
+                         * @default 2026-10-25T17:06:28.216Z
                          */
                         publishedAt?: string;
                         /** @description A component field */
@@ -2196,7 +2224,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-14T12:51:55.503Z
+                             * @default 2026-10-25T17:03:24.454Z
                              */
                             publishedAt: string;
                             /** @description A component field */
@@ -2290,7 +2318,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-14T12:51:55.505Z
+                             * @default 2026-10-25T17:03:24.456Z
                              */
                             publishedAt: string;
                             /** @description A component field */
@@ -2381,7 +2409,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-14T12:51:55.508Z
+                             * @default 2026-10-25T17:03:24.458Z
                              */
                             publishedAt: string;
                             /** @description A component field */
@@ -2457,7 +2485,7 @@ export interface operations {
                         featuredSponsorTier?: "hoved" | "partner" | "stotte";
                         /**
                          * @description A datetime field
-                         * @default 2026-10-14T12:53:43.595Z
+                         * @default 2026-10-25T17:06:28.284Z
                          */
                         publishedAt?: string;
                         /** @description A component field */
@@ -2501,7 +2529,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-14T12:51:55.511Z
+                             * @default 2026-10-25T17:03:24.461Z
                              */
                             publishedAt: string;
                             /** @description A component field */
@@ -2593,7 +2621,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-14T12:51:55.513Z
+                             * @default 2026-10-25T17:03:24.462Z
                              */
                             publishedAt: string;
                             /** @description A component field */
@@ -2735,6 +2763,52 @@ export interface operations {
             };
         };
     };
+    "match/get/matches_by_matchId_stats": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Bad request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     "page/get/pages": {
         parameters: {
             query?: {
@@ -2800,7 +2874,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-14T12:51:55.519Z
+                             * @default 2026-10-25T17:03:24.465Z
                              */
                             publishedAt: string;
                             /** @description A relational field */
@@ -2883,7 +2957,7 @@ export interface operations {
                         showInMenu: ("0" | "1" | "t" | "true" | "f" | "false") | null;
                         /**
                          * @description A datetime field
-                         * @default 2026-10-14T12:53:43.669Z
+                         * @default 2026-10-25T17:06:28.365Z
                          */
                         publishedAt: string;
                         /**
@@ -2934,7 +3008,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-14T12:51:55.523Z
+                             * @default 2026-10-25T17:03:24.472Z
                              */
                             publishedAt: string;
                             /** @description A relational field */
@@ -3043,7 +3117,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-14T12:51:55.521Z
+                             * @default 2026-10-25T17:03:24.470Z
                              */
                             publishedAt: string;
                             /** @description A relational field */
@@ -3128,7 +3202,7 @@ export interface operations {
                         showInMenu?: ("0" | "1" | "t" | "true" | "f" | "false") | null;
                         /**
                          * @description A datetime field
-                         * @default 2026-10-14T12:53:43.721Z
+                         * @default 2026-10-25T17:06:28.422Z
                          */
                         publishedAt?: string;
                         /**
@@ -3179,7 +3253,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-14T12:51:55.526Z
+                             * @default 2026-10-25T17:03:24.474Z
                              */
                             publishedAt: string;
                             /** @description A relational field */
@@ -3283,7 +3357,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-14T12:51:55.527Z
+                             * @default 2026-10-25T17:03:24.475Z
                              */
                             publishedAt: string;
                             /** @description A relational field */
@@ -3393,7 +3467,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-14T12:51:55.536Z
+                             * @default 2026-10-25T17:03:24.478Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -3471,7 +3545,7 @@ export interface operations {
                         bio?: string;
                         /**
                          * @description A datetime field
-                         * @default 2026-10-14T12:53:43.796Z
+                         * @default 2026-10-25T17:06:28.505Z
                          */
                         publishedAt: string;
                         /** @description A media field */
@@ -3514,7 +3588,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-14T12:51:55.540Z
+                             * @default 2026-10-25T17:03:24.481Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -3618,7 +3692,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-14T12:51:55.538Z
+                             * @default 2026-10-25T17:03:24.480Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -3698,7 +3772,7 @@ export interface operations {
                         bio?: string;
                         /**
                          * @description A datetime field
-                         * @default 2026-10-14T12:53:43.846Z
+                         * @default 2026-10-25T17:06:28.561Z
                          */
                         publishedAt?: string;
                         /** @description A media field */
@@ -3741,7 +3815,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-14T12:51:55.542Z
+                             * @default 2026-10-25T17:03:24.483Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -3840,7 +3914,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-14T12:51:55.544Z
+                             * @default 2026-10-25T17:03:24.484Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -3933,20 +4007,22 @@ export interface operations {
                             name: string;
                             /** @description A UID field */
                             slug?: string;
-                            /** @description An integer field */
-                            number?: number;
+                            /** @description A biginteger field */
+                            number?: string;
                             /**
                              * @description An enum field
+                             * @default Ukjent
                              * @enum {string}
                              */
-                            position: "malvakt" | "back" | "center" | "ving" | "forward";
+                            position: "Målvakt" | "Back" | "Center" | "Ving" | "Forward" | "Ukjent";
                             /**
                              * @description An enum field
+                             * @default Venstre
                              * @enum {string}
                              */
-                            shoots: "venstre" | "hoyre";
-                            /** @description An integer field */
-                            birthYear: number;
+                            shoots: "Venstre" | "Høyre";
+                            /** @description A biginteger field */
+                            birthYear?: string;
                             /** @description A blocks field */
                             about: unknown[];
                             /**
@@ -3965,7 +4041,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-14T12:51:55.549Z
+                             * @default 2026-10-25T17:03:24.488Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -4036,20 +4112,22 @@ export interface operations {
                         name: string;
                         /** @description A UID field */
                         slug?: string;
-                        /** @description A float field */
-                        number?: number;
+                        /** @description A biginteger field */
+                        number?: string;
                         /**
                          * @description An enum field
+                         * @default Ukjent
                          * @enum {string}
                          */
-                        position: "malvakt" | "back" | "center" | "ving" | "forward";
+                        position: "Målvakt" | "Back" | "Center" | "Ving" | "Forward" | "Ukjent";
                         /**
                          * @description An enum field
+                         * @default Venstre
                          * @enum {string}
                          */
-                        shoots: "venstre" | "hoyre";
-                        /** @description A float field */
-                        birthYear: number;
+                        shoots: "Venstre" | "Høyre";
+                        /** @description A biginteger field */
+                        birthYear?: string;
                         /** @description A blocks field */
                         about: unknown[];
                         /**
@@ -4064,7 +4142,7 @@ export interface operations {
                         sortOrder: number;
                         /**
                          * @description A datetime field
-                         * @default 2026-10-14T12:53:43.928Z
+                         * @default 2026-10-25T17:06:28.649Z
                          */
                         publishedAt: string;
                         /** @description A media field */
@@ -4099,20 +4177,22 @@ export interface operations {
                             name: string;
                             /** @description A UID field */
                             slug?: string;
-                            /** @description An integer field */
-                            number?: number;
+                            /** @description A biginteger field */
+                            number?: string;
                             /**
                              * @description An enum field
+                             * @default Ukjent
                              * @enum {string}
                              */
-                            position: "malvakt" | "back" | "center" | "ving" | "forward";
+                            position: "Målvakt" | "Back" | "Center" | "Ving" | "Forward" | "Ukjent";
                             /**
                              * @description An enum field
+                             * @default Venstre
                              * @enum {string}
                              */
-                            shoots: "venstre" | "hoyre";
-                            /** @description An integer field */
-                            birthYear: number;
+                            shoots: "Venstre" | "Høyre";
+                            /** @description A biginteger field */
+                            birthYear?: string;
                             /** @description A blocks field */
                             about: unknown[];
                             /**
@@ -4131,7 +4211,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-14T12:51:55.557Z
+                             * @default 2026-10-25T17:03:24.496Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -4224,20 +4304,22 @@ export interface operations {
                             name: string;
                             /** @description A UID field */
                             slug?: string;
-                            /** @description An integer field */
-                            number?: number;
+                            /** @description A biginteger field */
+                            number?: string;
                             /**
                              * @description An enum field
+                             * @default Ukjent
                              * @enum {string}
                              */
-                            position: "malvakt" | "back" | "center" | "ving" | "forward";
+                            position: "Målvakt" | "Back" | "Center" | "Ving" | "Forward" | "Ukjent";
                             /**
                              * @description An enum field
+                             * @default Venstre
                              * @enum {string}
                              */
-                            shoots: "venstre" | "hoyre";
-                            /** @description An integer field */
-                            birthYear: number;
+                            shoots: "Venstre" | "Høyre";
+                            /** @description A biginteger field */
+                            birthYear?: string;
                             /** @description A blocks field */
                             about: unknown[];
                             /**
@@ -4256,7 +4338,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-14T12:51:55.552Z
+                             * @default 2026-10-25T17:03:24.494Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -4329,20 +4411,22 @@ export interface operations {
                         name?: string;
                         /** @description A UID field */
                         slug?: string;
-                        /** @description A float field */
-                        number?: number;
+                        /** @description A biginteger field */
+                        number?: string;
                         /**
                          * @description An enum field
+                         * @default Ukjent
                          * @enum {string}
                          */
-                        position?: "malvakt" | "back" | "center" | "ving" | "forward";
+                        position?: "Målvakt" | "Back" | "Center" | "Ving" | "Forward" | "Ukjent";
                         /**
                          * @description An enum field
+                         * @default Venstre
                          * @enum {string}
                          */
-                        shoots?: "venstre" | "hoyre";
-                        /** @description A float field */
-                        birthYear?: number;
+                        shoots?: "Venstre" | "Høyre";
+                        /** @description A biginteger field */
+                        birthYear?: string;
                         /** @description A blocks field */
                         about?: unknown[];
                         /**
@@ -4357,7 +4441,7 @@ export interface operations {
                         sortOrder?: number;
                         /**
                          * @description A datetime field
-                         * @default 2026-10-14T12:53:43.980Z
+                         * @default 2026-10-25T17:06:28.706Z
                          */
                         publishedAt?: string;
                         /** @description A media field */
@@ -4392,20 +4476,22 @@ export interface operations {
                             name: string;
                             /** @description A UID field */
                             slug?: string;
-                            /** @description An integer field */
-                            number?: number;
+                            /** @description A biginteger field */
+                            number?: string;
                             /**
                              * @description An enum field
+                             * @default Ukjent
                              * @enum {string}
                              */
-                            position: "malvakt" | "back" | "center" | "ving" | "forward";
+                            position: "Målvakt" | "Back" | "Center" | "Ving" | "Forward" | "Ukjent";
                             /**
                              * @description An enum field
+                             * @default Venstre
                              * @enum {string}
                              */
-                            shoots: "venstre" | "hoyre";
-                            /** @description An integer field */
-                            birthYear: number;
+                            shoots: "Venstre" | "Høyre";
+                            /** @description A biginteger field */
+                            birthYear?: string;
                             /** @description A blocks field */
                             about: unknown[];
                             /**
@@ -4424,7 +4510,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-14T12:51:55.560Z
+                             * @default 2026-10-25T17:03:24.498Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -4512,20 +4598,22 @@ export interface operations {
                             name: string;
                             /** @description A UID field */
                             slug?: string;
-                            /** @description An integer field */
-                            number?: number;
+                            /** @description A biginteger field */
+                            number?: string;
                             /**
                              * @description An enum field
+                             * @default Ukjent
                              * @enum {string}
                              */
-                            position: "malvakt" | "back" | "center" | "ving" | "forward";
+                            position: "Målvakt" | "Back" | "Center" | "Ving" | "Forward" | "Ukjent";
                             /**
                              * @description An enum field
+                             * @default Venstre
                              * @enum {string}
                              */
-                            shoots: "venstre" | "hoyre";
-                            /** @description An integer field */
-                            birthYear: number;
+                            shoots: "Venstre" | "Høyre";
+                            /** @description A biginteger field */
+                            birthYear?: string;
                             /** @description A blocks field */
                             about: unknown[];
                             /**
@@ -4544,7 +4632,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-14T12:51:55.567Z
+                             * @default 2026-10-25T17:03:24.500Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -4662,7 +4750,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-14T12:51:55.572Z
+                             * @default 2026-10-25T17:03:24.504Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -4746,7 +4834,7 @@ export interface operations {
                         sortOrder: number;
                         /**
                          * @description A datetime field
-                         * @default 2026-10-14T12:53:44.057Z
+                         * @default 2026-10-25T17:06:28.793Z
                          */
                         publishedAt: string;
                         /** @description A media field */
@@ -4795,7 +4883,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-14T12:51:55.578Z
+                             * @default 2026-10-25T17:03:24.507Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -4905,7 +4993,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-14T12:51:55.575Z
+                             * @default 2026-10-25T17:03:24.506Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -4991,7 +5079,7 @@ export interface operations {
                         sortOrder?: number;
                         /**
                          * @description A datetime field
-                         * @default 2026-10-14T12:53:44.107Z
+                         * @default 2026-10-25T17:06:28.849Z
                          */
                         publishedAt?: string;
                         /** @description A media field */
@@ -5040,7 +5128,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-14T12:51:55.580Z
+                             * @default 2026-10-25T17:03:24.509Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -5145,7 +5233,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-14T12:51:55.582Z
+                             * @default 2026-10-25T17:03:24.511Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -5269,7 +5357,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-14T12:51:55.587Z
+                             * @default 2026-10-25T17:03:24.518Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -5367,7 +5455,7 @@ export interface operations {
                         sortOrder: number;
                         /**
                          * @description A datetime field
-                         * @default 2026-10-14T12:53:44.183Z
+                         * @default 2026-10-25T17:06:28.932Z
                          */
                         publishedAt: string;
                         /** @description A media field */
@@ -5430,7 +5518,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-14T12:51:55.593Z
+                             * @default 2026-10-25T17:03:24.523Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -5554,7 +5642,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-14T12:51:55.590Z
+                             * @default 2026-10-25T17:03:24.520Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -5654,7 +5742,7 @@ export interface operations {
                         sortOrder?: number;
                         /**
                          * @description A datetime field
-                         * @default 2026-10-14T12:53:44.235Z
+                         * @default 2026-10-25T17:06:28.989Z
                          */
                         publishedAt?: string;
                         /** @description A media field */
@@ -5717,7 +5805,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-14T12:51:55.599Z
+                             * @default 2026-10-25T17:03:24.525Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -5836,7 +5924,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-14T12:51:55.602Z
+                             * @default 2026-10-25T17:03:24.527Z
                              */
                             publishedAt: string;
                             /** @description A media field */
@@ -5938,7 +6026,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-14T12:51:55.605Z
+                             * @default 2026-10-25T17:03:24.530Z
                              */
                             publishedAt: string;
                         };
@@ -6015,7 +6103,7 @@ export interface operations {
                         isActive?: ("0" | "1" | "t" | "true" | "f" | "false") | null;
                         /**
                          * @description A datetime field
-                         * @default 2026-10-14T12:53:44.299Z
+                         * @default 2026-10-25T17:06:29.062Z
                          */
                         publishedAt?: string;
                     };
@@ -6057,7 +6145,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-14T12:51:55.607Z
+                             * @default 2026-10-25T17:03:24.532Z
                              */
                             publishedAt: string;
                         };
@@ -6150,7 +6238,7 @@ export interface operations {
                             updatedAt?: string;
                             /**
                              * @description A datetime field
-                             * @default 2026-10-14T12:51:55.608Z
+                             * @default 2026-10-25T17:03:24.533Z
                              */
                             publishedAt: string;
                         };

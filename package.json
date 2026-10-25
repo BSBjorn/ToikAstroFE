@@ -8,6 +8,7 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
+    "test": "node --test src/lib/*.test.ts",
     "preview": "astro preview",
     "astro": "astro",
     "types:gen": "openapi-typescript ${STRAPI_URL:-http://localhost:1337}/api/openapi.json -o src/types/generated.ts",

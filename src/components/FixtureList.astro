@@ -1,30 +1,9 @@
 ---
-import type { Fixture } from "../types/strapi";
+import type { Fixture, MatchStats } from "../types/strapi";
 import { formatDateShort } from "../lib/strapi";
 
-interface Stats {
-    shots?: { home: number; away: number };
-    penalties?: { home: number; away: number };
-    penaltyMinutes?: { home: number; away: number };
-    faceoffs?: {
-        home: number;
-        away: number;
-        total: number;
-        homePct: number | null;
-    };
-    timeline: Array<{
-        period: number | null;
-        time: number;
-        team: "home" | "away";
-        scorer: string | null;
-        assists: string[];
-        flags: string[];
-        score: { home: number; away: number };
-    }>;
-}
-
 interface EnrichedFixture extends Fixture {
-    stats?: Stats | null;
+    stats?: MatchStats | null;
 }
 
 interface Props {
@@ -41,13 +20,6 @@ const OUTCOME: Record<string, { label: string; class: string }> = {
     loss: { label: "T", class: "bg-accent-600 text-white" },
     draw: { label: "U", class: "bg-ice-400 text-white" },
 };
-
-/** Format period time (seconds) as "MM:SS". */
-function fmtTime(totalSeconds: number): string {
-    const m = Math.floor(totalSeconds / 60);
-    const s = totalSeconds % 60;
-    return `${m}:${String(s).padStart(2, "0")}`;
-}
 ---
 
 {fixtures.length === 0 ? (
@@ -181,7 +153,6 @@ function fmtTime(totalSeconds: number): string {
                                             {goal.period != null
                                                 ? `${goal.period}. per · `
                                                 : ""}
-                                            <!-- {fmtTime(goal.time)} ·{" "} -->
                                             {goal.score.home}–{goal.score.away}
                                         </span>
                                     </li>

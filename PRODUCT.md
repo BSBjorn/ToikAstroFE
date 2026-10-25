@@ -167,7 +167,7 @@ The site's visual system is built from a small set of reusable components. Each 
 | Component | Purpose | Visual Treatment |
 |-----------|---------|-----------------|
 | **Hero** | Landing page opener | Full-width imagery + large condensed heading, red accent word |
-| **LiveMatch** | Real-time score widget | Red background border or badge when active; calm gray otherwise |
+| **LiveMatch** | Real-time score and statistics widget | Red background border or badge when active; calm gray otherwise |
 | **ArticleCard** | News preview | Image top, title in display font, excerpt in body, subtle shadow on hover |
 | **FixtureList** | Match schedule/results | Tabular layout with team names, dates, scores; red highlight for live/today |
 | **SponsorGrid** | Tiered sponsor logos | Responsive grid, tier-aware sizing, clean white/neutral background |

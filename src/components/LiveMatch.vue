@@ -8,11 +8,12 @@
  *
  * Three phases:
  *  - pre-game: 2h before kickoff → countdown to start
- *  - live:     kickoff → slutt   → minimal data + link to hockey.no
- *  - post-game: slutt → +2h     → result + boxscore link
+ *  - live:     kickoff → slutt   → score, stats, goal timeline + HockeyLive link
+ *  - post-game: slutt → +2h     → final score, stats + HockeyLive link
  */
 import { computed, onMounted, onUnmounted, ref } from 'vue';
 import type { LiveMatch } from '../types/strapi';
+import { formatMatchClock } from '../lib/match-time';
 
 const props = withDefaults(
   defineProps<{
@@ -184,6 +185,9 @@ const stats = computed(() => state.value?.stats ?? null);
         <p class="text-xs text-ink-muted">
           Skudd {{ stats.shots.home }}–{{ stats.shots.away }} ·
           Utvisninger {{ stats.penalties.home }}–{{ stats.penalties.away }}
+          <template v-if="stats.faceoffs.total > 0">
+            · Faceoffs {{ stats.faceoffs.home }}–{{ stats.faceoffs.away }}
+          </template>
         </p>
         <ol v-if="stats.timeline.length > 0" class="mt-2 space-y-1 text-xs">
           <li
@@ -191,7 +195,9 @@ const stats = computed(() => state.value?.stats ?? null);
             :key="i"
             class="flex items-center gap-2"
           >
-            <span class="tabular-nums text-ink-muted">{{ goal.period ?? '–' }}:{{ String(goal.time).padStart(2, '0') }}</span>
+            <span class="shrink-0 tabular-nums text-ink-muted">
+              {{ goal.period != null ? `${goal.period}. per · ` : '' }}{{ formatMatchClock(goal.time) }}
+            </span>
             <span
               class="font-medium"
               :class="goal.team === 'home' ? 'text-brand-500' : 'text-accent-500'"

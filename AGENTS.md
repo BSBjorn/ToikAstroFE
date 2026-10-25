@@ -25,7 +25,7 @@ src/
     ArticleCard.astro      # News/article card (featured variant on front page)
     FixtureList.astro      # Upcoming / completed match list
     Grasrot.astro          # Norsk Tipping grasrot call-to-action
-    LiveMatch.vue          # Live match score island (Vue, polls Strapi)
+    LiveMatch.vue          # Live match score/stats island (Vue, polls Strapi)
     RichText.astro         # Strapi blocks rich-text renderer (recursive)
     SiteFooter.astro       # Multi-column footer with club links
     SiteHeader.astro       # Sticky header, hardcoded nav
@@ -51,6 +51,7 @@ pnpm install          # Install dependencies
 pnpm dev              # Start dev server (use `astro dev --background` per AGENTS.md)
 pnpm build            # Production build to ./dist/
 pnpm preview          # Preview production build locally
+pnpm test             # Unit and data-layer regression tests
 ```
 
 ## Environment Variables
@@ -77,7 +78,7 @@ Copy `env.example` to `.env`. Required variables:
 ### Server vs Client
 
 - All Strapi calls happen on the server in Astro frontmatter. The browser never calls Strapi directly.
-- The **one exception** is `LiveMatch.vue`, a Vue island that polls Strapi from the client for live scores. It receives `PUBLIC_STRAPI_URL` as a prop.
+- The **one exception** is `LiveMatch.vue`, a Vue island that polls Strapi from the client for live scores and statistics. It receives `PUBLIC_STRAPI_URL` as a prop.
 - The site ships zero JavaScript except for the LiveMatch island.
 
 ### Design Tokens
@@ -133,7 +134,13 @@ The front end expects these Strapi content types:
 | `forside` (single) | Front page hero content | title, text, image |
 | `klubb` (single) | Club info (org number, email, address) | orgNumber, email, address |
 
-Match data comes from a custom Strapi endpoint (`/api/matches`) — not a standard Strapi content type.
+Match data comes from custom Strapi endpoints, not a standard content type:
+
+- `/api/matches` — upcoming/completed fixtures.
+- `/api/matches/live` — current phase, score, countdown, and live/post-game stats.
+- `/api/matches/:matchId/stats` — completed-match stats with required `homeTeamId` and `awayTeamId` query parameters.
+
+`getMatchStats()` calls `/api/matches/:matchId/stats` (including the `/api` prefix). `LiveMatch.vue` polls every 5 seconds during live play and every 15 seconds otherwise. The canonical response contracts and upstream data flow are in [`../docs/match-api.md`](../docs/match-api.md); keep that document synchronized with API changes.
 
 ### Page Routes
 

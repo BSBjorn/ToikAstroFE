@@ -283,6 +283,7 @@ export interface MatchStats {
 
 export interface LiveMatch {
   active: boolean;
+  source: 'active' | 'explicit';
   phase: 'pre-game' | 'live' | 'post-game' | 'none';
   arena: string;
   match: {

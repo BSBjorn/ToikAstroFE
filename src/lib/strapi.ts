@@ -347,7 +347,7 @@ export async function getMatchStats(
     const res = await get<StrapiResponse<MatchStats>>(
       'match-stats',
       TTL_MATCH_STATS,
-      `/matches/${matchId}/stats`,
+      `/api/matches/${matchId}/stats`,
       { homeTeamId: String(homeTeamId), awayTeamId: String(awayTeamId) }
     );
     return res.data;
