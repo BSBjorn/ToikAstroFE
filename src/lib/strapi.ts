@@ -17,6 +17,7 @@ import type {
   Contact,
   FixtureResponse,
   LiveMatch,
+  MatchStats,
   Page,
   Person,
   Sponsor,
@@ -334,11 +335,25 @@ export async function getFixtures(
   }
 }
 
-/** Enrich completed fixtures with match stats (goals, shots, penalties, faceoffs). */
-export async function getMatchStats(_matchId: number): Promise<null> {
-  // Stats no longer served by the simplified live endpoint.
-  // Boxscore data is available via hockey.no/match/[id] instead.
-  return null;
+const TTL_MATCH_STATS = 10 * 60_000; // 10 min — completed match stats rarely change
+
+/** Fetch stats for a completed match from Strapi's hockey.no-backed stats endpoint. */
+export async function getMatchStats(
+  matchId: number,
+  homeTeamId: number,
+  awayTeamId: number
+): Promise<MatchStats | null> {
+  try {
+    const res = await get<StrapiResponse<MatchStats>>(
+      'match-stats',
+      TTL_MATCH_STATS,
+      `/matches/${matchId}/stats`,
+      { homeTeamId: String(homeTeamId), awayTeamId: String(awayTeamId) }
+    );
+    return res.data;
+  } catch {
+    return null;
+  }
 }
 
 /** Enrich completed fixtures with match stats (goals, shots, penalties, faceoffs). */
@@ -346,7 +361,10 @@ export async function enrichFixturesWithStats(fixtures: Fixture[]) {
   return Promise.all(
     fixtures.map(async (f) => ({
       ...f,
-      stats: f.id ? await getMatchStats(f.id) : null,
+      stats:
+        f.id && f.homeTeamId && f.awayTeamId
+          ? await getMatchStats(f.id, f.homeTeamId, f.awayTeamId)
+          : null,
     }))
   );
 }
