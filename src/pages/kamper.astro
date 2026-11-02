@@ -21,16 +21,19 @@ try {
 
 <Base title="Kamper">
     <div class="container-content py-16 lg:py-20">
-        <h1 class="mt-8 font-bold text-hero">Kamper</h1>
+        <h1 class="mt-8 font-bold text-hero">Terminliste og resultater</h1>
+        <h2 class="font-display text-h2 mt-1.5 font-medium text-accent-600">
+            Tønsberg og Omegn Ishockeyklubb A-lag
+        </h2>
 
         <div class="mt-8 grid gap-12 md:grid-cols-2">
             <div>
-                <h2 class="section-label text-h3 mb-4">Kommende kamper</h2>
+                <h2 class="section-label mb-4">Kommende kamper</h2>
                 <FixtureList fixtures={upcoming} type="upcoming" />
             </div>
 
             <div>
-                <h2 class="section-label text-h3 mb-4">Siste kamper</h2>
+                <h2 class="section-label mb-4">Siste kamper</h2>
                 <FixtureList fixtures={completed} type="completed" />
             </div>
         </div>

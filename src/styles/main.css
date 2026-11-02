@@ -467,4 +467,19 @@
   .link-footer {
     @apply hover:underline underline-offset-2;
   }
+
+  .teamTitleHero {
+      .teamTitlePart1 {
+        font-size: clamp(2.5rem, 5vw, 4.5rem);
+        font-family: var(--font-plus);
+        line-height: 1.55;
+        @apply z-10 relative top-3 lg:top-10 font-black text-ice-50 text-shadow-md;
+      }
+      .teamTitlePart2 {
+        font-size: clamp(4rem, 10vw, 9rem);
+        color: var(--color-accent-600);
+        font-family: var(--font-dc);
+        @apply block z-0 relative mt-0 font-medium text-shadow-md -rotate-3;
+      }
+  }
 }

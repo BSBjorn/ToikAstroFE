@@ -113,71 +113,31 @@ sectionMap.sponsors = sectionMap.sponsors ?? true;
     clubName={club.name}
     clubSlogan={club.slogan ?? undefined}
 >
-    <!-- Hero -->
-    {frontpage.hero || frontpage.title ? (
-        <section class="relative isolate overflow-hidden bg-brand-900 text-ink-invert min-h-[50vh]">
-            <div class="pointer-events-none absolute inset-0 after:pointer-events-none after:absolute after:bottom-0 after:left-0 after:right-0 after:h-1/4 after:bg-linear-to-t after:from-ice-900/50 -z-10" />
+    <!-- Hero — dark image + team title overlay -->
+    {frontpage.hero ? (
+        <section class="relative isolate overflow-hidden bg-brand-900 text-ink-invert min-h-[50vh] lg:min-h-[70vh]">
+            {/* Image fade from bottom */}
+            <div class="absolute inset-0 after:pointer-events-none after:absolute after:bottom-0 after:left-0 after:right-0 after:h-2/3 after:bg-gradient-to-t after:from-brand-700/40 -z-10" />
             {heroSrc && (
                 <img
                     src={heroSrc}
                     alt={mediaAlt(heroImage)}
-                    class="absolute inset-0 -z-20 size-full object-cover opacity-65"
+                    class="absolute inset-0 -z-20 size-full object-cover opacity-85 background-position-bottom"
                     fetchpriority="high"
                     decoding="async"
                 />
             )}
-            <div class="container-content py-10 sm:py-16 md:py-24 text-ice-50 md:pl-20 relative z-0 block">
-                <h1 class="font-display text-h1 mt-5 sm:mt-10 md:mt-16 block font-bold">
-                    {fullClubName}
-                </h1>
-                <h2 class="font-display text-h2 mt-1.5 font-medium">
-                    {heroTitle}
-                </h2>
-                <p class="mt-2 max-w-2xl text-sm sm:mt-4 md:text-xl">
-                    {heroText}
+            <div class="teamTitleHero absolute bottom-0 right-0 xl:bottom-1/6 3xl:right-20 p-10 text-right uppercase">
+                <p class="teamTitle">
+                    <span class="teamTitlePart1">{teamTitlePart1}</span>
+                    <span class="teamTitlePart2">{teamTitlePart2}</span>
                 </p>
-                <div class="mt-5 flex flex-wrap gap-3 sm:my-8">
-                    {frontpage.hero?.ctaText && frontpage.hero?.ctaLink ? (
-                        <a
-                            href={frontpage.hero.ctaLink}
-                            class="rounded-pill border bg-ice-200/80 border-ice-100/80 px-8 py-3.5 font-semibold text-ice-800 transition hover:bg-white/10 hover:text-ice-100"
-                        >
-                            {frontpage.hero.ctaText}
-                        </a>
-                    ) : (
-                        <a
-                            href="/kamper"
-                            class="rounded-pill border bg-ice-200/80 border-ice-100/80 px-8 py-3.5 font-semibold text-ice-800 transition hover:bg-white/10 hover:text-ice-100"
-                        >
-                            Se kampoppsettet
-                        </a>
-                    )}
-                    <a
-                        href="/p/ny-i-klubben"
-                        class="rounded-pill border border-accent-500 bg-accent-500 px-8 py-3.5 font-semibold text-white transition hover:bg-accent-500/10"
-                    >
-                        Bli med i klubben
-                    </a>
-                </div>
-                <h2 class="relative font-display font-extrabold text-hero md:ml-15 mt-8 text-shadow-lg group">
-                    {teamTitlePart1}
-                    <span class="font-dc text-intro -z-10 -rotate-6 block text-accent-500 relative left-2 sm:left-10 md:left-20 font-medium md:-top-10 group-hover:animate-vibrate">
-                        {teamTitlePart2}
-                    </span>
-                </h2>
             </div>
         </section>
     ) : (
-        <section class="relative isolate overflow-hidden bg-brand-900 text-ink-invert text-shadow">
+        <section class="relative isolate overflow-hidden bg-brand-900 text-ink-invert">
             <div class="container-content py-16 sm:py-24">
-                {/* Decorative background text */}
-                <span
-                    class="pointer-events-none absolute inset-0 -z-10 select-none font-display text-[13rem] leading-[0.9] text-white/[0.08]"
-                    aria-hidden="true"
-                >
-                    TOIK
-                </span>
-                <h1 class="relative max-w-3xl text-hero text-white/75">
+                <h1 class="max-w-3xl text-hero text-white/75">
                     Velkommen til TOIK
                 </h1>
                 <p class="mt-3 max-w-md text-lg text-ice-300">
@@ -188,12 +148,46 @@ sectionMap.sponsors = sectionMap.sponsors ?? true;
         </section>
     )}
 
+    <!-- Hero content — club name, title, description + CTAs -->
+    {frontpage.hero ? (
+        <section class="container-content py-10 sm:py-16 md:py-24 text-ink md:pl-20">
+            <h1 class="font-display text-h1 mt-5 sm:mt-10 md:mt-16 font-bold">
+                {fullClubName}
+            </h1>
+            <h2 class="font-display text-h2 mt-1.5 font-medium">
+                {heroTitle}
+            </h2>
+            <p class="mt-2 max-w-2xl text-sm sm:mt-4 md:text-xl">{heroText}</p>
+            <div class="mt-5 flex flex-wrap gap-3 sm:my-8">
+                <a
+                    href={frontpage.hero?.ctaLink || "/kamper"}
+                    class="rounded-pill border bg-ice-200/80 border-ice-100/80 px-8 py-3.5 font-semibold text-ice-800 transition hover:bg-white/10 hover:text-ice-100"
+                >
+                    {frontpage.hero?.ctaText || "Se kampoppsettet"}
+                </a>
+                <a
+                    href="/p/ny-i-klubben"
+                    class="rounded-pill border border-accent-500 bg-accent-500 px-8 py-3.5 font-semibold text-white transition hover:bg-accent-500/10"
+                >
+                    Bli med i klubben
+                </a>
+            </div>
+        </section>
+    ) : (
+        <section class="container-content py-10 sm:py-16 md:py-24 text-ink md:pl-20">
+            <h1 class="font-display text-h1 mt-5 sm:mt-10 md:mt-16 font-bold">
+                {fullClubName}
+            </h1>
+            <h2 class="font-display text-h2 mt-1.5 font-medium">{heroTitle}</h2>
+            <p class="mt-2 max-w-2xl text-sm sm:mt-4 md:text-xl">{heroText}</p>
+        </section>
+    )}
     <!-- Live match + fixtures — prominent red-accent card -->
     {(upcoming.length > 0 || recent.length > 0) && (
         <section class="container-content mt-12 mb-16" aria-labelledby="kamper">
             <span class="section-label">{fixturesTeamLabel}</span>
 
-            <div class="mt-4 overflow-hidden rounded-card border-l-4 border-accent-500 bg-surface-raised shadow-card">
+            <div class="mt-4 overflow-hidden rounded-card bg-surface-raised shadow-card">
                 <LiveMatch
                     client:load
                     strapiUrl={publicStrapiUrl()}
@@ -231,7 +225,6 @@ sectionMap.sponsors = sectionMap.sponsors ?? true;
             </div>
         </section>
     )}
-
     <!-- News -->
     {sectionMap.news && articles.length > 0 && (
         <section class="container-content mb-16" aria-labelledby="nyheter">
@@ -258,7 +251,6 @@ sectionMap.sponsors = sectionMap.sponsors ?? true;
             </div>
         </section>
     )}
-
     <!-- Dynamic sections from frontpage config -->
     {Object.entries(sectionData).map(([id, section], idx) => {
         if (!sectionMap[id]) return null;
@@ -315,7 +307,6 @@ sectionMap.sponsors = sectionMap.sponsors ?? true;
             </section>
         );
     })}
-
     {sectionMap.sponsors && (
         <SponsorGrid sponsors={sponsors} label="SAMARBEIDSPARTNERE" />
     )}
